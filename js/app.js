@@ -967,22 +967,37 @@
 
   /* ================= EVENT LISTENERS ================= */
   function attachEventListeners() {
-    // Candidate Auth Tab Switching
-    if (candidateAuthElements.tabRegisterBtn && candidateAuthElements.tabLoginBtn) {
-      candidateAuthElements.tabRegisterBtn.addEventListener("click", () => {
+    // Candidate Auth Card Navigation Links
+    const toRegisterLink = document.getElementById("toRegisterLink");
+    const toLoginLink = document.getElementById("toLoginLink");
+    const guestBrowseLink = document.getElementById("guestBrowseLink");
+    const authHeaderTitle = document.getElementById("authHeaderTitle");
+    const authHeaderSubtitle = document.getElementById("authHeaderSubtitle");
+
+    if (toRegisterLink) {
+      toRegisterLink.addEventListener("click", (e) => {
+        e.preventDefault();
         candidateAuthElements.regForm.classList.remove("hidden");
         candidateAuthElements.loginForm.classList.add("hidden");
-        candidateAuthElements.tabRegisterBtn.className = "btn btn-gold btn-sm";
-        candidateAuthElements.tabLoginBtn.className = "btn btn-outline btn-sm";
-        candidateAuthElements.tabLoginBtn.style.color = "#FFF";
+        if (authHeaderTitle) authHeaderTitle.textContent = "Create Account";
+        if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Register to access your GES promotion exam portal";
       });
+    }
 
-      candidateAuthElements.tabLoginBtn.addEventListener("click", () => {
-        candidateAuthElements.regForm.classList.add("hidden");
+    if (toLoginLink) {
+      toLoginLink.addEventListener("click", (e) => {
+        e.preventDefault();
         candidateAuthElements.loginForm.classList.remove("hidden");
-        candidateAuthElements.tabLoginBtn.className = "btn btn-gold btn-sm";
-        candidateAuthElements.tabRegisterBtn.className = "btn btn-outline btn-sm";
-        candidateAuthElements.tabRegisterBtn.style.color = "#FFF";
+        candidateAuthElements.regForm.classList.add("hidden");
+        if (authHeaderTitle) authHeaderTitle.textContent = "Welcome Back";
+        if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Login to access your GES promotion exam portal";
+      });
+    }
+
+    if (guestBrowseLink) {
+      guestBrowseLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        candidateAuthElements.modal.classList.remove("active");
       });
     }
 

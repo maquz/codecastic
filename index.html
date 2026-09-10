@@ -292,36 +292,67 @@
   </main>
 
   <!-- ================= CANDIDATE REGISTRATION & AUTHENTICATION MODAL ================= -->
-  <div class="modal-overlay" id="candidateAuthModal">
-    <div class="modal-card" style="max-width:520px;">
-      <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-        <h3 id="candidateModalTitle">🎓 Candidate Portal Access</h3>
-        <div style="display:flex; gap:6px;">
-          <button type="button" class="btn btn-gold btn-sm" id="tabRegisterBtn">Register</button>
-          <button type="button" class="btn btn-outline btn-sm" id="tabLoginBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">Sign In</button>
-        </div>
+  <div class="modal-overlay auth-modal-overlay" id="candidateAuthModal">
+    <div class="auth-card">
+      
+      <!-- Top Branding Logo & Title -->
+      <div class="auth-card-header">
+        <div class="auth-card-logo">🎓</div>
+        <h2 class="auth-card-title" id="authHeaderTitle">Welcome Back</h2>
+        <p class="auth-card-subtitle" id="authHeaderSubtitle">Login to access your GES promotion exam portal</p>
       </div>
-      <div class="modal-body">
+
+      <div class="auth-card-body">
+
+        <!-- SIGN IN FORM (MATCHING USER UI INTERFACE) -->
+        <form id="candidateLoginForm">
+          <div class="form-group">
+            <label for="loginEmail" class="auth-label">Username or Email</label>
+            <input type="email" class="form-control auth-input" id="loginEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
+          </div>
+
+          <div class="form-group">
+            <label for="loginPassword" class="auth-label">Password</label>
+            <input type="password" class="form-control auth-input" id="loginPassword" placeholder="••••••••" required>
+          </div>
+
+          <div class="auth-meta-row">
+            <label class="auth-checkbox-label">
+              <input type="checkbox" id="rememberMe" checked> Remember me
+            </label>
+            <a href="#" id="forgotPassLink" class="auth-link">Forgot password?</a>
+          </div>
+
+          <div class="feedback-box incorrect hidden" id="candidateLoginError" style="margin-top:10px; margin-bottom:12px; padding:10px 12px; border-radius:10px;">
+            ⚠️ Invalid email or password.
+          </div>
+
+          <button type="submit" class="btn auth-primary-btn">Login</button>
+
+          <div class="auth-switch-text" style="margin-top:20px;">
+            Don't have an account? <a href="#" id="toRegisterLink" class="auth-link-bold">Register now</a>
+          </div>
+
+          <div class="auth-back-link" style="margin-top:14px;">
+            <a href="#" id="guestBrowseLink">← Back to Portal Home</a>
+          </div>
+        </form>
 
         <!-- REGISTER FORM -->
-        <form id="candidateRegForm">
-          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:14px;">
-            Register your candidate details below. Access will be restricted exclusively to your selected promotion rank.
-          </p>
-
+        <form id="candidateRegForm" class="hidden">
           <div class="form-group">
-            <label for="regFullName">Full Name (Candidate) *</label>
-            <input type="text" class="form-control" id="regFullName" placeholder="e.g. Kwaku Mensah Addo" required>
+            <label for="regFullName" class="auth-label">Full Name (Candidate) *</label>
+            <input type="text" class="form-control auth-input" id="regFullName" placeholder="e.g. Kwaku Mensah Addo" required>
           </div>
 
           <div class="form-group">
-            <label for="regEmail">Candidate Email Address *</label>
-            <input type="email" class="form-control" id="regEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
+            <label for="regEmail" class="auth-label">Candidate Email Address *</label>
+            <input type="email" class="form-control auth-input" id="regEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
           </div>
 
           <div class="form-group">
-            <label for="regRegion">Ghana Region *</label>
-            <select class="form-control" id="regRegion" required>
+            <label for="regRegion" class="auth-label">Ghana Region *</label>
+            <select class="form-control auth-input" id="regRegion" required>
               <option value="" disabled selected>Select Your Region in Ghana...</option>
               <option value="Ahafo Region">Ahafo Region</option>
               <option value="Ashanti Region">Ashanti Region</option>
@@ -343,13 +374,13 @@
           </div>
 
           <div class="form-group">
-            <label for="regPassword">Candidate Password *</label>
-            <input type="password" class="form-control" id="regPassword" placeholder="Create your account password" required>
+            <label for="regPassword" class="auth-label">Candidate Password *</label>
+            <input type="password" class="form-control auth-input" id="regPassword" placeholder="Create your account password" required>
           </div>
 
           <div class="form-group">
-            <label for="regAssignedRank">Eligible Promotion Examination Rank *</label>
-            <select class="form-control" id="regAssignedRank" required>
+            <label for="regAssignedRank" class="auth-label">Eligible Promotion Rank *</label>
+            <select class="form-control auth-input" id="regAssignedRank" required>
               <option value="" disabled selected>Select Your Promotion Examination Rank...</option>
               <option value="AD_II">Assistant Director II (AD II)</option>
               <option value="AD_I">Assistant Director I (AD I)</option>
@@ -358,40 +389,10 @@
             </select>
           </div>
 
-          <div style="background:var(--paper-bg); border:1px solid var(--line-color); padding:10px 12px; border-radius:var(--radius-sm); margin-top:14px; font-size:0.82rem; color:var(--gold-600);">
-            🔒 <strong>Strict Rank Eligibility:</strong> Access will be unlocked ONLY for your selected promotion rank.
-          </div>
+          <button type="submit" class="btn auth-primary-btn" style="margin-top:14px;">Register Account & Launch Portal →</button>
 
-          <div style="display:flex; justify-content:flex-end; margin-top:18px;">
-            <button type="submit" class="btn btn-gold" style="width:100%;">Register Account & Enter Exam Portal →</button>
-          </div>
-        </form>
-
-        <!-- SIGN IN FORM -->
-        <form id="candidateLoginForm" class="hidden">
-          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:14px;">
-            Sign in with your registered candidate email and password.
-          </p>
-
-          <div class="form-group">
-            <label for="loginEmail">Candidate Email Address</label>
-            <input type="email" class="form-control" id="loginEmail" placeholder="Enter registered email" required>
-          </div>
-
-          <div class="form-group">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-              <label for="loginPassword" style="margin:0;">Account Password</label>
-              <a href="#" id="forgotPassLink" style="font-size:0.82rem; color:var(--gold-600); font-weight:600;">🔑 Forgot Password?</a>
-            </div>
-            <input type="password" class="form-control" id="loginPassword" placeholder="Enter account password" required>
-          </div>
-
-          <div class="feedback-box incorrect hidden" id="candidateLoginError" style="margin-top:10px; margin-bottom:12px; padding:10px 12px;">
-            ⚠️ Invalid email or password.
-          </div>
-
-          <div style="display:flex; justify-content:flex-end; margin-top:18px;">
-            <button type="submit" class="btn btn-gold" style="width:100%;">Sign In & Launch Dashboard →</button>
+          <div class="auth-switch-text" style="margin-top:18px;">
+            Already have an account? <a href="#" id="toLoginLink" class="auth-link-bold">Login now</a>
           </div>
         </form>
 
