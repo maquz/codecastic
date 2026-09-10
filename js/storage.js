@@ -8,7 +8,8 @@ var STORAGE_KEYS = {
   QUESTIONS: "codecastic_questions_v1",
   ATTEMPTS: "codecastic_attempts_v1",
   ADMIN_PASS: "codecastic_admin_pass_v1",
-  SETTINGS: "codecastic_settings_v1"
+  SETTINGS: "codecastic_settings_v1",
+  CANDIDATE: "codecastic_candidate_profile_v1"
 };
 
 var StorageManager = {
@@ -584,6 +585,43 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       return true;
     } catch (e) {
       console.error("Failed to update admin passcode:", e);
+      return false;
+    }
+  },
+
+  /**
+   * Get Candidate Registration Profile
+   */
+  getCandidateProfile: function() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.CANDIDATE);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  /**
+   * Save Candidate Registration Profile
+   */
+  saveCandidateProfile: function(profile) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(profile));
+      return true;
+    } catch (e) {
+      console.error("Failed to save candidate profile:", e);
+      return false;
+    }
+  },
+
+  /**
+   * Clear Candidate Profile (Log out candidate)
+   */
+  clearCandidateProfile: function() {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.CANDIDATE);
+      return true;
+    } catch (e) {
       return false;
     }
   }

@@ -365,6 +365,31 @@ body.dark-mode .rank-card.selected {
   background: rgba(217, 119, 6, 0.15);
 }
 
+.rank-card.locked-rank {
+  opacity: 0.55;
+  cursor: not-allowed;
+  background: var(--paper-bg);
+  border-color: var(--line-color);
+}
+
+.rank-card.locked-rank:hover {
+  transform: none;
+  border-color: var(--line-color);
+  box-shadow: none;
+}
+
+.badge-locked {
+  background: #F1F5F9;
+  color: #64748B;
+  border: 1px solid #CBD5E1;
+}
+
+body.dark-mode .badge-locked {
+  background: #1E293B;
+  color: #94A3B8;
+  border-color: #334155;
+}
+
 .rank-card h3 {
   font-size: 1.15rem;
   color: var(--text-main);

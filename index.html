@@ -28,6 +28,11 @@
       </div>
 
       <div class="header-actions">
+        <div class="stat-chip hidden" id="candidateProfileChip" title="Registered Candidate Profile" style="background:rgba(217,119,6,0.2); border-color:var(--gold-500);">
+          <span style="color:#FFF;">🎓 <strong id="candidateNameNav">Candidate</strong> (<span id="candidateRankNav">AD II</span>)</span>
+          <button class="btn btn-outline btn-sm" id="candidateLogoutBtn" style="padding:2px 8px; font-size:0.75rem; color:#FFF; border-color:rgba(255,255,255,0.4); margin-left:6px;" title="Switch / Re-register Candidate">Exit Profile</button>
+        </div>
+
         <div class="stat-chip" title="Personal Best Percentage">
           <span>Best:</span> <strong id="navBestScore">—</strong>
         </div>
@@ -247,6 +252,51 @@
     </section>
 
   </main>
+
+  <!-- ================= CANDIDATE REGISTRATION & ELIGIBILITY MODAL ================= -->
+  <div class="modal-overlay" id="candidateAuthModal">
+    <div class="modal-card" style="max-width:500px;">
+      <div class="modal-header">
+        <h3>🎓 Candidate Registration & Eligibility</h3>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-muted); font-size:0.92rem; margin-bottom:18px;">
+          Welcome to CodeCastic GES Examination Readiness Portal. Please register your candidate profile below. <strong>You will be eligible and allowed access ONLY to your registered promotion rank.</strong>
+        </p>
+
+        <form id="candidateRegForm">
+          <div class="form-group">
+            <label for="regFullName">Full Name (Candidate) *</label>
+            <input type="text" class="form-control" id="regFullName" placeholder="e.g. Kwaku Mensah Addo" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regStaffId">GES Staff ID / Reg No. *</label>
+            <input type="text" class="form-control" id="regStaffId" placeholder="e.g. GES-884920" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regAssignedRank">Eligible Promotion Examination Rank *</label>
+            <select class="form-control" id="regAssignedRank" required>
+              <option value="" disabled selected>Select Your Registered Promotion Rank...</option>
+              <option value="AD_II">Assistant Director II (AD II)</option>
+              <option value="AD_I">Assistant Director I (AD I)</option>
+              <option value="DD">Deputy Director (DD)</option>
+              <option value="DIR_II">Director II (Dir II)</option>
+            </select>
+          </div>
+
+          <div style="background:var(--paper-bg); border:1px solid var(--line-color); padding:12px 14px; border-radius:var(--radius-sm); margin-top:16px; font-size:0.85rem; color:var(--gold-600);">
+            🔒 <strong>Strict Rank Eligibility:</strong> Access will be restricted exclusively to your selected promotion rank.
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; margin-top:20px;">
+            <button type="submit" class="btn btn-gold" style="width:100%;">Complete Registration & Enter Exam Portal →</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- ================= ADMIN LOGIN MODAL ================= -->
   <div class="modal-overlay" id="adminLoginModal">

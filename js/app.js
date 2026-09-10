@@ -133,9 +133,22 @@
     resumeBtn: document.getElementById("endQuizResumeBtn")
   };
 
+  const candidateAuthElements = {
+    modal: document.getElementById("candidateAuthModal"),
+    form: document.getElementById("candidateRegForm"),
+    fullNameInput: document.getElementById("regFullName"),
+    staffIdInput: document.getElementById("regStaffId"),
+    assignedRankInput: document.getElementById("regAssignedRank"),
+    chip: document.getElementById("candidateProfileChip"),
+    nameNav: document.getElementById("candidateNameNav"),
+    rankNav: document.getElementById("candidateRankNav"),
+    logoutBtn: document.getElementById("candidateLogoutBtn")
+  };
+
   /* ================= INITIALIZATION ================= */
   function initApp() {
     setupTheme();
+    checkCandidateAuth();
     renderRankCards();
     updateDashboardStats();
     attachEventListeners();
@@ -149,36 +162,72 @@
     }
   }
 
+  function checkCandidateAuth() {
+    const profile = StorageManager.getCandidateProfile();
+    if (!profile) {
+      candidateAuthElements.modal.classList.add("active");
+      candidateAuthElements.chip.classList.add("hidden");
+    } else {
+      candidateAuthElements.modal.classList.remove("active");
+      candidateAuthElements.chip.classList.remove("hidden");
+      candidateAuthElements.nameNav.textContent = profile.name;
+      
+      const rankObj = GES_RANKS.find(r => r.id === profile.assignedRank);
+      candidateAuthElements.rankNav.textContent = rankObj ? rankObj.name : profile.assignedRank;
+      
+      currentRank = profile.assignedRank;
+    }
+  }
+
   /* ================= DASHBOARD & RANK SELECTION ================= */
   function renderRankCards() {
     const questions = StorageManager.getQuestions();
+    const candidate = StorageManager.getCandidateProfile();
+    const assignedRank = candidate ? candidate.assignedRank : null;
+
     selectElements.rankGrid.innerHTML = GES_RANKS.map(rank => {
-      // Calculate question count per rank
       const count = rank.id === "ALL" 
         ? questions.length 
         : questions.filter(q => q.level === rank.id).length;
+
+      const isEligible = !assignedRank || rank.id === assignedRank;
+      const isSelected = rank.id === currentRank && isEligible;
+      const lockClass = !isEligible ? "locked-rank" : "";
       
-      const isSelected = rank.id === currentRank ? "selected" : "";
-      
+      let badgeHtml;
+      if (!isEligible) {
+        badgeHtml = `<span class="badge badge-locked">🔒 LOCKED FOR THIS CANDIDATE</span>`;
+      } else {
+        badgeHtml = `<span class="badge ${rank.badgeClass}">${rank.name}</span>`;
+      }
+
       return `
-        <div class="rank-card ${isSelected}" data-rank="${rank.id}">
+        <div class="rank-card ${isSelected ? 'selected' : ''} ${lockClass}" data-rank="${rank.id}" data-eligible="${isEligible}">
           <div>
-            <span class="badge ${rank.badgeClass}">${rank.name}</span>
-            <h3>${rank.name} Exam</h3>
+            ${badgeHtml}
+            <h3 style="margin-top:10px;">${rank.name} Exam</h3>
             <p>${rank.description}</p>
           </div>
           <div class="rank-meta">
-            <span>📚 ${count} Available Questions</span>
-            <span>⏱️ 45s / Question</span>
+            <span>📚 ${count} Questions</span>
+            <span>${isEligible ? '✅ ELIGIBLE' : '🔒 RESTRICTED'}</span>
           </div>
         </div>
       `;
     }).join("");
 
-    // Attach card click handlers
     selectElements.rankGrid.querySelectorAll(".rank-card").forEach(card => {
       card.addEventListener("click", () => {
-        currentRank = card.getAttribute("data-rank");
+        const isEligible = card.getAttribute("data-eligible") === "true";
+        const rankId = card.getAttribute("data-rank");
+        
+        if (!isEligible) {
+          const assignedObj = GES_RANKS.find(r => r.id === assignedRank);
+          alert(`🔒 Rank Access Restricted!\n\nCandidate ${candidate ? candidate.name : ''} (Staff ID: ${candidate ? candidate.staffId : ''}) is registered ONLY for the ${assignedObj ? assignedObj.name : assignedRank} examination.`);
+          return;
+        }
+
+        currentRank = rankId;
         selectElements.rankGrid.querySelectorAll(".rank-card").forEach(c => c.classList.remove("selected"));
         card.classList.add("selected");
         
@@ -187,6 +236,14 @@
         selectElements.rankHint.textContent = `Selected: ${rankObj.name} Exam Readiness Test.`;
       });
     });
+
+    if (assignedRank) {
+      const eligibleRankObj = GES_RANKS.find(r => r.id === assignedRank);
+      if (eligibleRankObj) {
+        selectElements.startBtn.disabled = false;
+        selectElements.rankHint.textContent = `Eligible Promotion Rank Pre-Selected: ${eligibleRankObj.name} Exam.`;
+      }
+    }
   }
 
   function updateDashboardStats() {
@@ -474,8 +531,9 @@
     const history = StorageManager.getAttemptHistory();
     const latestAttempt = history[0];
     const rankObj = GES_RANKS.find(r => r.id === (latestAttempt ? latestAttempt.rankId : currentRank));
+    const candidate = StorageManager.getCandidateProfile();
 
-    certificateElements.recipientName.textContent = "Ghana Education Service Officer";
+    certificateElements.recipientName.textContent = candidate ? `${candidate.name} (${candidate.staffId})` : "Ghana Education Service Officer";
     certificateElements.rankName.textContent = rankObj ? rankObj.name : "Promotion Exam";
     certificateElements.scoreVal.textContent = latestAttempt ? latestAttempt.percentage : 100;
     certificateElements.dateVal.textContent = new Date().toLocaleDateString(undefined, {
@@ -609,6 +667,35 @@
 
   /* ================= EVENT LISTENERS ================= */
   function attachEventListeners() {
+    // Candidate Registration Handlers
+    candidateAuthElements.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const name = candidateAuthElements.fullNameInput.value.trim();
+      const staffId = candidateAuthElements.staffIdInput.value.trim();
+      const assignedRank = candidateAuthElements.assignedRankInput.value;
+
+      if (name && staffId && assignedRank) {
+        StorageManager.saveCandidateProfile({
+          name: name,
+          staffId: staffId,
+          assignedRank: assignedRank,
+          registeredAt: Date.now()
+        });
+
+        checkCandidateAuth();
+        renderRankCards();
+        updateDashboardStats();
+      }
+    });
+
+    candidateAuthElements.logoutBtn.addEventListener("click", () => {
+      if (confirm("Are you sure you want to exit your candidate profile to re-register?")) {
+        StorageManager.clearCandidateProfile();
+        checkCandidateAuth();
+        renderRankCards();
+      }
+    });
+
     // Theme toggle
     navElements.themeToggle.addEventListener("click", () => {
       document.body.classList.toggle("dark-mode");
