@@ -70,6 +70,21 @@
           <!-- Dynamically populated by JS -->
         </div>
 
+        <!-- Question Count Selector -->
+        <div style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:12px 16px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+          <label for="questionCountSelect" style="font-weight:600; font-size:0.9rem; margin:0;">📝 Number of Exam Questions:</label>
+          <select class="form-control" id="questionCountSelect" style="width:auto; max-width:280px; font-weight:600;">
+            <option value="25" selected>25 Questions (Standard Exam)</option>
+            <option value="30">30 Questions</option>
+            <option value="35">35 Questions</option>
+            <option value="40">40 Questions</option>
+            <option value="45">45 Questions</option>
+            <option value="50">50 Questions (Comprehensive)</option>
+            <option value="ALL">All Available Questions</option>
+          </select>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Starts at 25 questions minimum, continuing in multiples of 5.</span>
+        </div>
+
         <div class="action-row">
           <span id="rankHint" style="color:var(--text-muted); font-size:0.9rem;">
             Select a rank above to start your readiness test.
@@ -133,12 +148,15 @@
     </section>
 
     <!-- ================= SCREEN 2: INTERACTIVE QUIZ ENGINE ================= -->
-    <section id="screen-quiz" class="hidden">
-      <div class="panel">
+    <section id="screen-quiz" class="hidden no-select" style="position:relative; overflow:hidden;">
+      <!-- Dynamic Candidate Security Watermark -->
+      <div class="quiz-watermark" id="quizWatermark"></div>
+
+      <div class="panel" style="position:relative; z-index:2;">
         <div class="quiz-header">
           <div>
             <div class="quiz-rank-title" id="quizRankTitle">ASSISTANT DIRECTOR II</div>
-            <div class="quiz-count" id="quizCountLabel">Question 1 of 15</div>
+            <div class="quiz-count" id="quizCountLabel">Question 1 of 25</div>
           </div>
 
           <div class="timer-pill" id="timerPill">
@@ -155,9 +173,9 @@
           <span class="q-category-tag" id="categoryTag">Educational Law & Policy</span>
         </div>
 
-        <h3 class="question-text" id="questionText">Loading question content...</h3>
+        <h3 class="question-text no-select" id="questionText">Loading question content...</h3>
 
-        <div class="options-list" id="optionsList">
+        <div class="options-list no-select" id="optionsList">
           <!-- 4 Multiple Choice Options Populated by JS -->
         </div>
 
@@ -172,6 +190,26 @@
         </div>
       </div>
     </section>
+
+    <!-- ================= ANTI-CHEATING SECURITY WARNING MODAL ================= -->
+    <div class="modal-overlay" id="quizSecurityModal" style="z-index:999;">
+      <div class="modal-card" style="max-width:480px; border:2px solid var(--crimson-600);">
+        <div class="modal-header" style="background:var(--crimson-700);">
+          <h3 style="color:#FFF;">🛑 EXAM SECURITY WARNING</h3>
+        </div>
+        <div class="modal-body" style="text-align:center; padding:24px;">
+          <div style="font-size:2.8rem; margin-bottom:10px;">📷 🚫</div>
+          <h4 style="color:var(--crimson-700); font-size:1.15rem; margin-bottom:10px;">Screenshot / Text Copying Attempt Blocked</h4>
+          <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
+            Highlighting text, right-clicking, keyboard shortcuts (PrintScreen / Copy), and switching windows are <strong>strictly disabled</strong> during Ghana Education Service promotion examinations.
+          </p>
+          <div style="background:var(--crimson-100); color:var(--crimson-800); font-size:0.82rem; padding:10px; border-radius:var(--radius-sm); margin-top:14px; font-weight:600;">
+            🔒 Security Watermark active. All actions logged under candidate profile.
+          </div>
+          <button class="btn btn-gold" id="securityDismissBtn" style="margin-top:18px; width:100%;">I Understand — Return to Exam</button>
+        </div>
+      </div>
+    </div>
 
     <!-- ================= END QUIZ CONFIRMATION MODAL ================= -->
     <div class="modal-overlay" id="endQuizModal">

@@ -172,6 +172,7 @@
     checkCandidateAuth();
     renderRankCards();
     updateDashboardStats();
+    initExamSecurity();
     attachEventListeners();
   }
 
@@ -307,31 +308,147 @@
     }
   }
 
+  /* ================= ANTI-CHEATING SECURITY SYSTEM ================= */
+  let isSecurityActive = false;
+
+  function renderQuizWatermark() {
+    const watermarkContainer = document.getElementById("quizWatermark");
+    if (!watermarkContainer) return;
+
+    const candidate = StorageManager.getCandidateProfile();
+    const watermarkText = candidate 
+      ? `CONFIDENTIAL — GES PROMOTION EXAM — ${candidate.name} (${candidate.email}) — ${candidate.region || 'Ghana'}` 
+      : `CONFIDENTIAL — GES PROMOTION EXAM PORTAL — UNAUTHORIZED COPYING PROHIBITED`;
+
+    const items = Array(12).fill(`<div class="quiz-watermark-item">${watermarkText}</div>`).join("");
+    watermarkContainer.innerHTML = items;
+  }
+
+  function triggerSecurityWarning() {
+    if (!isSecurityActive) return;
+    const modal = document.getElementById("quizSecurityModal");
+    const quizScreen = document.getElementById("screen-quiz");
+    if (modal) modal.classList.add("active");
+    if (quizScreen) quizScreen.classList.add("blur-security");
+  }
+
+  function initExamSecurity() {
+    const securityDismissBtn = document.getElementById("securityDismissBtn");
+    if (securityDismissBtn) {
+      securityDismissBtn.addEventListener("click", () => {
+        const modal = document.getElementById("quizSecurityModal");
+        const quizScreen = document.getElementById("screen-quiz");
+        if (modal) modal.classList.remove("active");
+        if (quizScreen) quizScreen.classList.remove("blur-security");
+      });
+    }
+
+    // Prevent Right Click Context Menu
+    document.addEventListener("contextmenu", (e) => {
+      if (isSecurityActive) {
+        e.preventDefault();
+        triggerSecurityWarning();
+      }
+    });
+
+    // Prevent Copy, Cut, Paste
+    ["copy", "cut", "paste"].forEach(evt => {
+      document.addEventListener(evt, (e) => {
+        if (isSecurityActive) {
+          e.preventDefault();
+          triggerSecurityWarning();
+        }
+      });
+    });
+
+    // Prevent Keyboard Shortcuts & PrintScreen
+    document.addEventListener("keydown", (e) => {
+      if (!isSecurityActive) return;
+
+      const isMac = navigator.platform && navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+      // PrintScreen / PrtScn key
+      if (e.key === "PrintScreen" || e.keyCode === 44) {
+        e.preventDefault();
+        triggerSecurityWarning();
+      }
+
+      // Ctrl+C, Ctrl+X, Ctrl+U, Ctrl+S, Ctrl+P, Ctrl+A, F12, Ctrl+Shift+I, Win+Shift+S
+      if (
+        (ctrlOrCmd && ["c", "x", "u", "s", "p", "a"].includes(e.key.toLowerCase())) ||
+        e.key === "F12" ||
+        (ctrlOrCmd && e.shiftKey && (e.key.toLowerCase() === "i" || e.key.toLowerCase() === "s"))
+      ) {
+        e.preventDefault();
+        triggerSecurityWarning();
+      }
+    });
+
+    // Detect Tab Switch / App Blur
+    window.addEventListener("blur", () => {
+      if (isSecurityActive) {
+        triggerSecurityWarning();
+      }
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (isSecurityActive && document.hidden) {
+        triggerSecurityWarning();
+      }
+    });
+  }
+
   /* ================= QUIZ ENGINE ================= */
   function startQuiz() {
     const allQuestions = StorageManager.getQuestions();
     
     // Filter questions by rank
+    let pool = [];
     if (currentRank === "ALL") {
-      activeQuestions = [...allQuestions];
+      pool = [...allQuestions];
     } else {
-      activeQuestions = allQuestions.filter(q => q.level === currentRank);
+      pool = allQuestions.filter(q => q.level === currentRank);
     }
 
-    if (activeQuestions.length === 0) {
+    if (pool.length === 0) {
       alert("No questions found for the selected promotion level. Please add questions in the Admin panel.");
       return;
     }
 
-    // Shuffle questions slightly for variety
-    activeQuestions.sort(() => Math.random() - 0.5);
+    // Read selected question count
+    const selectElem = document.getElementById("questionCountSelect");
+    const chosenVal = selectElem ? selectElem.value : "25";
+    
+    let targetCount;
+    if (chosenVal === "ALL") {
+      targetCount = pool.length;
+    } else {
+      targetCount = parseInt(chosenVal, 10) || 25;
+    }
+
+    // Shuffle base pool
+    pool.sort(() => Math.random() - 0.5);
+
+    // If pool has fewer questions than targetCount, cycle/pad questions with unique IDs
+    activeQuestions = [];
+    let poolIdx = 0;
+    for (let i = 0; i < targetCount; i++) {
+      const baseQ = pool[poolIdx % pool.length];
+      activeQuestions.push({ ...baseQ, instanceId: i });
+      poolIdx++;
+    }
 
     currentQIndex = 0;
     examAnswers = [];
     totalTimeUsed = 0;
 
     const rankObj = GES_RANKS.find(r => r.id === currentRank);
-    quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} PROMOTION EXAM`;
+    quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} PROMOTION EXAM (${targetCount} QUESTIONS)`;
+
+    // Activate Anti-Cheating Security Mode
+    isSecurityActive = true;
+    renderQuizWatermark();
 
     showScreen("quiz");
     renderCurrentQuestion();
@@ -464,6 +581,12 @@
 
   /* ================= RESULTS & SCORECARD ================= */
   function finishExam() {
+    isSecurityActive = false;
+    const modal = document.getElementById("quizSecurityModal");
+    const quizScreen = document.getElementById("screen-quiz");
+    if (modal) modal.classList.remove("active");
+    if (quizScreen) quizScreen.classList.remove("blur-security");
+
     clearInterval(timerInterval);
     const total = activeQuestions.length;
     const correctCount = examAnswers.filter(a => a.isCorrect).length;
@@ -975,6 +1098,11 @@
 
     if (endQuizElements.dashboardBtn) {
       endQuizElements.dashboardBtn.addEventListener("click", () => {
+        isSecurityActive = false;
+        const secModal = document.getElementById("quizSecurityModal");
+        const quizScreen = document.getElementById("screen-quiz");
+        if (secModal) secModal.classList.remove("active");
+        if (quizScreen) quizScreen.classList.remove("blur-security");
         endQuizElements.modal.classList.remove("active");
         clearInterval(timerInterval);
         showScreen("select");

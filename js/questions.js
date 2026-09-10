@@ -61,7 +61,6 @@ var DEFAULT_QUESTIONS = [
     levelName: "Assistant Director II",
     category: "Code of Conduct & Ethics",
     q: "A teacher absenting themselves from duty without permission for 10 consecutive working days is liable to which sanction under the GES Code of Ethics?",
-    options: "Under the GES Code of Conduct for Staff, unauthorized absence from duty for 10 consecutive working days constitutes abandonment of post, resulting in summary dismissal or removal from payroll after due process.",
     options: [
       "Written warning letter only",
       "Forfeiture of one month's allowance",
@@ -70,6 +69,36 @@ var DEFAULT_QUESTIONS = [
     ],
     correct: 2,
     explanation: "Under the GES Code of Conduct, an employee who absents themselves from work without approved leave for 10 consecutive working days is deemed to have abandoned their post, forfeiting their appointment."
+  },
+  {
+    id: "ges_ad2_05",
+    level: "AD_II",
+    levelName: "Assistant Director II",
+    category: "Pedagogy & Assessment",
+    q: "Which assessment technique is prioritized in the NaCCA Standards-Based Curriculum for evaluating daily classroom learning?",
+    options: [
+      "Summative end-of-term written exams only",
+      "Formative Assessment for Learning (AfL) incorporating rubric-based portfolios and peer reviews",
+      "External standardized multiple choice tests",
+      "Rote recitation tests"
+    ],
+    correct: 1,
+    explanation: "Assessment for Learning (AfL) uses diagnostic and ongoing formative techniques (portfolios, observations, self/peer assessment) to guide learning rather than relying solely on end-of-term summative tests."
+  },
+  {
+    id: "ges_ad2_06",
+    level: "AD_II",
+    levelName: "Assistant Director II",
+    category: "Inclusive Education",
+    q: "The GES Inclusive Education Policy mandates which action for mainstream public schools regarding learners with special educational needs?",
+    options: [
+      "Refusing admission to learners with mild physical or learning disabilities",
+      "Providing reasonable accommodation, accessible infrastructure, and adapted teaching strategies",
+      "Enrolling all special needs children in separate residential institutions",
+      "Charging additional fees for special needs accommodation"
+    ],
+    correct: 1,
+    explanation: "Ghana's Inclusive Education Policy requires all regular schools to accommodate learners with special needs by adapting teaching methods, learning materials, and physical environments."
   },
 
   // ==================== ASSISTANT DIRECTOR I (AD I) ====================
@@ -133,6 +162,36 @@ var DEFAULT_QUESTIONS = [
     correct: 1,
     explanation: "The NTC Teacher Licensing and Professional Standing framework mandates that teachers accumulate required CPD points over a 3-year cycle through accredited programs and Professional Learning Community (PLC) participation."
   },
+  {
+    id: "ges_ad1_05",
+    level: "AD_I",
+    levelName: "Assistant Director I",
+    category: "Financial Management & Budgeting",
+    q: "Which financial document must be prepared by a school head before executing any operational expenditure under Act 921?",
+    options: [
+      "Annual Internal Audit Report",
+      "Approved Procurement Plan and Cash Flow Warrants",
+      "Bank Statement Reconciliation Statement only",
+      "PTA Minutes Ledger"
+    ],
+    correct: 1,
+    explanation: "Under the Public Financial Management Act (Act 921), all expenditures must be covered by an approved procurement plan, budget allocation, and valid cash release warrant."
+  },
+  {
+    id: "ges_ad1_06",
+    level: "AD_I",
+    levelName: "Assistant Director I",
+    category: "Administrative Communication",
+    q: "When an Assistant Director I issues a formal Query Letter to a subordinate officer, how many working days is the recipient legally given to submit a written response under GES regulations?",
+    options: [
+      "24 hours",
+      "48 hours (2 working days)",
+      "5 working days",
+      "14 working days"
+    ],
+    correct: 1,
+    explanation: "Under standard GES Administrative Procedures and Civil Service norms, a query letter requires the recipient to submit a formal written explanation within 48 hours (or 2 working days)."
+  },
 
   // ==================== DEPUTY DIRECTOR (DD) ====================
   {
@@ -195,6 +254,21 @@ var DEFAULT_QUESTIONS = [
     correct: 1,
     explanation: "Act 651 mandates that trade unions must exhaust negotiation and mediation mechanisms, and serve a mandatory 7-day written notice of intention to strike to the National Labour Commission before taking industrial action."
   },
+  {
+    id: "ges_dd_05",
+    level: "DD",
+    levelName: "Deputy Director",
+    category: "Human Resource Planning",
+    q: "What is the primary function of the GES Staff Establishment Ceiling at the District Directorate level?",
+    options: [
+      "To limit the total number of female teachers in urban schools",
+      "To regulate staff recruitment, posting, and deployment to prevent over-staffing in urban areas and under-staffing in rural districts",
+      "To dictate the price of school uniforms",
+      "To set the maximum pass mark for BECE candidates"
+    ],
+    correct: 1,
+    explanation: "Staff Establishment Ceilings ensure equitable distribution of teaching and non-teaching personnel across districts based on pupil-teacher ratios (PTR) and subject specialization."
+  },
 
   // ==================== DIRECTOR II (DIR II) ====================
   {
@@ -241,6 +315,21 @@ var DEFAULT_QUESTIONS = [
     ],
     correct: 1,
     explanation: "Executive risk management prioritizes learning continuity, emergency preparedness, infrastructure resilience, and digital access during disruptions (such as floods, pandemics, or civil emergencies)."
+  },
+  {
+    id: "ges_d2_04",
+    level: "DIR_II",
+    levelName: "Director II",
+    category: "Executive Financial Oversight",
+    q: "Under Act 921, which sanction applies directly to a Spending Officer who authorizes commitments beyond their approved budgetary allocation without Ministry of Finance clearance?",
+    options: [
+      "Commendation for initiative",
+      "Personal liability for financial loss, surcharge, and administrative disciplinary proceedings",
+      "Transfer to another Ministry without penalty",
+      "Automatic budget increase in the following fiscal year"
+    ],
+    correct: 1,
+    explanation: "Section 96 of Act 921 holds spending officers personally liable for unbudgeted financial commitments, leading to surcharges, loss of office, or legal prosecution."
   }
 ];
 
