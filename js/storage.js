@@ -372,6 +372,191 @@ DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitution
   },
 
   /**
+   * Generate downloadable Microsoft Word Document (.doc) template
+   */
+  generateWordTemplate: function() {
+    return `====================================================================
+  CODECASTIC - GHANA EDUCATION SERVICE PROMOTION QUESTION TEMPLATE
+====================================================================
+Instructions for Administrators:
+1. Fill in your questions following the structured blocks below.
+2. Separate each question with three dashes: ---
+3. Valid Ranks: AD_II (Assistant Director II), AD_I (Assistant Director I), DD (Deputy Director), DIR_II (Director II).
+4. Correct choices: A, B, C, or D.
+
+---
+
+Rank: AD_II
+Category: Educational Law & Policy
+Question: Under Act 1023, which body is legally empowered to license professional teachers in Ghana?
+A) National Council for Curriculum and Assessment (NaCCA)
+B) National Teaching Council (NTC)
+C) National Inspectorate Authority (NaSIA)
+D) Ghana Education Service Council (GESC)
+Correct: B
+Explanation: Act 1023 established the NTC to regulate and issue teaching licenses in Ghana.
+
+---
+
+Rank: AD_I
+Category: Financial Regulations
+Question: Who serves as the Covered Entity Head in a Senior High School under Act 921?
+A) Assistant Headmaster
+B) Headmaster / Headmistress
+C) School Bursar
+D) PTA Chairman
+Correct: B
+Explanation: Act 921 designates the Headmaster/Headmistress as the chief accounting officer.
+
+---
+
+Rank: DD
+Category: Educational Governance
+Question: Which statutory committee oversees basic education delivery at the district level?
+A) District Education Oversight Committee (DEOC)
+B) NAGRAT
+C) CHASS
+D) WAEC
+Correct: A
+Explanation: The DEOC manages educational policy implementation and monitoring at the district level.
+
+---
+
+Rank: DIR_II
+Category: Executive Leadership
+Question: The Free SHS policy incorporates which constitutional directive principle?
+A) Article 25(1)(b) of the 1992 Constitution
+B) Article 106
+C) Article 190
+D) Article 210
+Correct: A
+Explanation: Article 25(1)(b) mandates that secondary education shall be made progressively free.
+`;
+  },
+
+  /**
+   * Extract clean text from Word (.docx/.doc) or text content
+   */
+  extractTextFromWordContent: function(rawContent) {
+    if (typeof rawContent !== "string") return "";
+    
+    // If rawContent contains Word XML tags (<w:t>), extract text inside <w:t> tags
+    if (rawContent.includes("<w:t") || rawContent.includes("<w:p")) {
+      const paragraphs = [];
+      const pMatches = rawContent.match(/<w:p[^>]*>[\s\S]*?<\/w:p>/gi);
+      if (pMatches) {
+        pMatches.forEach(pXml => {
+          const tMatches = pXml.match(/<w:t[^>]*>(.*?)<\/w:t>/gi);
+          if (tMatches) {
+            const pText = tMatches.map(t => t.replace(/<[^>]+>/g, '')).join('');
+            paragraphs.push(pText);
+          }
+        });
+        return paragraphs.join('\n');
+      }
+      return rawContent.replace(/<w:t[^>]*>(.*?)<\/w:t>/gi, '$1\n').replace(/<[^>]+>/g, '');
+    }
+    
+    return rawContent;
+  },
+
+  /**
+   * Import questions from Microsoft Word / Text Document
+   */
+  importWordDocument: function(rawContent) {
+    try {
+      const plainText = this.extractTextFromWordContent(rawContent);
+      const blocks = plainText.split(/(?:---|(?=Rank:)|(?=Level:))/i).map(b => b.trim()).filter(b => b.length > 20);
+
+      const rankMap = {
+        "AD_II": "Assistant Director II",
+        "AD_I": "Assistant Director I",
+        "DD": "Deputy Director",
+        "DIR_II": "Director II",
+        "ASSISTANT_DIRECTOR_II": "Assistant Director II",
+        "ASSISTANT_DIRECTOR_I": "Assistant Director I",
+        "DEPUTY_DIRECTOR": "Deputy Director",
+        "DIRECTOR_II": "Director II"
+      };
+
+      const newQuestions = [];
+
+      blocks.forEach((block, idx) => {
+        const lines = block.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+        
+        let level = "AD_II";
+        let category = "GES Administration";
+        let questionText = "";
+        let optA = "", optB = "", optC = "", optD = "";
+        let correctIdx = 0;
+        let explanation = "GES promotion assessment reference.";
+
+        lines.forEach(line => {
+          const lower = line.toLowerCase();
+          
+          if (lower.startsWith("rank:") || lower.startsWith("level:")) {
+            const val = line.substring(line.indexOf(":") + 1).trim().toUpperCase().replace(/\s+/g, "_");
+            if (rankMap[val]) level = val;
+            else if (val.includes("AD_I") || val.includes("ASSISTANT_DIRECTOR_I")) level = "AD_I";
+            else if (val.includes("AD_II") || val.includes("ASSISTANT_DIRECTOR_II")) level = "AD_II";
+            else if (val.includes("DD") || val.includes("DEPUTY")) level = "DD";
+            else if (val.includes("DIR") || val.includes("DIRECTOR")) level = "DIR_II";
+          } else if (lower.startsWith("category:") || lower.startsWith("topic:")) {
+            category = line.substring(line.indexOf(":") + 1).trim();
+          } else if (lower.startsWith("question:") || lower.startsWith("q:")) {
+            questionText = line.substring(line.indexOf(":") + 1).trim();
+          } else if (lower.startsWith("a)") || lower.startsWith("a.") || lower.startsWith("option a:")) {
+            optA = line.replace(/^(a\)|a\.|option a:)/i, "").trim();
+          } else if (lower.startsWith("b)") || lower.startsWith("b.") || lower.startsWith("option b:")) {
+            optB = line.replace(/^(b\)|b\.|option b:)/i, "").trim();
+          } else if (lower.startsWith("c)") || lower.startsWith("c.") || lower.startsWith("option c:")) {
+            optC = line.replace(/^(c\)|c\.|option c:)/i, "").trim();
+          } else if (lower.startsWith("d)") || lower.startsWith("d.") || lower.startsWith("option d:")) {
+            optD = line.replace(/^(d\)|d\.|option d:)/i, "").trim();
+          } else if (lower.startsWith("correct:") || lower.startsWith("answer:") || lower.startsWith("correct option:")) {
+            const ansVal = line.substring(line.indexOf(":") + 1).trim().toUpperCase();
+            if (ansVal.includes("A") || ansVal === "0") correctIdx = 0;
+            else if (ansVal.includes("B") || ansVal === "1") correctIdx = 1;
+            else if (ansVal.includes("C") || ansVal === "2") correctIdx = 2;
+            else if (ansVal.includes("D") || ansVal === "3") correctIdx = 3;
+          } else if (lower.startsWith("explanation:") || lower.startsWith("rationale:")) {
+            explanation = line.substring(line.indexOf(":") + 1).trim();
+          } else if (!questionText && !line.includes(":") && line.length > 10) {
+            questionText = line;
+          }
+        });
+
+        const levelName = rankMap[level] || "Assistant Director II";
+
+        if (questionText && optA && optB && optC && optD) {
+          newQuestions.push({
+            id: 'codecastic_q_word_' + Date.now() + '_' + idx,
+            level: level,
+            levelName: levelName,
+            category: category,
+            q: questionText,
+            options: [optA, optB, optC, optD],
+            correct: correctIdx,
+            explanation: explanation
+          });
+        }
+      });
+
+      if (newQuestions.length === 0) {
+        return { success: false, error: "No structured question blocks found in the Word document. Please follow the Word template format." };
+      }
+
+      const existing = this.getQuestions();
+      const updatedList = [...newQuestions, ...existing];
+      this.saveQuestions(updatedList);
+
+      return { success: true, count: newQuestions.length };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
    * Get Admin passcode (defaults to 'admin123')
    */
   getAdminPasscode: function() {

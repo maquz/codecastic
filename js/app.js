@@ -710,6 +710,25 @@
       }
     });
 
+    // Download Word Template
+    const downloadWordTemplateBtn = document.getElementById("downloadWordTemplateBtn");
+    if (downloadWordTemplateBtn) {
+      downloadWordTemplateBtn.addEventListener("click", () => {
+        const wordContent = StorageManager.generateWordTemplate();
+        const blob = new Blob([wordContent], { type: "application/msword;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "codecastic_question_template.doc";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 200);
+      });
+    }
+
     // Download CSV Template
     const downloadCsvTemplateBtn = document.getElementById("downloadCsvTemplateBtn");
     if (downloadCsvTemplateBtn) {
@@ -780,7 +799,7 @@
       }
     });
 
-    // Import CSV or JSON File
+    // Import Word, CSV or JSON File
     adminElements.importInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -790,8 +809,16 @@
           const fileName = file.name.toLowerCase();
 
           let res;
-          if (fileName.endsWith(".csv") || fileName.endsWith(".txt")) {
+          if (fileName.endsWith(".doc") || fileName.endsWith(".docx")) {
+            res = StorageManager.importWordDocument(content);
+          } else if (fileName.endsWith(".csv")) {
             res = StorageManager.importCSV(content);
+          } else if (fileName.endsWith(".txt")) {
+            // Try Word format first, fallback to CSV
+            res = StorageManager.importWordDocument(content);
+            if (!res.success) {
+              res = StorageManager.importCSV(content);
+            }
           } else {
             res = StorageManager.importJSON(content);
           }

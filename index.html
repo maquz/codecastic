@@ -296,18 +296,19 @@
         <!-- Bulk Question Templates & Import -->
         <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
           <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Excel/CSV or JSON), fill in your questions, and upload the file to import all questions at once.</p>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions at once.</p>
 
           <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn btn-gold btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
+              <button class="btn btn-gold btn-sm" id="downloadWordTemplateBtn">📝 Word Template (.doc)</button>
+              <button class="btn btn-outline btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
               <button class="btn btn-outline btn-sm" id="downloadJsonTemplateBtn">📄 JSON Template</button>
             </div>
 
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
               <label class="btn btn-primary btn-sm" style="margin:0; cursor:pointer;">
-                📤 Upload Filled File (CSV/JSON)
-                <input type="file" id="adminImportInput" accept=".json,.csv,.txt" style="display:none;">
+                📤 Upload File (Word/CSV/JSON)
+                <input type="file" id="adminImportInput" accept=".doc,.docx,.txt,.csv,.json" style="display:none;">
               </label>
               <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
             </div>
