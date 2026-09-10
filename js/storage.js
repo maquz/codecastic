@@ -36,7 +36,7 @@ var StorageManager = {
   /**
    * Get all questions (custom storage or defaults)
    */
-  getQuestions: function() {
+  getQuestions: function () {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.QUESTIONS);
       if (raw) {
@@ -54,7 +54,7 @@ var StorageManager = {
   /**
    * Save questions list to localStorage
    */
-  saveQuestions: function(questions) {
+  saveQuestions: function (questions) {
     try {
       localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions));
       return true;
@@ -67,7 +67,7 @@ var StorageManager = {
   /**
    * Reset question bank back to original default questions
    */
-  resetQuestionsToDefault: function() {
+  resetQuestionsToDefault: function () {
     try {
       localStorage.removeItem(STORAGE_KEYS.QUESTIONS);
       return DEFAULT_QUESTIONS;
@@ -80,7 +80,7 @@ var StorageManager = {
   /**
    * Add a new question to storage
    */
-  addQuestion: function(newQ) {
+  addQuestion: function (newQ) {
     const list = this.getQuestions();
     newQ.id = 'codecastic_q_' + Date.now();
     list.unshift(newQ);
@@ -91,7 +91,7 @@ var StorageManager = {
   /**
    * Update an existing question by ID
    */
-  updateQuestion: function(id, updatedData) {
+  updateQuestion: function (id, updatedData) {
     const list = this.getQuestions();
     const index = list.findIndex(q => q.id === id);
     if (index !== -1) {
@@ -105,7 +105,7 @@ var StorageManager = {
   /**
    * Delete a question by ID
    */
-  deleteQuestion: function(id) {
+  deleteQuestion: function (id) {
     let list = this.getQuestions();
     const initialLen = list.length;
     list = list.filter(q => q.id !== id);
@@ -119,7 +119,7 @@ var StorageManager = {
   /**
    * Get attempt history from localStorage (filtered by candidateEmail if provided)
    */
-  getAttemptHistory: function(candidateEmail) {
+  getAttemptHistory: function (candidateEmail) {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.ATTEMPTS);
       const history = raw ? JSON.parse(raw) : [];
@@ -137,7 +137,7 @@ var StorageManager = {
   /**
    * Save a completed exam attempt
    */
-  saveAttempt: function(attemptRecord) {
+  saveAttempt: function (attemptRecord) {
     const history = this.getAttemptHistory(); // Full global history
     const activeCandidate = this.getCandidateProfile();
     const record = {
@@ -169,7 +169,7 @@ var StorageManager = {
   /**
    * Clear attempt history (scoped to candidateEmail if provided)
    */
-  clearHistory: function(candidateEmail) {
+  clearHistory: function (candidateEmail) {
     try {
       if (candidateEmail) {
         const raw = localStorage.getItem(STORAGE_KEYS.ATTEMPTS);
@@ -190,7 +190,7 @@ var StorageManager = {
   /**
    * Get high scores and statistics grouped by rank (scoped to candidateEmail if provided)
    */
-  getStats: function(candidateEmail) {
+  getStats: function (candidateEmail) {
     const history = this.getAttemptHistory(candidateEmail);
     if (history.length === 0) {
       return {
@@ -231,7 +231,7 @@ var StorageManager = {
   /**
    * Export all CodeCastic data (Questions & History) as JSON string
    */
-  exportJSON: function() {
+  exportJSON: function () {
     const data = {
       version: "1.0",
       exportDate: new Date().toISOString(),
@@ -244,7 +244,7 @@ var StorageManager = {
   /**
    * Import data from JSON string
    */
-  importJSON: function(jsonString) {
+  importJSON: function (jsonString) {
     try {
       const parsed = JSON.parse(jsonString);
       if (parsed.questions && Array.isArray(parsed.questions)) {
@@ -266,7 +266,7 @@ var StorageManager = {
   /**
    * Generate downloadable CSV template
    */
-  generateCSVTemplate: function() {
+  generateCSVTemplate: function () {
     return `Level,Category,Question,Option A,Option B,Option C,Option D,Correct Option,Explanation
 AD_II,Educational Law & Policy,"Under Act 1023, which body is legally empowered to license teachers in Ghana?",NaCCA,National Teaching Council (NTC),NaSIA,GESC,B,"Act 1023 established the NTC to regulate and issue teaching licenses in Ghana."
 AD_I,Financial Regulations,"Who serves as the Covered Entity Head in a Senior High School under Act 921?",Assistant Headmaster,Headmaster / Headmistress,School Bursar,PTA Chairman,B,"Act 921 designates the Headmaster/Headmistress as the chief accounting officer."
@@ -277,7 +277,7 @@ DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitution
   /**
    * Generate downloadable JSON template
    */
-  generateJSONTemplate: function() {
+  generateJSONTemplate: function () {
     const template = [
       {
         level: "AD_II",
@@ -314,7 +314,7 @@ DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitution
   /**
    * Parse CSV line handling quoted fields
    */
-  parseCSVLine: function(text) {
+  parseCSVLine: function (text) {
     const p = [''];
     let idx = 0;
     let inQuotes = false;
@@ -343,7 +343,7 @@ DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitution
   /**
    * Import questions from CSV string
    */
-  importCSV: function(csvText) {
+  importCSV: function (csvText) {
     try {
       const lines = csvText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
       if (lines.length <= 1) {
@@ -412,7 +412,7 @@ DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitution
   /**
    * Generate downloadable Microsoft Word Document (.doc) template
    */
-  generateWordTemplate: function() {
+  generateWordTemplate: function () {
     return `====================================================================
   CODECASTIC - GHANA EDUCATION SERVICE PROMOTION QUESTION TEMPLATE
 ====================================================================
@@ -475,9 +475,9 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Extract clean text from Word (.docx/.doc) or text content
    */
-  extractTextFromWordContent: function(rawContent) {
+  extractTextFromWordContent: function (rawContent) {
     if (typeof rawContent !== "string") return "";
-    
+
     // If rawContent contains Word XML tags (<w:t>), extract text inside <w:t> tags
     if (rawContent.includes("<w:t") || rawContent.includes("<w:p")) {
       const paragraphs = [];
@@ -494,14 +494,14 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       }
       return rawContent.replace(/<w:t[^>]*>(.*?)<\/w:t>/gi, '$1\n').replace(/<[^>]+>/g, '');
     }
-    
+
     return rawContent;
   },
 
   /**
    * Import questions from Microsoft Word / Text Document
    */
-  importWordDocument: function(rawContent) {
+  importWordDocument: function (rawContent) {
     try {
       const plainText = this.extractTextFromWordContent(rawContent);
       const blocks = plainText.split(/(?:---|(?=Rank:)|(?=Level:))/i).map(b => b.trim()).filter(b => b.length > 20);
@@ -521,7 +521,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
 
       blocks.forEach((block, idx) => {
         const lines = block.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
-        
+
         let level = "AD_II";
         let category = "GES Administration";
         let questionText = "";
@@ -531,7 +531,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
 
         lines.forEach(line => {
           const lower = line.toLowerCase();
-          
+
           if (lower.startsWith("rank:") || lower.startsWith("level:")) {
             const val = line.substring(line.indexOf(":") + 1).trim().toUpperCase().replace(/\s+/g, "_");
             if (rankMap[val]) level = val;
@@ -597,7 +597,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Get Admin passcode (defaults to 'admin123')
    */
-  getAdminPasscode: function() {
+  getAdminPasscode: function () {
     try {
       const saved = localStorage.getItem(STORAGE_KEYS.ADMIN_PASS);
       return saved || "admin123";
@@ -609,14 +609,14 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Verify entered Admin passcode
    */
-  verifyAdminPasscode: function(inputPass) {
+  verifyAdminPasscode: function (inputPass) {
     return inputPass === this.getAdminPasscode();
   },
 
   /**
    * Update Admin passcode
    */
-  setAdminPasscode: function(newPass) {
+  setAdminPasscode: function (newPass) {
     try {
       localStorage.setItem(STORAGE_KEYS.ADMIN_PASS, newPass);
       return true;
@@ -629,7 +629,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Get Candidate Registration Profile
    */
-  getCandidateProfile: function() {
+  getCandidateProfile: function () {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CANDIDATE);
       return raw ? JSON.parse(raw) : null;
@@ -641,7 +641,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Save Candidate Registration Profile
    */
-  saveCandidateProfile: function(profile) {
+  saveCandidateProfile: function (profile) {
     try {
       localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(profile));
       return true;
@@ -654,7 +654,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Clear Candidate Profile (Log out candidate)
    */
-  clearCandidateProfile: function() {
+  clearCandidateProfile: function () {
     try {
       localStorage.removeItem(STORAGE_KEYS.CANDIDATE);
       return true;
@@ -666,7 +666,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Get all registered candidate accounts
    */
-  getCandidateAccounts: function() {
+  getCandidateAccounts: function () {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS);
       return raw ? JSON.parse(raw) : [];
@@ -678,12 +678,12 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Register a new candidate account or update existing by email
    */
-  registerCandidateAccount: function(accountData) {
+  registerCandidateAccount: function (accountData) {
     try {
       const accounts = this.getCandidateAccounts();
       const cleanEmail = (accountData.email || "").toLowerCase().trim();
       const existingIdx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
-      
+
       const updatedAccount = {
         ...accountData,
         email: cleanEmail,
@@ -707,11 +707,11 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Log in candidate with Email and Password
    */
-  loginCandidate: function(email, password) {
+  loginCandidate: function (email, password) {
     const accounts = this.getCandidateAccounts();
     const cleanEmail = (email || "").toLowerCase().trim();
     const found = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password === password);
-    
+
     if (found) {
       this.saveCandidateProfile(found);
       return { success: true, account: found };
@@ -722,11 +722,11 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Recover Candidate Password via Email & Registered Ghana Region
    */
-  recoverCandidatePassword: function(email, region) {
+  recoverCandidatePassword: function (email, region) {
     const accounts = this.getCandidateAccounts();
     const cleanEmail = (email || "").toLowerCase().trim();
     const found = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.region === region);
-    
+
     if (found) {
       return { success: true, password: found.password, name: found.name };
     }
@@ -738,4 +738,37 @@ if (typeof window !== 'undefined') {
   window.GHANA_REGIONS = GHANA_REGIONS;
   window.STORAGE_KEYS = STORAGE_KEYS;
   window.StorageManager = StorageManager;
+}
+// Register candidate to Supabase
+async function registerCandidateSupabase(accountData) {
+  const { data, error } = await supabaseClient
+    .from('candidates')
+    .insert([{
+      full_name: accountData.name,
+      email: accountData.email.toLowerCase(),
+      region: accountData.region,
+      password: accountData.password,
+      assigned_rank: accountData.assignedRank
+    }]);
+  return { data, error };
+}
+
+// Save attempt to Supabase
+async function saveAttemptSupabase(attempt) {
+  const { data, error } = await supabaseClient
+    .from('attempts')
+    .insert([{
+      date_formatted: attempt.dateFormatted,
+      candidate_email: attempt.candidateEmail,
+      candidate_name: attempt.candidateName,
+      candidate_region: attempt.candidateRegion,
+      rank_id: attempt.rankId,
+      rank_name: attempt.rankName,
+      total_questions: attempt.total,
+      correct_count: attempt.correct,
+      percentage: attempt.percentage,
+      pass_status: attempt.pass,
+      time_seconds: attempt.timeSeconds
+    }]);
+  return { data, error };
 }
