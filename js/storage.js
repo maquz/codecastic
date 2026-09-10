@@ -211,11 +211,161 @@ var StorageManager = {
       const parsed = JSON.parse(jsonString);
       if (parsed.questions && Array.isArray(parsed.questions)) {
         this.saveQuestions(parsed.questions);
+      } else if (Array.isArray(parsed)) {
+        // Direct array of question objects
+        this.saveQuestions(parsed);
+        return { success: true, count: parsed.length };
       }
       if (parsed.attempts && Array.isArray(parsed.attempts)) {
         localStorage.setItem(STORAGE_KEYS.ATTEMPTS, JSON.stringify(parsed.attempts));
       }
       return { success: true, count: parsed.questions ? parsed.questions.length : 0 };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Generate downloadable CSV template
+   */
+  generateCSVTemplate: function() {
+    return `Level,Category,Question,Option A,Option B,Option C,Option D,Correct Option,Explanation
+AD_II,Educational Law & Policy,"Under Act 1023, which body is legally empowered to license teachers in Ghana?",NaCCA,National Teaching Council (NTC),NaSIA,GESC,B,"Act 1023 established the NTC to regulate and issue teaching licenses in Ghana."
+AD_I,Financial Regulations,"Who serves as the Covered Entity Head in a Senior High School under Act 921?",Assistant Headmaster,Headmaster / Headmistress,School Bursar,PTA Chairman,B,"Act 921 designates the Headmaster/Headmistress as the chief accounting officer."
+DD,Educational Governance,"Which statutory committee oversees basic education delivery at the district level?",District Education Oversight Committee (DEOC),NAGRAT,CHASS,WAEC,A,"The DEOC manages educational policy implementation and monitoring at the district level."
+DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitutional directive principle?",Article 25(1)(b),Article 106,Article 190,Article 210,A,"Article 25(1)(b) mandates that secondary education shall be made progressively free."`;
+  },
+
+  /**
+   * Generate downloadable JSON template
+   */
+  generateJSONTemplate: function() {
+    const template = [
+      {
+        level: "AD_II",
+        levelName: "Assistant Director II",
+        category: "Educational Law & Policy",
+        q: "Under Act 1023, which body is legally empowered to license teachers in Ghana?",
+        options: [
+          "NaCCA",
+          "National Teaching Council (NTC)",
+          "NaSIA",
+          "GESC"
+        ],
+        correct: 1,
+        explanation: "Act 1023 established the NTC to regulate and issue teaching licenses in Ghana."
+      },
+      {
+        level: "AD_I",
+        levelName: "Assistant Director I",
+        category: "Financial Regulations",
+        q: "Who serves as the Covered Entity Head in a Senior High School under Act 921?",
+        options: [
+          "Assistant Headmaster",
+          "Headmaster / Headmistress",
+          "School Bursar",
+          "PTA Chairman"
+        ],
+        correct: 1,
+        explanation: "Act 921 designates the Headmaster/Headmistress as the chief accounting officer."
+      }
+    ];
+    return JSON.stringify(template, null, 2);
+  },
+
+  /**
+   * Parse CSV line handling quoted fields
+   */
+  parseCSVLine: function(text) {
+    const p = [''];
+    let idx = 0;
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      const next = text[i + 1];
+
+      if (c === '"') {
+        if (inQuotes && next === '"') {
+          p[idx] += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (c === ',' && !inQuotes) {
+        idx++;
+        p.push('');
+      } else {
+        p[idx] += c;
+      }
+    }
+    return p.map(s => s.trim());
+  },
+
+  /**
+   * Import questions from CSV string
+   */
+  importCSV: function(csvText) {
+    try {
+      const lines = csvText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+      if (lines.length <= 1) {
+        return { success: false, error: "CSV file is empty or missing data rows." };
+      }
+
+      const rankMap = {
+        "AD_II": "Assistant Director II",
+        "AD_I": "Assistant Director I",
+        "DD": "Deputy Director",
+        "DIR_II": "Director II"
+      };
+
+      const newQuestions = [];
+      for (let i = 1; i < lines.length; i++) {
+        const cols = this.parseCSVLine(lines[i]);
+        if (cols.length < 8) continue;
+
+        const rawLevel = cols[0].toUpperCase().replace(/\s+/g, "_");
+        const level = rankMap[rawLevel] ? rawLevel : "AD_II";
+        const levelName = rankMap[level] || "Assistant Director II";
+        const category = cols[1] || "GES Administration";
+        const questionText = cols[2];
+        const optA = cols[3];
+        const optB = cols[4];
+        const optC = cols[5];
+        const optD = cols[6];
+
+        let correctIdx = 0;
+        const rawCorrect = (cols[7] || "").trim().toUpperCase();
+        if (rawCorrect === "A" || rawCorrect === "0") correctIdx = 0;
+        else if (rawCorrect === "B" || rawCorrect === "1") correctIdx = 1;
+        else if (rawCorrect === "C" || rawCorrect === "2") correctIdx = 2;
+        else if (rawCorrect === "D" || rawCorrect === "3") correctIdx = 3;
+
+        const explanation = cols[8] || "GES promotion assessment reference.";
+
+        if (questionText && optA && optB && optC && optD) {
+          newQuestions.push({
+            id: 'codecastic_q_' + Date.now() + '_' + i,
+            level: level,
+            levelName: levelName,
+            category: category,
+            q: questionText,
+            options: [optA, optB, optC, optD],
+            correct: correctIdx,
+            explanation: explanation
+          });
+        }
+      }
+
+      if (newQuestions.length === 0) {
+        return { success: false, error: "No valid question rows found in CSV." };
+      }
+
+      const existing = this.getQuestions();
+      const updatedList = [...newQuestions, ...existing];
+      this.saveQuestions(updatedList);
+
+      return { success: true, count: newQuestions.length };
     } catch (e) {
       return { success: false, error: e.message };
     }

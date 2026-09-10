@@ -710,7 +710,45 @@
       }
     });
 
-    // Export & Import
+    // Download CSV Template
+    const downloadCsvTemplateBtn = document.getElementById("downloadCsvTemplateBtn");
+    if (downloadCsvTemplateBtn) {
+      downloadCsvTemplateBtn.addEventListener("click", () => {
+        const csvContent = StorageManager.generateCSVTemplate();
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "codecastic_question_template.csv";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 200);
+      });
+    }
+
+    // Download JSON Template
+    const downloadJsonTemplateBtn = document.getElementById("downloadJsonTemplateBtn");
+    if (downloadJsonTemplateBtn) {
+      downloadJsonTemplateBtn.addEventListener("click", () => {
+        const jsonContent = StorageManager.generateJSONTemplate();
+        const blob = new Blob([jsonContent], { type: "application/json;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "codecastic_question_template.json";
+        document.body.appendChild(a);
+        a.click();
+        setTimeout(() => {
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 200);
+      });
+    }
+
+    // Export Backup
     adminElements.exportBtn.addEventListener("click", () => {
       try {
         const jsonString = StorageManager.exportJSON();
@@ -742,20 +780,31 @@
       }
     });
 
+    // Import CSV or JSON File
     adminElements.importInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
-          const res = StorageManager.importJSON(event.target.result);
+          const content = event.target.result;
+          const fileName = file.name.toLowerCase();
+
+          let res;
+          if (fileName.endsWith(".csv") || fileName.endsWith(".txt")) {
+            res = StorageManager.importCSV(content);
+          } else {
+            res = StorageManager.importJSON(content);
+          }
+
           if (res.success) {
-            alert(`Successfully imported ${res.count} questions into CodeCastic!`);
+            alert(`🎉 Success! Uploaded and imported ${res.count} question(s) into CodeCastic!`);
             renderAdminQuestionsList();
             renderRankCards();
             updateDashboardStats();
           } else {
-            alert("Failed to import JSON file: " + res.error);
+            alert("❌ Failed to import file: " + res.error);
           }
+          e.target.value = "";
         };
         reader.readAsText(file);
       }

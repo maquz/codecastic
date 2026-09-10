@@ -293,18 +293,24 @@
           <!-- Populated by JS -->
         </div>
 
-        <!-- Backup & Import JSON -->
-        <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
-          <div>
-            <strong style="font-size:0.9rem;">Backup & Restore Question Bank</strong>
-            <p style="font-size:0.8rem; color:var(--text-muted);">Export or import JSON files to transfer questions between administrators.</p>
-          </div>
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export JSON</button>
-            <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer;">
-              📤 Import JSON
-              <input type="file" id="adminImportInput" accept=".json" style="display:none;">
-            </label>
+        <!-- Bulk Question Templates & Import -->
+        <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
+          <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Excel/CSV or JSON), fill in your questions, and upload the file to import all questions at once.</p>
+
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="btn btn-gold btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
+              <button class="btn btn-outline btn-sm" id="downloadJsonTemplateBtn">📄 JSON Template</button>
+            </div>
+
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <label class="btn btn-primary btn-sm" style="margin:0; cursor:pointer;">
+                📤 Upload Filled File (CSV/JSON)
+                <input type="file" id="adminImportInput" accept=".json,.csv,.txt" style="display:none;">
+              </label>
+              <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
+            </div>
           </div>
         </div>
 
