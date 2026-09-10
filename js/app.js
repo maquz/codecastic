@@ -399,6 +399,18 @@
     });
   }
 
+  /**
+   * Fisher-Yates array shuffling algorithm for unbiased randomization
+   */
+  function shuffleArray(array) {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
   /* ================= QUIZ ENGINE ================= */
   function startQuiz() {
     const allQuestions = StorageManager.getQuestions();
@@ -427,16 +439,33 @@
       targetCount = parseInt(chosenVal, 10) || 25;
     }
 
-    // Shuffle base pool
-    pool.sort(() => Math.random() - 0.5);
+    // Thoroughly reshuffle the base question pool
+    pool = shuffleArray(pool);
 
-    // If pool has fewer questions than targetCount, cycle/pad questions with unique IDs
+    // If pool has fewer questions than targetCount, cycle/pad questions with unique instance IDs & reshuffled options
     activeQuestions = [];
     let poolIdx = 0;
     for (let i = 0; i < targetCount; i++) {
       const baseQ = pool[poolIdx % pool.length];
-      activeQuestions.push({ ...baseQ, instanceId: i });
+
+      // Reshuffle option choices (A, B, C, D) for this question instance
+      const originalOptions = baseQ.options ? [...baseQ.options] : [];
+      const correctText = originalOptions[baseQ.correct];
+      const shuffledOptions = shuffleArray(originalOptions);
+      const newCorrectIdx = shuffledOptions.indexOf(correctText);
+
+      activeQuestions.push({
+        ...baseQ,
+        instanceId: i,
+        options: shuffledOptions,
+        correct: newCorrectIdx >= 0 ? newCorrectIdx : baseQ.correct
+      });
+
       poolIdx++;
+      if (poolIdx % pool.length === 0) {
+        // Re-shuffle pool on every full cycle for maximum variety
+        pool = shuffleArray(pool);
+      }
     }
 
     currentQIndex = 0;
