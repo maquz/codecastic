@@ -117,12 +117,17 @@ var StorageManager = {
   },
 
   /**
-   * Get attempt history from localStorage
+   * Get attempt history from localStorage (filtered by candidateEmail if provided)
    */
-  getAttemptHistory: function() {
+  getAttemptHistory: function(candidateEmail) {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.ATTEMPTS);
-      return raw ? JSON.parse(raw) : [];
+      const history = raw ? JSON.parse(raw) : [];
+      if (candidateEmail) {
+        const cleanEmail = candidateEmail.toLowerCase().trim();
+        return history.filter(a => a.candidateEmail && a.candidateEmail.toLowerCase() === cleanEmail);
+      }
+      return history;
     } catch (e) {
       console.warn("Error loading attempt history:", e);
       return [];
@@ -133,7 +138,8 @@ var StorageManager = {
    * Save a completed exam attempt
    */
   saveAttempt: function(attemptRecord) {
-    const history = this.getAttemptHistory();
+    const history = this.getAttemptHistory(); // Full global history
+    const activeCandidate = this.getCandidateProfile();
     const record = {
       id: 'att_' + Date.now(),
       timestamp: Date.now(),
@@ -144,11 +150,14 @@ var StorageManager = {
         hour: '2-digit',
         minute: '2-digit'
       }),
+      candidateEmail: activeCandidate ? activeCandidate.email : "guest@codecastic.local",
+      candidateName: activeCandidate ? activeCandidate.name : "Guest Officer",
+      candidateRegion: activeCandidate ? activeCandidate.region : "General",
       ...attemptRecord
     };
     history.unshift(record);
-    // Keep last 100 attempts
-    const trimmed = history.slice(0, 100);
+    // Keep last 200 attempts globally
+    const trimmed = history.slice(0, 200);
     try {
       localStorage.setItem(STORAGE_KEYS.ATTEMPTS, JSON.stringify(trimmed));
     } catch (e) {
@@ -158,11 +167,19 @@ var StorageManager = {
   },
 
   /**
-   * Clear all attempt history
+   * Clear attempt history (scoped to candidateEmail if provided)
    */
-  clearHistory: function() {
+  clearHistory: function(candidateEmail) {
     try {
-      localStorage.removeItem(STORAGE_KEYS.ATTEMPTS);
+      if (candidateEmail) {
+        const raw = localStorage.getItem(STORAGE_KEYS.ATTEMPTS);
+        const history = raw ? JSON.parse(raw) : [];
+        const cleanEmail = candidateEmail.toLowerCase().trim();
+        const remaining = history.filter(a => !a.candidateEmail || a.candidateEmail.toLowerCase() !== cleanEmail);
+        localStorage.setItem(STORAGE_KEYS.ATTEMPTS, JSON.stringify(remaining));
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.ATTEMPTS);
+      }
       return true;
     } catch (e) {
       console.error("Failed to clear history:", e);
@@ -171,10 +188,10 @@ var StorageManager = {
   },
 
   /**
-   * Get high scores and statistics grouped by rank
+   * Get high scores and statistics grouped by rank (scoped to candidateEmail if provided)
    */
-  getStats: function() {
-    const history = this.getAttemptHistory();
+  getStats: function(candidateEmail) {
+    const history = this.getAttemptHistory(candidateEmail);
     if (history.length === 0) {
       return {
         totalAttempts: 0,

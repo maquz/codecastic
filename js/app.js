@@ -268,8 +268,11 @@
   }
 
   function updateDashboardStats() {
-    const stats = StorageManager.getStats();
-    const history = StorageManager.getAttemptHistory();
+    const candidate = StorageManager.getCandidateProfile();
+    const candidateEmail = candidate ? candidate.email : null;
+
+    const stats = StorageManager.getStats(candidateEmail);
+    const history = StorageManager.getAttemptHistory(candidateEmail);
 
     navElements.bestScore.textContent = stats.overallBest > 0 ? `${stats.overallBest}%` : "—";
     navElements.attemptsCount.textContent = stats.totalAttempts;
@@ -567,7 +570,7 @@
   /* ================= ADMIN MANAGEMENT PORTAL ================= */
   function openAdminModal() {
     if (isAdminAuthenticated) {
-      renderAdminQuestionsList();
+      switchAdminTab("questions");
       adminElements.modal.classList.add("active");
     } else {
       adminLoginElements.passInput.value = "";
@@ -575,6 +578,130 @@
       adminLoginElements.modal.classList.add("active");
       setTimeout(() => adminLoginElements.passInput.focus(), 150);
     }
+  }
+
+  function switchAdminTab(tabName) {
+    const tabQBank = document.getElementById("adminTabQBank");
+    const tabCandidates = document.getElementById("adminTabCandidates");
+    const tabAudit = document.getElementById("adminTabAudit");
+
+    const viewQuestions = document.getElementById("adminViewQuestions");
+    const viewCandidates = document.getElementById("adminViewCandidates");
+    const viewAudit = document.getElementById("adminViewAudit");
+
+    [tabQBank, tabCandidates, tabAudit].forEach(btn => {
+      if (btn) {
+        btn.classList.remove("active", "btn-gold");
+        btn.classList.add("btn-outline");
+      }
+    });
+    [viewQuestions, viewCandidates, viewAudit].forEach(view => view?.classList.add("hidden"));
+
+    if (tabName === "questions") {
+      tabQBank?.classList.add("active", "btn-gold");
+      tabQBank?.classList.remove("btn-outline");
+      viewQuestions?.classList.remove("hidden");
+      renderAdminQuestionsList();
+    } else if (tabName === "candidates") {
+      tabCandidates?.classList.add("active", "btn-gold");
+      tabCandidates?.classList.remove("btn-outline");
+      viewCandidates?.classList.remove("hidden");
+      renderAdminCandidatesList();
+    } else if (tabName === "audit") {
+      tabAudit?.classList.add("active", "btn-gold");
+      tabAudit?.classList.remove("btn-outline");
+      viewAudit?.classList.remove("hidden");
+      renderAdminAuditLog();
+    }
+  }
+
+  function renderAdminCandidatesList() {
+    const accounts = StorageManager.getCandidateAccounts();
+    const countBadge = document.getElementById("adminCandidateCount");
+    if (countBadge) countBadge.textContent = accounts.length;
+
+    const searchTerm = (document.getElementById("adminCandidateSearch")?.value || "").toLowerCase().trim();
+    const regionFilter = document.getElementById("adminCandidateRegionFilter")?.value || "ALL";
+
+    let filtered = accounts.filter(acct => {
+      const matchSearch = !searchTerm || 
+        acct.name.toLowerCase().includes(searchTerm) || 
+        acct.email.toLowerCase().includes(searchTerm) || 
+        (acct.region && acct.region.toLowerCase().includes(searchTerm));
+      const matchRegion = regionFilter === "ALL" || acct.region === regionFilter;
+      return matchSearch && matchRegion;
+    });
+
+    const tbody = document.getElementById("adminCandidateTableBody");
+    if (!tbody) return;
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:16px;">No candidate accounts found matching criteria.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(acct => {
+      const cStats = StorageManager.getStats(acct.email);
+      const rankObj = GES_RANKS.find(r => r.id === acct.assignedRank);
+      const rankName = rankObj ? rankObj.name : (acct.assignedRank || "All");
+
+      return `
+        <tr>
+          <td><strong>${acct.name}</strong></td>
+          <td><code>${acct.email}</code></td>
+          <td>${acct.region || 'Ghana'}</td>
+          <td><span class="badge badge-ad2" style="font-size:0.7rem;">${rankName}</span></td>
+          <td>${cStats.totalAttempts}</td>
+          <td><strong>${cStats.overallBest > 0 ? cStats.overallBest + '%' : '—'}</strong></td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function renderAdminAuditLog() {
+    const allAttempts = StorageManager.getAttemptHistory(); // Get all attempts across candidates
+    const countBadge = document.getElementById("adminAuditCount");
+    if (countBadge) countBadge.textContent = allAttempts.length;
+
+    const searchTerm = (document.getElementById("adminAuditSearch")?.value || "").toLowerCase().trim();
+    const regionFilter = document.getElementById("adminAuditRegionFilter")?.value || "ALL";
+
+    let filtered = allAttempts.filter(att => {
+      const matchSearch = !searchTerm || 
+        (att.candidateName && att.candidateName.toLowerCase().includes(searchTerm)) || 
+        (att.candidateEmail && att.candidateEmail.toLowerCase().includes(searchTerm)) ||
+        (att.rankName && att.rankName.toLowerCase().includes(searchTerm));
+      const matchRegion = regionFilter === "ALL" || att.candidateRegion === regionFilter;
+      return matchSearch && matchRegion;
+    });
+
+    const tbody = document.getElementById("adminAuditTableBody");
+    if (!tbody) return;
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:16px;">No examination audit records found matching criteria.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(att => {
+      const rankObj = GES_RANKS.find(r => r.id === att.rankId);
+      const rankName = rankObj ? rankObj.name : att.rankId;
+      const statusPill = att.pass 
+        ? `<span class="pill-pass">PASS</span>` 
+        : `<span class="pill-fail">FAIL</span>`;
+
+      return `
+        <tr>
+          <td>${att.dateFormatted}</td>
+          <td><strong>${att.candidateName || 'Guest Candidate'}</strong></td>
+          <td><code>${att.candidateEmail || 'guest@codecastic.local'}</code></td>
+          <td>${att.candidateRegion || 'General'}</td>
+          <td>${rankName}</td>
+          <td><strong>${att.percentage}%</strong> (${att.correct}/${att.total})</td>
+          <td>${statusPill}</td>
+        </tr>
+      `;
+    }).join("");
   }
 
   function renderAdminQuestionsList() {
@@ -873,14 +1000,48 @@
 
     // Clear History
     selectElements.clearHistoryBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to clear your local attempt history?")) {
-        StorageManager.clearHistory();
+      const candidate = StorageManager.getCandidateProfile();
+      const email = candidate ? candidate.email : null;
+      if (confirm("Are you sure you want to clear your personal attempt history?")) {
+        StorageManager.clearHistory(email);
         updateDashboardStats();
       }
     });
 
     // Admin Modal & Login
     navElements.adminOpenBtn.addEventListener("click", openAdminModal);
+
+    // Admin Tab Navigation
+    const tabQBank = document.getElementById("adminTabQBank");
+    const tabCandidates = document.getElementById("adminTabCandidates");
+    const tabAudit = document.getElementById("adminTabAudit");
+
+    if (tabQBank) tabQBank.addEventListener("click", () => switchAdminTab("questions"));
+    if (tabCandidates) tabCandidates.addEventListener("click", () => switchAdminTab("candidates"));
+    if (tabAudit) tabAudit.addEventListener("click", () => switchAdminTab("audit"));
+
+    // Candidate Master Roster Filters & Search
+    const candidateSearch = document.getElementById("adminCandidateSearch");
+    const candidateRegionFilter = document.getElementById("adminCandidateRegionFilter");
+    if (candidateSearch) candidateSearch.addEventListener("input", renderAdminCandidatesList);
+    if (candidateRegionFilter) candidateRegionFilter.addEventListener("change", renderAdminCandidatesList);
+
+    // Global Exam Audit Log Filters, Search & Clear
+    const auditSearch = document.getElementById("adminAuditSearch");
+    const auditRegionFilter = document.getElementById("adminAuditRegionFilter");
+    const clearAuditBtn = document.getElementById("adminClearAuditBtn");
+    if (auditSearch) auditSearch.addEventListener("input", renderAdminAuditLog);
+    if (auditRegionFilter) auditRegionFilter.addEventListener("change", renderAdminAuditLog);
+    if (clearAuditBtn) {
+      clearAuditBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to clear the global examination audit history for all candidates?")) {
+          StorageManager.clearHistory(null); // Clear all attempts globally
+          renderAdminAuditLog();
+          updateDashboardStats();
+          alert("Global audit history cleared successfully.");
+        }
+      });
+    }
 
     adminLoginElements.closeBtn.addEventListener("click", () => {
       adminLoginElements.modal.classList.remove("active");
@@ -895,7 +1056,7 @@
       if (StorageManager.verifyAdminPasscode(inputPass)) {
         isAdminAuthenticated = true;
         adminLoginElements.modal.classList.remove("active");
-        renderAdminQuestionsList();
+        switchAdminTab("questions");
         adminElements.modal.classList.add("active");
       } else {
         adminLoginElements.errorMsg.classList.remove("hidden");

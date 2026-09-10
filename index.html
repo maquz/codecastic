@@ -447,9 +447,9 @@
 
   <!-- ================= ADMIN MANAGEMENT MODAL ================= -->
   <div class="modal-overlay" id="adminModal">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width:850px;">
       <div class="modal-header">
-        <h3>⚙️ CodeCastic Admin Portal — Question Management</h3>
+        <h3 id="adminPortalTitle">⚙️ CodeCastic Admin Portal</h3>
         <div style="display:flex; gap:8px;">
           <button class="btn btn-outline btn-sm" id="adminLogoutBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">🔒 Log Out</button>
           <button class="btn btn-outline btn-sm" id="adminCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
@@ -457,62 +457,169 @@
       </div>
 
       <div class="modal-body">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <label style="font-weight:600; font-size:0.9rem;">Filter Rank:</label>
-            <select class="form-control" id="adminRankFilter" style="width:auto;">
-              <option value="ALL">All Levels (15)</option>
-              <option value="AD_II">Assistant Director II</option>
-              <option value="AD_I">Assistant Director I</option>
-              <option value="DD">Deputy Director</option>
-              <option value="DIR_II">Director II</option>
-            </select>
-          </div>
-
-          <div style="display:flex; gap:8px;">
-            <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add Question</button>
-            <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
-          </div>
+        <!-- Admin Navigation Tabs -->
+        <div class="admin-tab-nav">
+          <button type="button" class="btn btn-gold btn-sm admin-tab-btn active" id="adminTabQBank">📚 Question Bank</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabCandidates">🎓 Candidate Roster (<span id="adminCandidateCount">0</span>)</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAudit">📊 Exam Audit Log (<span id="adminAuditCount">0</span>)</button>
         </div>
 
-        <!-- Question Bank List -->
-        <div id="adminQuestionsList">
-          <!-- Populated by JS -->
-        </div>
-
-        <!-- Bulk Question Templates & Import -->
-        <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
-          <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions at once.</p>
-
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="btn btn-gold btn-sm" id="downloadWordTemplateBtn">📝 Word Template (.doc)</button>
-              <button class="btn btn-outline btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
-              <button class="btn btn-outline btn-sm" id="downloadJsonTemplateBtn">📄 JSON Template</button>
+        <!-- TAB 1: QUESTION BANK VIEW -->
+        <div id="adminViewQuestions">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <label style="font-weight:600; font-size:0.9rem;">Filter Rank:</label>
+              <select class="form-control" id="adminRankFilter" style="width:auto;">
+                <option value="ALL">All Levels</option>
+                <option value="AD_II">Assistant Director II</option>
+                <option value="AD_I">Assistant Director I</option>
+                <option value="DD">Deputy Director</option>
+                <option value="DIR_II">Director II</option>
+              </select>
             </div>
 
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <label class="btn btn-primary btn-sm" style="margin:0; cursor:pointer;">
-                📤 Upload File (Word/CSV/JSON)
-                <input type="file" id="adminImportInput" accept=".doc,.docx,.txt,.csv,.json" style="display:none;">
-              </label>
-              <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add Question</button>
+              <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
             </div>
+          </div>
+
+          <!-- Question Bank List -->
+          <div id="adminQuestionsList">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Bulk Question Templates & Import -->
+          <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
+            <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions at once.</p>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-gold btn-sm" id="downloadWordTemplateBtn">📝 Word Template (.doc)</button>
+                <button class="btn btn-outline btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
+                <button class="btn btn-outline btn-sm" id="downloadJsonTemplateBtn">📄 JSON Template</button>
+              </div>
+
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <label class="btn btn-primary btn-sm" style="margin:0; cursor:pointer;">
+                  📤 Upload File (Word/CSV/JSON)
+                  <input type="file" id="adminImportInput" accept=".doc,.docx,.txt,.csv,.json" style="display:none;">
+                </label>
+                <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security & Passcode Change -->
+          <div style="margin-top:18px; border-top:1px solid var(--line-color); padding-top:16px;">
+            <strong style="font-size:0.9rem;">Security & Passcode Settings</strong>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
+
+            <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" style="max-width:200px;" required>
+              <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
+              <span id="changePassMsg" style="font-size:0.8rem; color:var(--emerald-600); font-weight:600;"></span>
+            </form>
           </div>
         </div>
 
-        <!-- Security & Passcode Change -->
-        <div style="margin-top:18px; border-top:1px solid var(--line-color); padding-top:16px;">
-          <strong style="font-size:0.9rem;">Security & Passcode Settings</strong>
-          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
+        <!-- TAB 2: CANDIDATE MASTER ROSTER VIEW -->
+        <div id="adminViewCandidates" class="hidden">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <strong style="font-size:1rem;">Registered Candidates Master Roster</strong>
+            <div style="display:flex; gap:8px;">
+              <input type="text" class="form-control" id="adminCandidateSearch" placeholder="Search by name, email, or region..." style="width:260px;">
+              <select class="form-control" id="adminCandidateRegionFilter" style="width:auto;">
+                <option value="ALL">All 16 Regions</option>
+                <option value="Ahafo Region">Ahafo Region</option>
+                <option value="Ashanti Region">Ashanti Region</option>
+                <option value="Bono Region">Bono Region</option>
+                <option value="Bono East Region">Bono East Region</option>
+                <option value="Central Region">Central Region</option>
+                <option value="Eastern Region">Eastern Region</option>
+                <option value="Greater Accra Region">Greater Accra Region</option>
+                <option value="North East Region">North East Region</option>
+                <option value="Northern Region">Northern Region</option>
+                <option value="Oti Region">Oti Region</option>
+                <option value="Savannah Region">Savannah Region</option>
+                <option value="Upper East Region">Upper East Region</option>
+                <option value="Upper West Region">Upper West Region</option>
+                <option value="Volta Region">Volta Region</option>
+                <option value="Western Region">Western Region</option>
+                <option value="Western North Region">Western North Region</option>
+              </select>
+            </div>
+          </div>
 
-          <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" style="max-width:200px;" required>
-            <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
-            <span id="changePassMsg" style="font-size:0.8rem; color:var(--emerald-600); font-weight:600;"></span>
-          </form>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Candidate Name</th>
+                  <th>Email Address</th>
+                  <th>Ghana Region</th>
+                  <th>Assigned Rank</th>
+                  <th>Exams Taken</th>
+                  <th>Best Score</th>
+                </tr>
+              </thead>
+              <tbody id="adminCandidateTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <!-- TAB 3: GLOBAL EXAM AUDIT LOG VIEW -->
+        <div id="adminViewAudit" class="hidden">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <strong style="font-size:1rem;">Global Examination Audit Log</strong>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <input type="text" class="form-control" id="adminAuditSearch" placeholder="Search candidate or email..." style="width:220px;">
+              <select class="form-control" id="adminAuditRegionFilter" style="width:auto;">
+                <option value="ALL">All Regions</option>
+                <option value="Ahafo Region">Ahafo Region</option>
+                <option value="Ashanti Region">Ashanti Region</option>
+                <option value="Bono Region">Bono Region</option>
+                <option value="Bono East Region">Bono East Region</option>
+                <option value="Central Region">Central Region</option>
+                <option value="Eastern Region">Eastern Region</option>
+                <option value="Greater Accra Region">Greater Accra Region</option>
+                <option value="North East Region">North East Region</option>
+                <option value="Northern Region">Northern Region</option>
+                <option value="Oti Region">Oti Region</option>
+                <option value="Savannah Region">Savannah Region</option>
+                <option value="Upper East Region">Upper East Region</option>
+                <option value="Upper West Region">Upper West Region</option>
+                <option value="Volta Region">Volta Region</option>
+                <option value="Western Region">Western Region</option>
+                <option value="Western North Region">Western North Region</option>
+              </select>
+              <button class="btn btn-outline btn-sm" id="adminClearAuditBtn" style="color:var(--crimson-600); border-color:var(--crimson-600);">Clear Audit History</button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Candidate Name</th>
+                  <th>Email</th>
+                  <th>Region</th>
+                  <th>Exam Rank</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminAuditTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
