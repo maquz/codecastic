@@ -23,6 +23,7 @@
 
   /* ================= DOM ELEMENTS ================= */
   const screens = {
+    landing: document.getElementById("screen-landing"),
     select: document.getElementById("screen-select"),
     quiz: document.getElementById("screen-quiz"),
     results: document.getElementById("screen-results")
@@ -187,9 +188,11 @@
   function checkCandidateAuth() {
     const profile = StorageManager.getCandidateProfile();
     if (!profile) {
-      candidateAuthElements.modal.classList.add("active");
+      // Unauthenticated visitor -> Show Public Landing Page & hide candidate chip
       candidateAuthElements.chip.classList.add("hidden");
+      showScreen("landing");
     } else {
+      // Authenticated candidate -> Unlock Candidate Dashboard & show candidate chip
       candidateAuthElements.modal.classList.remove("active");
       candidateAuthElements.chip.classList.remove("hidden");
       candidateAuthElements.nameNav.textContent = profile.name;
@@ -198,6 +201,7 @@
       candidateAuthElements.rankNav.textContent = rankObj ? rankObj.name : profile.assignedRank;
       
       currentRank = profile.assignedRank;
+      showScreen("select");
     }
   }
 
@@ -955,11 +959,19 @@
 
   /* ================= HELPER ROUTER ================= */
   function showScreen(screenKey) {
+    const candidate = StorageManager.getCandidateProfile();
+    // Guard: Prevent unauthenticated users from bypassing auth to access dashboard or quiz
+    if (!candidate && (screenKey === "select" || screenKey === "quiz")) {
+      screenKey = "landing";
+    }
+
     Object.keys(screens).forEach(key => {
-      if (key === screenKey) {
-        screens[key].classList.remove("hidden");
-      } else {
-        screens[key].classList.add("hidden");
+      if (screens[key]) {
+        if (key === screenKey) {
+          screens[key].classList.remove("hidden");
+        } else {
+          screens[key].classList.add("hidden");
+        }
       }
     });
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -967,6 +979,34 @@
 
   /* ================= EVENT LISTENERS ================= */
   function attachEventListeners() {
+    const brandHomeBtn = document.getElementById("brandHomeBtn");
+    if (brandHomeBtn) {
+      brandHomeBtn.addEventListener("click", () => {
+        const candidate = StorageManager.getCandidateProfile();
+        showScreen(candidate ? "select" : "landing");
+      });
+    }
+
+    // Landing Page Action Buttons
+    const landingSignInBtn = document.getElementById("landingSignInBtn");
+    const landingBottomSignInBtn = document.getElementById("landingBottomSignInBtn");
+    const landingAdminBtn = document.getElementById("landingAdminBtn");
+
+    const openAuthModal = () => {
+      candidateAuthElements.loginErrorMsg.classList.add("hidden");
+      candidateAuthElements.regForm.classList.add("hidden");
+      candidateAuthElements.loginForm.classList.remove("hidden");
+      const authHeaderTitle = document.getElementById("authHeaderTitle");
+      const authHeaderSubtitle = document.getElementById("authHeaderSubtitle");
+      if (authHeaderTitle) authHeaderTitle.textContent = "Welcome Back";
+      if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Login to access your GES promotion exam portal";
+      candidateAuthElements.modal.classList.add("active");
+    };
+
+    if (landingSignInBtn) landingSignInBtn.addEventListener("click", openAuthModal);
+    if (landingBottomSignInBtn) landingBottomSignInBtn.addEventListener("click", openAuthModal);
+    if (landingAdminBtn) landingAdminBtn.addEventListener("click", openAdminModal);
+
     // Candidate Auth Card Navigation Links
     const toRegisterLink = document.getElementById("toRegisterLink");
     const toLoginLink = document.getElementById("toLoginLink");
@@ -998,6 +1038,7 @@
       guestBrowseLink.addEventListener("click", (e) => {
         e.preventDefault();
         candidateAuthElements.modal.classList.remove("active");
+        showScreen("landing");
       });
     }
 

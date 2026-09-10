@@ -19,7 +19,7 @@
   <!-- ================= TOP NAVIGATION BAR ================= -->
   <header class="topbar">
     <div class="topbar-inner">
-      <div class="brand">
+      <div class="brand" id="brandHomeBtn" style="cursor:pointer;" title="Return to Portal Home">
         <div class="brand-logo">CC</div>
         <div class="brand-text">
           <h1>CodeCastic</h1>
@@ -52,8 +52,106 @@
   <!-- ================= MAIN APP CONTAINER ================= -->
   <main class="app-container">
 
+    <!-- ================= SCREEN 0: PUBLIC INFORMATION LANDING PAGE ================= -->
+    <section id="screen-landing">
+      <!-- Hero Banner -->
+      <div class="panel landing-hero">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px; flex-wrap:wrap;">
+          <span class="badge badge-ad2" style="font-size:0.8rem; padding:4px 12px;">Official GES Readiness Portal</span>
+          <span style="font-size:0.85rem; color:var(--gold-600); font-weight:700;">Ghana Education Service</span>
+        </div>
+        <h2 class="heading-lg" style="font-size:2.2rem; line-height:1.2;">
+          Master Your GES Promotion Examination With Confidence
+        </h2>
+        <p class="lede-text" style="margin-top:14px; font-size:1.05rem; max-width:780px;">
+          CodeCastic is the authoritative digital prep platform built specifically for Ghanaian education officers preparing for official GES promotion interviews and competitive promotion exams across all 16 regions of Ghana.
+        </p>
+
+        <!-- Promotion Rank Badges Row -->
+        <div style="display:flex; gap:10px; margin-top:20px; flex-wrap:wrap;">
+          <span class="landing-rank-pill">Assistant Director II (AD II)</span>
+          <span class="landing-rank-pill">Assistant Director I (AD I)</span>
+          <span class="landing-rank-pill">Deputy Director (DD)</span>
+          <span class="landing-rank-pill">Director II (Dir II)</span>
+        </div>
+
+        <!-- Primary Call to Actions -->
+        <div style="display:flex; gap:14px; margin-top:28px; flex-wrap:wrap;">
+          <button class="btn btn-gold btn-lg" id="landingSignInBtn" style="padding:14px 28px; font-size:1.05rem;">
+            🎓 Candidate Sign In / Register →
+          </button>
+          <button class="btn btn-outline btn-lg" id="landingAdminBtn" style="padding:14px 24px; font-size:1rem;">
+            ⚙️ Administrator Portal
+          </button>
+        </div>
+      </div>
+
+      <!-- Core Features Grid -->
+      <div class="panel" style="margin-top:24px;">
+        <div class="section-label">
+          <span>Portal Architecture & System Capabilities</span>
+          <span class="rule"></span>
+        </div>
+
+        <div class="landing-feature-grid">
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">📜</div>
+            <h3>Authentic GES Policy & Law</h3>
+            <p>Comprehensive questions covering Act 1023 (NTC/NaSIA/NaCCA), Act 921 (Public Financial Management), Act 663 (Procurement), SPAS appraisals, and NaCCA Standards-Based Curriculum.</p>
+          </div>
+
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">⏱️</div>
+            <h3>Timed Exam Simulations</h3>
+            <p>Experience realistic examination conditions with a 45-second per question timer clock, custom question count selection (25 to 50 questions), and instant feedback with authoritative rationale.</p>
+          </div>
+
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">🔒</div>
+            <h3>Anti-Cheating & Integrity System</h3>
+            <p>Strict security protection featuring anti-text-copying, anti-highlighting, keyboard shortcut blocking, screenshot detection with automatic screen blur, and dynamic candidate watermarking.</p>
+          </div>
+
+          <div class="landing-feature-card">
+            <div class="landing-feature-icon">🏆</div>
+            <h3>Personalized Audit & Certificates</h3>
+            <p>Private personal scorecards, historical attempt performance tracking, and printable Official Certificates of Achievement upon meeting the 70% passing benchmark.</p>
+          </div>
+        </div>
+
+        <!-- How It Works Step Banner -->
+        <div style="margin-top:32px; background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:24px;">
+          <h3 style="font-size:1.2rem; margin-bottom:14px; color:var(--navy-900);">📋 Candidate Examination Process</h3>
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">1. Register Account</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Sign up with your email, Ghana region, and eligible promotion rank level.</div>
+            </div>
+            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">2. Select Exam Test</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Choose your desired question count (25, 30, 35, 40, 50, or All).</div>
+            </div>
+            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">3. Complete Assessment</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Answer timed questions with Fisher-Yates randomized options & instant explanations.</div>
+            </div>
+            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">4. Track & Print Cert</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Review private performance analytics and print your official certificate of excellence.</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:28px;">
+          <button class="btn btn-gold btn-lg" id="landingBottomSignInBtn" style="padding:14px 32px; font-size:1.1rem;">
+            🎓 Launch Candidate Portal & Sign In →
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= SCREEN 1: LEVEL SELECTION & DASHBOARD ================= -->
-    <section id="screen-select">
+    <section id="screen-select" class="hidden">
       <!-- Welcome Panel -->
       <div class="panel">
         <div class="section-label">
