@@ -124,6 +124,15 @@
     dateVal: document.getElementById("certDateVal")
   };
 
+  const endQuizElements = {
+    btn: document.getElementById("endQuizBtn"),
+    modal: document.getElementById("endQuizModal"),
+    closeBtn: document.getElementById("endQuizCloseBtn"),
+    finishBtn: document.getElementById("endQuizFinishBtn"),
+    dashboardBtn: document.getElementById("endQuizDashboardBtn"),
+    resumeBtn: document.getElementById("endQuizResumeBtn")
+  };
+
   /* ================= INITIALIZATION ================= */
   function initApp() {
     setupTheme();
@@ -613,6 +622,40 @@
 
     // Quiz Navigation
     quizElements.nextBtn.addEventListener("click", advanceQuiz);
+
+    // End Quiz Early Listeners
+    if (endQuizElements.btn) {
+      endQuizElements.btn.addEventListener("click", () => {
+        clearInterval(timerInterval);
+        endQuizElements.modal.classList.add("active");
+      });
+    }
+
+    const resumeQuiz = () => {
+      endQuizElements.modal.classList.remove("active");
+      if (!isAnswerLocked && timeLeft > 0) {
+        startQuestionTimer();
+      }
+    };
+
+    if (endQuizElements.closeBtn) endQuizElements.closeBtn.addEventListener("click", resumeQuiz);
+    if (endQuizElements.resumeBtn) endQuizElements.resumeBtn.addEventListener("click", resumeQuiz);
+
+    if (endQuizElements.finishBtn) {
+      endQuizElements.finishBtn.addEventListener("click", () => {
+        endQuizElements.modal.classList.remove("active");
+        finishExam();
+      });
+    }
+
+    if (endQuizElements.dashboardBtn) {
+      endQuizElements.dashboardBtn.addEventListener("click", () => {
+        endQuizElements.modal.classList.remove("active");
+        clearInterval(timerInterval);
+        showScreen("select");
+        updateDashboardStats();
+      });
+    }
 
     // Results Actions
     resultElements.retryBtn.addEventListener("click", startQuiz);

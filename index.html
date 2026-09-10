@@ -161,11 +161,33 @@
           <!-- Instant Feedback Content injected by JS -->
         </div>
 
-        <div class="quiz-footer">
+        <div class="quiz-footer" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+          <button class="btn btn-outline btn-sm" id="endQuizBtn" style="color:var(--crimson-600); border-color:var(--line-color);">🛑 End Quiz Early</button>
           <button class="btn btn-primary hidden" id="nextBtn">Next Question →</button>
         </div>
       </div>
     </section>
+
+    <!-- ================= END QUIZ CONFIRMATION MODAL ================= -->
+    <div class="modal-overlay" id="endQuizModal">
+      <div class="modal-card" style="max-width:460px;">
+        <div class="modal-header">
+          <h3>🛑 End Quiz Early</h3>
+          <button class="btn btn-outline btn-sm" id="endQuizCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
+        </div>
+        <div class="modal-body">
+          <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:16px;">
+            Would you like to finish the exam now and view your scorecard for answered questions, or exit to the main dashboard to continue later?
+          </p>
+
+          <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
+            <button class="btn btn-gold" id="endQuizFinishBtn">📊 View Scorecard for Answered Questions</button>
+            <button class="btn btn-outline" id="endQuizDashboardBtn">🏠 Exit to Main Dashboard</button>
+            <button class="btn btn-outline btn-sm" id="endQuizResumeBtn" style="margin-top:6px;">▶️ Resume Current Question</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- ================= SCREEN 3: SCORECARD & RESULTS ================= -->
     <section id="screen-results" class="hidden">
