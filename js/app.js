@@ -135,14 +135,35 @@
 
   const candidateAuthElements = {
     modal: document.getElementById("candidateAuthModal"),
-    form: document.getElementById("candidateRegForm"),
+    modalTitle: document.getElementById("candidateModalTitle"),
+    regForm: document.getElementById("candidateRegForm"),
+    loginForm: document.getElementById("candidateLoginForm"),
+    tabRegisterBtn: document.getElementById("tabRegisterBtn"),
+    tabLoginBtn: document.getElementById("tabLoginBtn"),
     fullNameInput: document.getElementById("regFullName"),
-    staffIdInput: document.getElementById("regStaffId"),
+    emailInput: document.getElementById("regEmail"),
+    regionInput: document.getElementById("regRegion"),
+    passwordInput: document.getElementById("regPassword"),
     assignedRankInput: document.getElementById("regAssignedRank"),
+    
+    loginEmailInput: document.getElementById("loginEmail"),
+    loginPasswordInput: document.getElementById("loginPassword"),
+    loginErrorMsg: document.getElementById("candidateLoginError"),
+    forgotPassLink: document.getElementById("forgotPassLink"),
+    
     chip: document.getElementById("candidateProfileChip"),
     nameNav: document.getElementById("candidateNameNav"),
     rankNav: document.getElementById("candidateRankNav"),
-    logoutBtn: document.getElementById("candidateLogoutBtn")
+    logoutBtn: document.getElementById("candidateLogoutBtn"),
+
+    // Forgot Password Modal
+    forgotModal: document.getElementById("forgotPassModal"),
+    forgotForm: document.getElementById("forgotPassForm"),
+    forgotEmailInput: document.getElementById("forgotEmail"),
+    forgotRegionInput: document.getElementById("forgotRegion"),
+    forgotResultBox: document.getElementById("forgotResultBox"),
+    forgotCloseBtn: document.getElementById("forgotCloseBtn"),
+    forgotCancelBtn: document.getElementById("forgotCancelBtn")
   };
 
   /* ================= INITIALIZATION ================= */
@@ -533,7 +554,7 @@
     const rankObj = GES_RANKS.find(r => r.id === (latestAttempt ? latestAttempt.rankId : currentRank));
     const candidate = StorageManager.getCandidateProfile();
 
-    certificateElements.recipientName.textContent = candidate ? `${candidate.name} (${candidate.staffId})` : "Ghana Education Service Officer";
+    certificateElements.recipientName.textContent = candidate ? `${candidate.name} — ${candidate.region || 'Ghana'}` : "Ghana Education Service Officer";
     certificateElements.rankName.textContent = rankObj ? rankObj.name : "Promotion Exam";
     certificateElements.scoreVal.textContent = latestAttempt ? latestAttempt.percentage : 100;
     certificateElements.dateVal.textContent = new Date().toLocaleDateString(undefined, {
@@ -667,34 +688,124 @@
 
   /* ================= EVENT LISTENERS ================= */
   function attachEventListeners() {
-    // Candidate Registration Handlers
-    candidateAuthElements.form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const name = candidateAuthElements.fullNameInput.value.trim();
-      const staffId = candidateAuthElements.staffIdInput.value.trim();
-      const assignedRank = candidateAuthElements.assignedRankInput.value;
+    // Candidate Auth Tab Switching
+    if (candidateAuthElements.tabRegisterBtn && candidateAuthElements.tabLoginBtn) {
+      candidateAuthElements.tabRegisterBtn.addEventListener("click", () => {
+        candidateAuthElements.regForm.classList.remove("hidden");
+        candidateAuthElements.loginForm.classList.add("hidden");
+        candidateAuthElements.tabRegisterBtn.className = "btn btn-gold btn-sm";
+        candidateAuthElements.tabLoginBtn.className = "btn btn-outline btn-sm";
+        candidateAuthElements.tabLoginBtn.style.color = "#FFF";
+      });
 
-      if (name && staffId && assignedRank) {
-        StorageManager.saveCandidateProfile({
-          name: name,
-          staffId: staffId,
-          assignedRank: assignedRank,
-          registeredAt: Date.now()
-        });
+      candidateAuthElements.tabLoginBtn.addEventListener("click", () => {
+        candidateAuthElements.regForm.classList.add("hidden");
+        candidateAuthElements.loginForm.classList.remove("hidden");
+        candidateAuthElements.tabLoginBtn.className = "btn btn-gold btn-sm";
+        candidateAuthElements.tabRegisterBtn.className = "btn btn-outline btn-sm";
+        candidateAuthElements.tabRegisterBtn.style.color = "#FFF";
+      });
+    }
 
-        checkCandidateAuth();
-        renderRankCards();
-        updateDashboardStats();
-      }
-    });
+    // Candidate Registration Form Submit
+    if (candidateAuthElements.regForm) {
+      candidateAuthElements.regForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const name = candidateAuthElements.fullNameInput.value.trim();
+        const email = candidateAuthElements.emailInput.value.trim();
+        const region = candidateAuthElements.regionInput.value;
+        const password = candidateAuthElements.passwordInput.value;
+        const assignedRank = candidateAuthElements.assignedRankInput.value;
 
-    candidateAuthElements.logoutBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to exit your candidate profile to re-register?")) {
-        StorageManager.clearCandidateProfile();
-        checkCandidateAuth();
-        renderRankCards();
-      }
-    });
+        if (name && email && region && password && assignedRank) {
+          const res = StorageManager.registerCandidateAccount({
+            name: name,
+            email: email,
+            region: region,
+            password: password,
+            assignedRank: assignedRank
+          });
+
+          if (res.success) {
+            checkCandidateAuth();
+            renderRankCards();
+            updateDashboardStats();
+          } else {
+            alert("Registration Error: " + res.error);
+          }
+        }
+      });
+    }
+
+    // Candidate Sign In Form Submit
+    if (candidateAuthElements.loginForm) {
+      candidateAuthElements.loginForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = candidateAuthElements.loginEmailInput.value.trim();
+        const password = candidateAuthElements.loginPasswordInput.value;
+
+        const res = StorageManager.loginCandidate(email, password);
+        if (res.success) {
+          candidateAuthElements.loginErrorMsg.classList.add("hidden");
+          checkCandidateAuth();
+          renderRankCards();
+          updateDashboardStats();
+        } else {
+          candidateAuthElements.loginErrorMsg.classList.remove("hidden");
+        }
+      });
+    }
+
+    // Candidate Logout / Exit Profile
+    if (candidateAuthElements.logoutBtn) {
+      candidateAuthElements.logoutBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to exit your candidate profile?")) {
+          StorageManager.clearCandidateProfile();
+          checkCandidateAuth();
+          renderRankCards();
+        }
+      });
+    }
+
+    // Forgot Password Link & Modal
+    if (candidateAuthElements.forgotPassLink) {
+      candidateAuthElements.forgotPassLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        candidateAuthElements.forgotResultBox.classList.add("hidden");
+        candidateAuthElements.forgotForm.reset();
+        candidateAuthElements.forgotModal.classList.add("active");
+      });
+    }
+
+    const closeForgotModal = () => {
+      if (candidateAuthElements.forgotModal) candidateAuthElements.forgotModal.classList.remove("active");
+    };
+
+    if (candidateAuthElements.forgotCloseBtn) candidateAuthElements.forgotCloseBtn.addEventListener("click", closeForgotModal);
+    if (candidateAuthElements.forgotCancelBtn) candidateAuthElements.forgotCancelBtn.addEventListener("click", closeForgotModal);
+
+    if (candidateAuthElements.forgotForm) {
+      candidateAuthElements.forgotForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const email = candidateAuthElements.forgotEmailInput.value.trim();
+        const region = candidateAuthElements.forgotRegionInput.value;
+
+        const res = StorageManager.recoverCandidatePassword(email, region);
+        candidateAuthElements.forgotResultBox.classList.remove("hidden");
+        if (res.success) {
+          candidateAuthElements.forgotResultBox.className = "feedback-box correct";
+          candidateAuthElements.forgotResultBox.innerHTML = `
+            <strong>🔑 Account Found!</strong><br>
+            Hello ${res.name}, your recovered password is: <strong style="font-size:1.1rem; color:var(--navy-950);">${res.password}</strong>
+          `;
+        } else {
+          candidateAuthElements.forgotResultBox.className = "feedback-box incorrect";
+          candidateAuthElements.forgotResultBox.innerHTML = `
+            <strong>❌ Recovery Failed:</strong> ${res.error}
+          `;
+        }
+      });
+    }
 
     // Theme toggle
     navElements.themeToggle.addEventListener("click", () => {

@@ -4,12 +4,32 @@
  * high score calculation, and JSON backup/restore.
  */
 
+var GHANA_REGIONS = [
+  "Ahafo Region",
+  "Ashanti Region",
+  "Bono Region",
+  "Bono East Region",
+  "Central Region",
+  "Eastern Region",
+  "Greater Accra Region",
+  "North East Region",
+  "Northern Region",
+  "Oti Region",
+  "Savannah Region",
+  "Upper East Region",
+  "Upper West Region",
+  "Volta Region",
+  "Western Region",
+  "Western North Region"
+];
+
 var STORAGE_KEYS = {
   QUESTIONS: "codecastic_questions_v1",
   ATTEMPTS: "codecastic_attempts_v1",
   ADMIN_PASS: "codecastic_admin_pass_v1",
   SETTINGS: "codecastic_settings_v1",
-  CANDIDATE: "codecastic_candidate_profile_v1"
+  CANDIDATE: "codecastic_candidate_profile_v1",
+  CANDIDATE_ACCOUNTS: "codecastic_candidate_accounts_v1"
 };
 
 var StorageManager = {
@@ -624,10 +644,81 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
     } catch (e) {
       return false;
     }
+  },
+
+  /**
+   * Get all registered candidate accounts
+   */
+  getCandidateAccounts: function() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  },
+
+  /**
+   * Register a new candidate account or update existing by email
+   */
+  registerCandidateAccount: function(accountData) {
+    try {
+      const accounts = this.getCandidateAccounts();
+      const cleanEmail = (accountData.email || "").toLowerCase().trim();
+      const existingIdx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+      
+      const updatedAccount = {
+        ...accountData,
+        email: cleanEmail,
+        registeredAt: Date.now()
+      };
+
+      if (existingIdx !== -1) {
+        accounts[existingIdx] = updatedAccount;
+      } else {
+        accounts.push(updatedAccount);
+      }
+
+      localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+      this.saveCandidateProfile(updatedAccount);
+      return { success: true, account: updatedAccount };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Log in candidate with Email and Password
+   */
+  loginCandidate: function(email, password) {
+    const accounts = this.getCandidateAccounts();
+    const cleanEmail = (email || "").toLowerCase().trim();
+    const found = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password === password);
+    
+    if (found) {
+      this.saveCandidateProfile(found);
+      return { success: true, account: found };
+    }
+    return { success: false, error: "Invalid Email Address or Password. Please check your details." };
+  },
+
+  /**
+   * Recover Candidate Password via Email & Registered Ghana Region
+   */
+  recoverCandidatePassword: function(email, region) {
+    const accounts = this.getCandidateAccounts();
+    const cleanEmail = (email || "").toLowerCase().trim();
+    const found = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.region === region);
+    
+    if (found) {
+      return { success: true, password: found.password, name: found.name };
+    }
+    return { success: false, error: "No candidate account found matching this Email Address and Ghana Region." };
   }
 };
 
 if (typeof window !== 'undefined') {
+  window.GHANA_REGIONS = GHANA_REGIONS;
   window.STORAGE_KEYS = STORAGE_KEYS;
   window.StorageManager = StorageManager;
 }

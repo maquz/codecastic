@@ -253,32 +253,66 @@
 
   </main>
 
-  <!-- ================= CANDIDATE REGISTRATION & ELIGIBILITY MODAL ================= -->
+  <!-- ================= CANDIDATE REGISTRATION & AUTHENTICATION MODAL ================= -->
   <div class="modal-overlay" id="candidateAuthModal">
-    <div class="modal-card" style="max-width:500px;">
-      <div class="modal-header">
-        <h3>🎓 Candidate Registration & Eligibility</h3>
+    <div class="modal-card" style="max-width:520px;">
+      <div class="modal-header" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+        <h3 id="candidateModalTitle">🎓 Candidate Portal Access</h3>
+        <div style="display:flex; gap:6px;">
+          <button type="button" class="btn btn-gold btn-sm" id="tabRegisterBtn">Register</button>
+          <button type="button" class="btn btn-outline btn-sm" id="tabLoginBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">Sign In</button>
+        </div>
       </div>
       <div class="modal-body">
-        <p style="color:var(--text-muted); font-size:0.92rem; margin-bottom:18px;">
-          Welcome to CodeCastic GES Examination Readiness Portal. Please register your candidate profile below. <strong>You will be eligible and allowed access ONLY to your registered promotion rank.</strong>
-        </p>
 
+        <!-- REGISTER FORM -->
         <form id="candidateRegForm">
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:14px;">
+            Register your candidate details below. Access will be restricted exclusively to your selected promotion rank.
+          </p>
+
           <div class="form-group">
             <label for="regFullName">Full Name (Candidate) *</label>
             <input type="text" class="form-control" id="regFullName" placeholder="e.g. Kwaku Mensah Addo" required>
           </div>
 
           <div class="form-group">
-            <label for="regStaffId">GES Staff ID / Reg No. *</label>
-            <input type="text" class="form-control" id="regStaffId" placeholder="e.g. GES-884920" required>
+            <label for="regEmail">Candidate Email Address *</label>
+            <input type="email" class="form-control" id="regEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
+          </div>
+
+          <div class="form-group">
+            <label for="regRegion">Ghana Region *</label>
+            <select class="form-control" id="regRegion" required>
+              <option value="" disabled selected>Select Your Region in Ghana...</option>
+              <option value="Ahafo Region">Ahafo Region</option>
+              <option value="Ashanti Region">Ashanti Region</option>
+              <option value="Bono Region">Bono Region</option>
+              <option value="Bono East Region">Bono East Region</option>
+              <option value="Central Region">Central Region</option>
+              <option value="Eastern Region">Eastern Region</option>
+              <option value="Greater Accra Region">Greater Accra Region</option>
+              <option value="North East Region">North East Region</option>
+              <option value="Northern Region">Northern Region</option>
+              <option value="Oti Region">Oti Region</option>
+              <option value="Savannah Region">Savannah Region</option>
+              <option value="Upper East Region">Upper East Region</option>
+              <option value="Upper West Region">Upper West Region</option>
+              <option value="Volta Region">Volta Region</option>
+              <option value="Western Region">Western Region</option>
+              <option value="Western North Region">Western North Region</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="regPassword">Candidate Password *</label>
+            <input type="password" class="form-control" id="regPassword" placeholder="Create your account password" required>
           </div>
 
           <div class="form-group">
             <label for="regAssignedRank">Eligible Promotion Examination Rank *</label>
             <select class="form-control" id="regAssignedRank" required>
-              <option value="" disabled selected>Select Your Registered Promotion Rank...</option>
+              <option value="" disabled selected>Select Your Promotion Examination Rank...</option>
               <option value="AD_II">Assistant Director II (AD II)</option>
               <option value="AD_I">Assistant Director I (AD I)</option>
               <option value="DD">Deputy Director (DD)</option>
@@ -286,12 +320,93 @@
             </select>
           </div>
 
-          <div style="background:var(--paper-bg); border:1px solid var(--line-color); padding:12px 14px; border-radius:var(--radius-sm); margin-top:16px; font-size:0.85rem; color:var(--gold-600);">
-            🔒 <strong>Strict Rank Eligibility:</strong> Access will be restricted exclusively to your selected promotion rank.
+          <div style="background:var(--paper-bg); border:1px solid var(--line-color); padding:10px 12px; border-radius:var(--radius-sm); margin-top:14px; font-size:0.82rem; color:var(--gold-600);">
+            🔒 <strong>Strict Rank Eligibility:</strong> Access will be unlocked ONLY for your selected promotion rank.
           </div>
 
-          <div style="display:flex; justify-content:flex-end; margin-top:20px;">
-            <button type="submit" class="btn btn-gold" style="width:100%;">Complete Registration & Enter Exam Portal →</button>
+          <div style="display:flex; justify-content:flex-end; margin-top:18px;">
+            <button type="submit" class="btn btn-gold" style="width:100%;">Register Account & Enter Exam Portal →</button>
+          </div>
+        </form>
+
+        <!-- SIGN IN FORM -->
+        <form id="candidateLoginForm" class="hidden">
+          <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:14px;">
+            Sign in with your registered candidate email and password.
+          </p>
+
+          <div class="form-group">
+            <label for="loginEmail">Candidate Email Address</label>
+            <input type="email" class="form-control" id="loginEmail" placeholder="Enter registered email" required>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label for="loginPassword" style="margin:0;">Account Password</label>
+              <a href="#" id="forgotPassLink" style="font-size:0.82rem; color:var(--gold-600); font-weight:600;">🔑 Forgot Password?</a>
+            </div>
+            <input type="password" class="form-control" id="loginPassword" placeholder="Enter account password" required>
+          </div>
+
+          <div class="feedback-box incorrect hidden" id="candidateLoginError" style="margin-top:10px; margin-bottom:12px; padding:10px 12px;">
+            ⚠️ Invalid email or password.
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; margin-top:18px;">
+            <button type="submit" class="btn btn-gold" style="width:100%;">Sign In & Launch Dashboard →</button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FORGOT PASSWORD RECOVERY MODAL ================= -->
+  <div class="modal-overlay" id="forgotPassModal">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header">
+        <h3>🔑 Candidate Password Recovery</h3>
+        <button class="btn btn-outline btn-sm" id="forgotCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:14px;">
+          Enter your registered Email Address and select your Ghana Region to recover your account password.
+        </p>
+
+        <form id="forgotPassForm">
+          <div class="form-group">
+            <label for="forgotEmail">Registered Email Address</label>
+            <input type="email" class="form-control" id="forgotEmail" placeholder="Enter your registered email" required>
+          </div>
+
+          <div class="form-group">
+            <label for="forgotRegion">Registered Ghana Region</label>
+            <select class="form-control" id="forgotRegion" required>
+              <option value="" disabled selected>Select Your Registered Region...</option>
+              <option value="Ahafo Region">Ahafo Region</option>
+              <option value="Ashanti Region">Ashanti Region</option>
+              <option value="Bono Region">Bono Region</option>
+              <option value="Bono East Region">Bono East Region</option>
+              <option value="Central Region">Central Region</option>
+              <option value="Eastern Region">Eastern Region</option>
+              <option value="Greater Accra Region">Greater Accra Region</option>
+              <option value="North East Region">North East Region</option>
+              <option value="Northern Region">Northern Region</option>
+              <option value="Oti Region">Oti Region</option>
+              <option value="Savannah Region">Savannah Region</option>
+              <option value="Upper East Region">Upper East Region</option>
+              <option value="Upper West Region">Upper West Region</option>
+              <option value="Volta Region">Volta Region</option>
+              <option value="Western Region">Western Region</option>
+              <option value="Western North Region">Western North Region</option>
+            </select>
+          </div>
+
+          <div id="forgotResultBox" class="hidden" style="margin-top:12px; padding:12px; border-radius:var(--radius-sm); font-size:0.9rem;"></div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+            <button type="button" class="btn btn-outline" id="forgotCancelBtn">Back to Login</button>
+            <button type="submit" class="btn btn-gold" id="forgotSubmitBtn">Recover Password</button>
           </div>
         </form>
       </div>
