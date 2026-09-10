@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeCastic — Ghana Education Service Promotion Exam Portal</title>
+  <meta name="description" content="Online readiness exam portal for Ghana Education Service workers preparing for Assistant Director II, Assistant Director I, Deputy Director, and Director II promotion exams.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ================= TOP NAVIGATION BAR ================= -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-logo">CC</div>
+        <div class="brand-text">
+          <h1>CodeCastic</h1>
+          <span>GES Promotion Exam Portal</span>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <div class="stat-chip" title="Personal Best Percentage">
+          <span>Best:</span> <strong id="navBestScore">—</strong>
+        </div>
+        <div class="stat-chip" title="Total Exam Attempts">
+          <span>Attempts:</span> <strong id="navAttemptsCount">0</strong>
+        </div>
+        <button class="btn btn-outline btn-sm" id="themeToggle" title="Toggle Light/Dark Theme" style="color:#FFF; border-color:rgba(255,255,255,0.3);">
+          🌙 Theme
+        </button>
+        <button class="btn btn-gold btn-sm" id="adminOpenBtn" title="Open Admin Portal">
+          ⚙️ Admin
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN APP CONTAINER ================= -->
+  <main class="app-container">
+
+    <!-- ================= SCREEN 1: LEVEL SELECTION & DASHBOARD ================= -->
+    <section id="screen-select">
+      <!-- Welcome Panel -->
+      <div class="panel">
+        <div class="section-label">
+          <span>Select Examination Rank</span>
+          <span class="rule"></span>
+        </div>
+        <h2 class="heading-lg">Ghana Education Service Promotion Exams</h2>
+        <p class="lede-text">
+          Prepare for your official GES promotion interview and written examination. Choose your target promotion rank below to begin a timed, 45-second per question simulation with instant feedback and authoritative explanations.
+        </p>
+
+        <!-- Rank Grid -->
+        <div class="rank-grid" id="rankGrid">
+          <!-- Dynamically populated by JS -->
+        </div>
+
+        <div class="action-row">
+          <span id="rankHint" style="color:var(--text-muted); font-size:0.9rem;">
+            Select a rank above to start your readiness test.
+          </span>
+          <button class="btn btn-gold" id="startBtn" disabled>
+            🚀 Begin Promotion Exam
+          </button>
+        </div>
+      </div>
+
+      <!-- History & Stats Panel -->
+      <div class="panel" style="margin-top:24px;">
+        <div class="section-label">
+          <span>Performance Record & History</span>
+          <span class="rule"></span>
+        </div>
+        
+        <div class="stats-summary">
+          <div class="stat-box">
+            <div class="val" id="statTotal">0</div>
+            <div class="lbl">Total Attempts</div>
+          </div>
+          <div class="stat-box">
+            <div class="val" id="statPassRate">0%</div>
+            <div class="lbl">Pass Rate (≥70%)</div>
+          </div>
+          <div class="stat-box">
+            <div class="val" id="statBest">0%</div>
+            <div class="lbl">Personal Best</div>
+          </div>
+          <div class="stat-box">
+            <div class="val">45s</div>
+            <div class="lbl">Clock / Question</div>
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+          <h3 style="font-size:1.1rem;">Recent Exam Attempts</h3>
+          <button class="btn btn-outline btn-sm" id="clearHistoryBtn" style="font-size:0.78rem;">Clear History</button>
+        </div>
+
+        <div id="historyEmptyState" class="hidden" style="color:var(--text-muted); padding:16px 0;">
+          No attempt history saved yet. Complete your first exam to track your progress!
+        </div>
+
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Rank Level</th>
+              <th>Score</th>
+              <th>Percentage</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+            <!-- Populated by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ================= SCREEN 2: INTERACTIVE QUIZ ENGINE ================= -->
+    <section id="screen-quiz" class="hidden">
+      <div class="panel">
+        <div class="quiz-header">
+          <div>
+            <div class="quiz-rank-title" id="quizRankTitle">ASSISTANT DIRECTOR II</div>
+            <div class="quiz-count" id="quizCountLabel">Question 1 of 15</div>
+          </div>
+
+          <div class="timer-pill" id="timerPill">
+            <span class="timer-indicator"></span>
+            <span id="timerVal">45</span>s
+          </div>
+        </div>
+
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="progressFill" style="width: 0%;"></div>
+        </div>
+
+        <div>
+          <span class="q-category-tag" id="categoryTag">Educational Law & Policy</span>
+        </div>
+
+        <h3 class="question-text" id="questionText">Loading question content...</h3>
+
+        <div class="options-list" id="optionsList">
+          <!-- 4 Multiple Choice Options Populated by JS -->
+        </div>
+
+        <!-- Instant Feedback Callout -->
+        <div class="feedback-box hidden" id="feedbackBox">
+          <!-- Instant Feedback Content injected by JS -->
+        </div>
+
+        <div class="quiz-footer">
+          <button class="btn btn-primary hidden" id="nextBtn">Next Question →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= SCREEN 3: SCORECARD & RESULTS ================= -->
+    <section id="screen-results" class="hidden">
+      <div class="panel">
+        <div class="results-hero">
+          <div class="score-ring-container">
+            <svg width="140" height="140" viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="58" fill="none" stroke="var(--line-color)" stroke-width="12"/>
+              <circle id="ringProgress" cx="70" cy="70" r="58" fill="none" stroke="var(--gold-500)" stroke-width="12" stroke-linecap="round"/>
+            </svg>
+            <div class="score-ring-val" id="ringVal">0%</div>
+          </div>
+
+          <div class="results-meta">
+            <div class="quiz-rank-title" id="resultRankTitle">PROMOTION EXAM SCORECARD</div>
+            <h2 class="heading-lg">Assessment Complete</h2>
+            <p id="resultSummaryText">You scored 0 out of 15 questions correctly.</p>
+            <span class="result-status-tag" id="statusTag">PASS</span>
+          </div>
+        </div>
+
+        <!-- Score Metrics Grid -->
+        <div class="stats-summary" style="margin-top:32px;">
+          <div class="stat-box">
+            <div class="val" id="statCorrect" style="color:var(--emerald-600);">0</div>
+            <div class="lbl">Correct Answers</div>
+          </div>
+          <div class="stat-box">
+            <div class="val" id="statIncorrect" style="color:var(--crimson-600);">0</div>
+            <div class="lbl">Incorrect Answers</div>
+          </div>
+          <div class="stat-box">
+            <div class="val" id="statTime">0:00</div>
+            <div class="lbl">Time Elapsed</div>
+          </div>
+          <div class="stat-box">
+            <div class="val">70%</div>
+            <div class="lbl">Passing Benchmark</div>
+          </div>
+        </div>
+
+        <!-- Detailed Breakdown -->
+        <h3 class="breakdown-title">Itemized Answer Review & Explanations</h3>
+        <div id="breakdownList">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-row" style="margin-top:32px;">
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <button class="btn btn-gold" id="retryBtn">🔄 Retake Exam</button>
+            <button class="btn btn-outline" id="homeBtn">🏠 Choose Another Rank</button>
+          </div>
+          <button class="btn btn-primary hidden" id="certificateBtn">🏆 View Certificate</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= ADMIN LOGIN MODAL ================= -->
+  <div class="modal-overlay" id="adminLoginModal">
+    <div class="modal-card" style="max-width:440px;">
+      <div class="modal-header">
+        <h3>🔐 Admin Authentication</h3>
+        <button class="btn btn-outline btn-sm" id="adminLoginCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
+          Please enter the administrator passcode to manage quiz levels, questions, and backups.
+          <br><small style="color:var(--gold-600); font-weight:600;">(Default Passcode: admin123)</small>
+        </p>
+
+        <form id="adminLoginForm">
+          <div class="form-group">
+            <label for="adminPassInput">Admin Passcode</label>
+            <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin passcode" required autofocus>
+          </div>
+
+          <div class="feedback-box incorrect hidden" id="adminLoginError" style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
+            ⚠️ Incorrect passcode. Please try again.
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
+            <button type="button" class="btn btn-outline" id="adminLoginCancelBtn">Cancel</button>
+            <button type="submit" class="btn btn-gold" id="adminLoginSubmitBtn">Unlock Portal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ADMIN MANAGEMENT MODAL ================= -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>⚙️ CodeCastic Admin Portal — Question Management</h3>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-outline btn-sm" id="adminLogoutBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">🔒 Log Out</button>
+          <button class="btn btn-outline btn-sm" id="adminCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+          <div style="display:flex; align-items:center; gap:10px;">
+            <label style="font-weight:600; font-size:0.9rem;">Filter Rank:</label>
+            <select class="form-control" id="adminRankFilter" style="width:auto;">
+              <option value="ALL">All Levels (15)</option>
+              <option value="AD_II">Assistant Director II</option>
+              <option value="AD_I">Assistant Director I</option>
+              <option value="DD">Deputy Director</option>
+              <option value="DIR_II">Director II</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add Question</button>
+            <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
+          </div>
+        </div>
+
+        <!-- Question Bank List -->
+        <div id="adminQuestionsList">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- Backup & Import JSON -->
+        <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+          <div>
+            <strong style="font-size:0.9rem;">Backup & Restore Question Bank</strong>
+            <p style="font-size:0.8rem; color:var(--text-muted);">Export or import JSON files to transfer questions between administrators.</p>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export JSON</button>
+            <label class="btn btn-outline btn-sm" style="margin:0; cursor:pointer;">
+              📤 Import JSON
+              <input type="file" id="adminImportInput" accept=".json" style="display:none;">
+            </label>
+          </div>
+        </div>
+
+        <!-- Security & Passcode Change -->
+        <div style="margin-top:18px; border-top:1px solid var(--line-color); padding-top:16px;">
+          <strong style="font-size:0.9rem;">Security & Passcode Settings</strong>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
+
+          <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" style="max-width:200px;" required>
+            <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
+            <span id="changePassMsg" style="font-size:0.8rem; color:var(--emerald-600); font-weight:600;"></span>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ADD / EDIT QUESTION FORM MODAL ================= -->
+  <div class="modal-overlay" id="qFormModal">
+    <div class="modal-card" style="max-width:600px;">
+      <div class="modal-header">
+        <h3 id="qFormTitle">Add New Promotion Question</h3>
+        <button class="btn btn-outline btn-sm" id="qFormCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="qForm">
+          <div class="form-group">
+            <label>Promotion Rank Level *</label>
+            <select class="form-control" id="inputLevel" required>
+              <option value="AD_II">Assistant Director II</option>
+              <option value="AD_I">Assistant Director I</option>
+              <option value="DD">Deputy Director</option>
+              <option value="DIR_II">Director II</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Category / Topic Area</label>
+            <input type="text" class="form-control" id="inputCategory" placeholder="e.g. Public Financial Management, NaCCA Curriculum" required>
+          </div>
+
+          <div class="form-group">
+            <label>Question Text *</label>
+            <textarea class="form-control" id="inputQ" rows="3" placeholder="Enter the full question statement..." required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Option A *</label>
+            <input type="text" class="form-control" id="inputOpt0" required>
+          </div>
+
+          <div class="form-group">
+            <label>Option B *</label>
+            <input type="text" class="form-control" id="inputOpt1" required>
+          </div>
+
+          <div class="form-group">
+            <label>Option C *</label>
+            <input type="text" class="form-control" id="inputOpt2" required>
+          </div>
+
+          <div class="form-group">
+            <label>Option D *</label>
+            <input type="text" class="form-control" id="inputOpt3" required>
+          </div>
+
+          <div class="form-group">
+            <label>Correct Answer Index *</label>
+            <select class="form-control" id="inputCorrect" required>
+              <option value="0">Option A</option>
+              <option value="1">Option B</option>
+              <option value="2">Option C</option>
+              <option value="3">Option D</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Authoritative Explanation *</label>
+            <textarea class="form-control" id="inputExplanation" rows="3" placeholder="Explain why this is the correct answer according to GES policies or Ghanaian law..." required></textarea>
+          </div>
+
+          <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
+            <button type="button" class="btn btn-outline" id="qFormCancelBtn">Cancel</button>
+            <button type="submit" class="btn btn-gold">Save Question</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= CERTIFICATE MODAL ================= -->
+  <div class="modal-overlay" id="certificateModal">
+    <div class="modal-card" style="max-width:700px;">
+      <div class="modal-header">
+        <h3>🏆 Official Certificate of Achievement</h3>
+        <button class="btn btn-outline btn-sm" id="certCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="certificate-frame">
+          <div style="color:var(--gold-600); font-weight:800; letter-spacing:0.1em; font-size:0.85rem; text-transform:uppercase;">Ghana Education Service Promotion Portal</div>
+          <h2>Certificate of Exam Excellence</h2>
+          <p>This is to certify that</p>
+          <div class="certificate-name" id="certRecipientName">GES Officer</div>
+          <p>has successfully passed the simulated promotion assessment for</p>
+          <h3 id="certRankName" style="color:var(--navy-900); font-size:1.3rem; margin-top:8px;">Assistant Director I</h3>
+          <p style="margin-top:14px; font-size:1rem;">Score Achieved: <strong id="certScoreVal">90</strong>% (Passing Benchmark: 70%)</p>
+          <div style="margin-top:24px; font-size:0.85rem; color:var(--text-muted);" id="certDateVal">September 10, 2026</div>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+          <button class="btn btn-primary" id="certPrintBtn">🖨️ Print / Download Certificate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer>
+    <p>CodeCastic &copy; 2026 — Ghana Education Service Promotion Exam Preparation Portal.</p>
+    <p style="font-size:0.78rem; margin-top:4px; opacity:0.8;">Scores, attempt records, and customized questions are stored locally in your browser.</p>
+  </footer>
+
+  <!-- ================= SCRIPTS ================= -->
+  <script src="js/questions.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
