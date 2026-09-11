@@ -933,30 +933,43 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Log in candidate with Email and Password across local & cloud (Supabase)
    */
+  /**
+   * Log in candidate with Email and Password across local & cloud (Supabase)
+   */
   loginCandidate: async function (email, password) {
     const cleanEmail = (email || "").toLowerCase().trim();
+    const cleanPass = (password || "").trim();
     const accounts = this.getCandidateAccounts();
-    const foundLocal = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password === password);
+    const foundLocal = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password.trim() === cleanPass);
 
     if (foundLocal) {
       this.saveCandidateProfile(foundLocal);
       return { success: true, account: foundLocal };
     }
 
-    // Try cloud lookup on Supabase for cross-device login
+    // First try fetching all cloud accounts to ensure cache is up to date
+    await this.fetchCloudAccountsSupabase();
+    const updatedAccounts = this.getCandidateAccounts();
+    const reFoundLocal = updatedAccounts.find(a => a.email.toLowerCase() === cleanEmail && a.password.trim() === cleanPass);
+    if (reFoundLocal) {
+      this.saveCandidateProfile(reFoundLocal);
+      return { success: true, account: reFoundLocal };
+    }
+
+    // Direct cloud lookup on Supabase for cross-device login
     if (typeof supabaseClient !== 'undefined' && supabaseClient) {
       try {
         const { data, error } = await supabaseClient
           .from('candidates')
           .select('*')
-          .eq('email', cleanEmail)
-          .eq('password', password)
+          .ilike('email', cleanEmail)
+          .eq('password', cleanPass)
           .maybeSingle();
 
         if (data) {
           const cloudAccount = {
             name: data.full_name,
-            email: data.email,
+            email: data.email.toLowerCase(),
             region: data.region,
             password: data.password,
             assignedRank: data.assigned_rank,
@@ -964,10 +977,10 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
           };
 
           // Cache locally on this device
-          const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
-          if (idx !== -1) accounts[idx] = cloudAccount;
-          else accounts.push(cloudAccount);
-          localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+          const idx = updatedAccounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+          if (idx !== -1) updatedAccounts[idx] = cloudAccount;
+          else updatedAccounts.push(cloudAccount);
+          localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(updatedAccounts));
           this.saveCandidateProfile(cloudAccount);
 
           return { success: true, account: cloudAccount };
@@ -992,20 +1005,28 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       return { success: true, password: foundLocal.password, name: foundLocal.name };
     }
 
-    // Try cloud lookup on Supabase for cross-device recovery
+    // Refresh cloud accounts cache first
+    await this.fetchCloudAccountsSupabase();
+    const updatedAccounts = this.getCandidateAccounts();
+    const reFoundLocal = updatedAccounts.find(a => a.email.toLowerCase() === cleanEmail && a.region === region);
+    if (reFoundLocal) {
+      return { success: true, password: reFoundLocal.password, name: reFoundLocal.name };
+    }
+
+    // Direct cloud lookup on Supabase for cross-device recovery
     if (typeof supabaseClient !== 'undefined' && supabaseClient) {
       try {
         const { data, error } = await supabaseClient
           .from('candidates')
           .select('*')
-          .eq('email', cleanEmail)
+          .ilike('email', cleanEmail)
           .eq('region', region)
           .maybeSingle();
 
         if (data) {
           const cloudAccount = {
             name: data.full_name,
-            email: data.email,
+            email: data.email.toLowerCase(),
             region: data.region,
             password: data.password,
             assignedRank: data.assigned_rank,
@@ -1013,10 +1034,10 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
           };
 
           // Cache locally
-          const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
-          if (idx !== -1) accounts[idx] = cloudAccount;
-          else accounts.push(cloudAccount);
-          localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+          const idx = updatedAccounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+          if (idx !== -1) updatedAccounts[idx] = cloudAccount;
+          else updatedAccounts.push(cloudAccount);
+          localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(updatedAccounts));
 
           return { success: true, password: data.password, name: data.full_name };
         }
@@ -1026,6 +1047,74 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
     }
 
     return { success: false, error: "No candidate account found matching this Email Address and Ghana Region." };
+  },
+
+  /**
+   * Sync all local candidate accounts to Supabase cloud database
+   */
+  syncLocalAccountsToSupabase: async function () {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return { success: false, error: "Supabase not connected" };
+    try {
+      const accounts = this.getCandidateAccounts();
+      if (accounts.length === 0) return { success: true, count: 0 };
+
+      const records = accounts.map(a => ({
+        full_name: a.name,
+        email: (a.email || "").toLowerCase().trim(),
+        region: a.region,
+        password: a.password,
+        assigned_rank: a.assignedRank
+      }));
+
+      const { data, error } = await supabaseClient
+        .from('candidates')
+        .upsert(records, { onConflict: 'email' });
+
+      if (error) {
+        console.warn("Supabase bulk sync error:", error);
+        return { success: false, error: error.message };
+      }
+      return { success: true, count: accounts.length };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Fetch all candidate accounts from Supabase cloud into local storage
+   */
+  fetchCloudAccountsSupabase: async function () {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return [];
+    try {
+      const { data, error } = await supabaseClient
+        .from('candidates')
+        .select('*');
+
+      if (data && Array.isArray(data) && data.length > 0) {
+        const accounts = this.getCandidateAccounts();
+        data.forEach(item => {
+          const cleanEmail = (item.email || "").toLowerCase().trim();
+          const cloudAccount = {
+            name: item.full_name,
+            email: cleanEmail,
+            region: item.region,
+            password: item.password,
+            assignedRank: item.assigned_rank,
+            registeredAt: item.created_at ? new Date(item.created_at).getTime() : Date.now()
+          };
+
+          const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+          if (idx !== -1) accounts[idx] = cloudAccount;
+          else accounts.push(cloudAccount);
+        });
+
+        localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+        return accounts;
+      }
+    } catch (e) {
+      console.warn("Error fetching cloud accounts from Supabase:", e);
+    }
+    return [];
   }
 };
 

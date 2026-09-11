@@ -181,8 +181,19 @@
   };
 
   /* ================= INITIALIZATION ================= */
-  function initApp() {
+  async function initApp() {
     setupTheme();
+    
+    // Auto-sync & fetch candidate accounts from Supabase Cloud on startup
+    if (typeof StorageManager !== 'undefined') {
+      try {
+        await StorageManager.syncLocalAccountsToSupabase();
+        await StorageManager.fetchCloudAccountsSupabase();
+      } catch (e) {
+        console.warn("Cloud startup sync notice:", e);
+      }
+    }
+
     checkCandidateAuth();
     renderRankCards();
     updateDashboardStats();
