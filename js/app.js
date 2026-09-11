@@ -211,21 +211,21 @@
     const candidate = StorageManager.getCandidateProfile();
     const assignedRank = candidate ? candidate.assignedRank : null;
 
-    selectElements.rankGrid.innerHTML = GES_RANKS.map(rank => {
+    // Strictly filter ranks: if a registered candidate is logged in, show ONLY their target promotion rank
+    const visibleRanks = assignedRank 
+      ? GES_RANKS.filter(r => r.id === assignedRank) 
+      : GES_RANKS;
+
+    selectElements.rankGrid.innerHTML = visibleRanks.map(rank => {
       const count = rank.id === "ALL" 
         ? questions.length 
         : questions.filter(q => q.level === rank.id).length;
 
       const isEligible = !assignedRank || rank.id === assignedRank;
-      const isSelected = rank.id === currentRank && isEligible;
+      const isSelected = rank.id === currentRank || visibleRanks.length === 1;
       const lockClass = !isEligible ? "locked-rank" : "";
       
-      let badgeHtml;
-      if (!isEligible) {
-        badgeHtml = `<span class="badge badge-locked">🔒 LOCKED FOR THIS CANDIDATE</span>`;
-      } else {
-        badgeHtml = `<span class="badge ${rank.badgeClass}">${rank.name}</span>`;
-      }
+      let badgeHtml = `<span class="badge ${rank.badgeClass}">${rank.name}</span>`;
 
       return `
         <div class="rank-card ${isSelected ? 'selected' : ''} ${lockClass}" data-rank="${rank.id}" data-eligible="${isEligible}">
@@ -236,7 +236,7 @@
           </div>
           <div class="rank-meta">
             <span>📚 ${count} Questions</span>
-            <span>${isEligible ? '✅ ELIGIBLE' : '🔒 RESTRICTED'}</span>
+            <span>✅ TARGET PROMOTION EXAM</span>
           </div>
         </div>
       `;
@@ -247,11 +247,7 @@
         const isEligible = card.getAttribute("data-eligible") === "true";
         const rankId = card.getAttribute("data-rank");
         
-        if (!isEligible) {
-          const assignedObj = GES_RANKS.find(r => r.id === assignedRank);
-          alert(`🔒 Rank Access Restricted!\n\nCandidate ${candidate ? candidate.name : ''} (Staff ID: ${candidate ? candidate.staffId : ''}) is registered ONLY for the ${assignedObj ? assignedObj.name : assignedRank} examination.`);
-          return;
-        }
+        if (!isEligible) return;
 
         currentRank = rankId;
         selectElements.rankGrid.querySelectorAll(".rank-card").forEach(c => c.classList.remove("selected"));
@@ -259,11 +255,12 @@
         
         const rankObj = GES_RANKS.find(r => r.id === currentRank);
         selectElements.startBtn.disabled = false;
-        selectElements.rankHint.textContent = `Selected: ${rankObj.name} Exam Readiness Test.`;
+        selectElements.rankHint.textContent = `Selected: ${rankObj ? rankObj.name : currentRank} Exam Readiness Test.`;
       });
     });
 
     if (assignedRank) {
+      currentRank = assignedRank;
       const eligibleRankObj = GES_RANKS.find(r => r.id === assignedRank);
       if (eligibleRankObj) {
         selectElements.startBtn.disabled = false;
@@ -1044,7 +1041,7 @@
 
     // Candidate Registration Form Submit
     if (candidateAuthElements.regForm) {
-      candidateAuthElements.regForm.addEventListener("submit", (e) => {
+      candidateAuthElements.regForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const name = candidateAuthElements.fullNameInput.value.trim();
         const email = candidateAuthElements.emailInput.value.trim();
@@ -1053,7 +1050,7 @@
         const assignedRank = candidateAuthElements.assignedRankInput.value;
 
         if (name && email && region && password && assignedRank) {
-          const res = StorageManager.registerCandidateAccount({
+          const res = await StorageManager.registerCandidateAccount({
             name: name,
             email: email,
             region: region,
@@ -1074,12 +1071,12 @@
 
     // Candidate Sign In Form Submit
     if (candidateAuthElements.loginForm) {
-      candidateAuthElements.loginForm.addEventListener("submit", (e) => {
+      candidateAuthElements.loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = candidateAuthElements.loginEmailInput.value.trim();
         const password = candidateAuthElements.loginPasswordInput.value;
 
-        const res = StorageManager.loginCandidate(email, password);
+        const res = await StorageManager.loginCandidate(email, password);
         if (res.success) {
           candidateAuthElements.loginErrorMsg.classList.add("hidden");
           checkCandidateAuth();
@@ -1120,12 +1117,12 @@
     if (candidateAuthElements.forgotCancelBtn) candidateAuthElements.forgotCancelBtn.addEventListener("click", closeForgotModal);
 
     if (candidateAuthElements.forgotForm) {
-      candidateAuthElements.forgotForm.addEventListener("submit", (e) => {
+      candidateAuthElements.forgotForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         const email = candidateAuthElements.forgotEmailInput.value.trim();
         const region = candidateAuthElements.forgotRegionInput.value;
 
-        const res = StorageManager.recoverCandidatePassword(email, region);
+        const res = await StorageManager.recoverCandidatePassword(email, region);
         candidateAuthElements.forgotResultBox.classList.remove("hidden");
         if (res.success) {
           candidateAuthElements.forgotResultBox.className = "feedback-box correct";

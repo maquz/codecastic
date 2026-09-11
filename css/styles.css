@@ -1272,6 +1272,41 @@ body.dark-mode .landing-rank-pill {
   line-height: 1.5;
 }
 
+/* Centered Responsive Screen & Content Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.panel {
+  width: 100%;
+  max-width: 920px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#screen-landing .landing-hero,
+#screen-landing .panel {
+  text-align: center;
+}
+
+.landing-hero > div,
+.landing-hero .lede-text {
+  margin-left: auto;
+  margin-right: auto;
+  justify-content: center;
+}
+
+.auth-modal .modal-card,
+#candidateAuthModal .welcome-card {
+  margin: 0 auto;
+  text-align: center;
+}
+
 /* Helpers */
 .hidden { display: none !important; }
 

@@ -678,7 +678,10 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   /**
    * Register a new candidate account or update existing by email
    */
-  registerCandidateAccount: function (accountData) {
+  /**
+   * Register a new candidate account or update existing by email
+   */
+  registerCandidateAccount: async function (accountData) {
     try {
       const accounts = this.getCandidateAccounts();
       const cleanEmail = (accountData.email || "").toLowerCase().trim();
@@ -698,6 +701,24 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
 
       localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
       this.saveCandidateProfile(updatedAccount);
+
+      // Cloud Sync to Supabase
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        try {
+          await supabaseClient
+            .from('candidates')
+            .upsert([{
+              full_name: updatedAccount.name,
+              email: updatedAccount.email,
+              region: updatedAccount.region,
+              password: updatedAccount.password,
+              assigned_rank: updatedAccount.assignedRank
+            }], { onConflict: 'email' });
+        } catch (sbErr) {
+          console.warn("Supabase cloud sync warning:", sbErr);
+        }
+      }
+
       return { success: true, account: updatedAccount };
     } catch (e) {
       return { success: false, error: e.message };
@@ -705,31 +726,100 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   },
 
   /**
-   * Log in candidate with Email and Password
+   * Log in candidate with Email and Password across local & cloud (Supabase)
    */
-  loginCandidate: function (email, password) {
-    const accounts = this.getCandidateAccounts();
+  loginCandidate: async function (email, password) {
     const cleanEmail = (email || "").toLowerCase().trim();
-    const found = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password === password);
+    const accounts = this.getCandidateAccounts();
+    const foundLocal = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password === password);
 
-    if (found) {
-      this.saveCandidateProfile(found);
-      return { success: true, account: found };
+    if (foundLocal) {
+      this.saveCandidateProfile(foundLocal);
+      return { success: true, account: foundLocal };
     }
+
+    // Try cloud lookup on Supabase for cross-device login
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('candidates')
+          .select('*')
+          .eq('email', cleanEmail)
+          .eq('password', password)
+          .maybeSingle();
+
+        if (data) {
+          const cloudAccount = {
+            name: data.full_name,
+            email: data.email,
+            region: data.region,
+            password: data.password,
+            assignedRank: data.assigned_rank,
+            registeredAt: data.created_at ? new Date(data.created_at).getTime() : Date.now()
+          };
+
+          // Cache locally on this device
+          const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+          if (idx !== -1) accounts[idx] = cloudAccount;
+          else accounts.push(cloudAccount);
+          localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+          this.saveCandidateProfile(cloudAccount);
+
+          return { success: true, account: cloudAccount };
+        }
+      } catch (e) {
+        console.warn("Supabase cloud login check failed:", e);
+      }
+    }
+
     return { success: false, error: "Invalid Email Address or Password. Please check your details." };
   },
 
   /**
-   * Recover Candidate Password via Email & Registered Ghana Region
+   * Recover Candidate Password via Email & Registered Ghana Region (Local & Cloud Sync)
    */
-  recoverCandidatePassword: function (email, region) {
-    const accounts = this.getCandidateAccounts();
+  recoverCandidatePassword: async function (email, region) {
     const cleanEmail = (email || "").toLowerCase().trim();
-    const found = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.region === region);
+    const accounts = this.getCandidateAccounts();
+    const foundLocal = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.region === region);
 
-    if (found) {
-      return { success: true, password: found.password, name: found.name };
+    if (foundLocal) {
+      return { success: true, password: foundLocal.password, name: foundLocal.name };
     }
+
+    // Try cloud lookup on Supabase for cross-device recovery
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('candidates')
+          .select('*')
+          .eq('email', cleanEmail)
+          .eq('region', region)
+          .maybeSingle();
+
+        if (data) {
+          const cloudAccount = {
+            name: data.full_name,
+            email: data.email,
+            region: data.region,
+            password: data.password,
+            assignedRank: data.assigned_rank,
+            registeredAt: data.created_at ? new Date(data.created_at).getTime() : Date.now()
+          };
+
+          // Cache locally
+          const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+          if (idx !== -1) accounts[idx] = cloudAccount;
+          else accounts.push(cloudAccount);
+          localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+
+          return { success: true, password: data.password, name: data.full_name };
+        }
+      } catch (e) {
+        console.warn("Supabase cloud password recovery check failed:", e);
+      }
+    }
+
     return { success: false, error: "No candidate account found matching this Email Address and Ghana Region." };
   }
 };
@@ -739,22 +829,25 @@ if (typeof window !== 'undefined') {
   window.STORAGE_KEYS = STORAGE_KEYS;
   window.StorageManager = StorageManager;
 }
+
 // Register candidate to Supabase
 async function registerCandidateSupabase(accountData) {
+  if (!supabaseClient) return { data: null, error: "Supabase client not initialized" };
   const { data, error } = await supabaseClient
     .from('candidates')
-    .insert([{
+    .upsert([{
       full_name: accountData.name,
       email: accountData.email.toLowerCase(),
       region: accountData.region,
       password: accountData.password,
       assigned_rank: accountData.assignedRank
-    }]);
+    }], { onConflict: 'email' });
   return { data, error };
 }
 
 // Save attempt to Supabase
 async function saveAttemptSupabase(attempt) {
+  if (!supabaseClient) return { data: null, error: "Supabase client not initialized" };
   const { data, error } = await supabaseClient
     .from('attempts')
     .insert([{
