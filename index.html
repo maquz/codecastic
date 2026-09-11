@@ -42,7 +42,7 @@
         <button class="btn btn-outline btn-sm" id="themeToggle" title="Toggle Light/Dark Theme" style="color:#FFF; border-color:rgba(255,255,255,0.3);">
           🌙 Theme
         </button>
-        <button class="btn btn-gold btn-sm" id="adminOpenBtn" title="Open Admin Portal">
+        <button class="btn btn-gold btn-sm hidden" id="adminOpenBtn" title="Open Admin Portal">
           ⚙️ Admin
         </button>
       </div>
@@ -554,28 +554,32 @@
   <div class="modal-overlay" id="adminLoginModal">
     <div class="modal-card" style="max-width:440px;">
       <div class="modal-header">
-        <h3>🔐 Admin Authentication</h3>
+        <h3>🔐 System Admin Authentication</h3>
         <button class="btn btn-outline btn-sm" id="adminLoginCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
       </div>
       <div class="modal-body">
-        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;">
-          Please enter the administrator passcode to manage quiz levels, questions, and backups.
-          <br><small style="color:var(--gold-600); font-weight:600;">(Default Passcode: admin123)</small>
+        <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:16px;">
+          Enter your registered Administrator Email Address and Password to access system controls, manage administrators, and view candidate audit logs.
         </p>
 
         <form id="adminLoginForm">
           <div class="form-group">
-            <label for="adminPassInput">Admin Passcode</label>
-            <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin passcode" required autofocus>
+            <label for="adminEmailInput" style="font-weight:700; font-size:0.88rem;">Admin Email / Username *</label>
+            <input type="email" class="form-control" id="adminEmailInput" placeholder="e.g. admin@ges.gov.gh" value="admin@ges.gov.gh" required autofocus>
+          </div>
+
+          <div class="form-group">
+            <label for="adminPassInput" style="font-weight:700; font-size:0.88rem;">Admin Password *</label>
+            <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password" required>
           </div>
 
           <div class="feedback-box incorrect hidden" id="adminLoginError" style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
-            ⚠️ Incorrect passcode. Please try again.
+            ⚠️ Invalid Admin Email or Password. Please check your credentials.
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
             <button type="button" class="btn btn-outline" id="adminLoginCancelBtn">Cancel</button>
-            <button type="submit" class="btn btn-gold" id="adminLoginSubmitBtn">Unlock Portal</button>
+            <button type="submit" class="btn btn-gold" id="adminLoginSubmitBtn">Unlock Admin Portal</button>
           </div>
         </form>
       </div>
@@ -584,9 +588,12 @@
 
   <!-- ================= ADMIN MANAGEMENT MODAL ================= -->
   <div class="modal-overlay" id="adminModal">
-    <div class="modal-card" style="max-width:850px;">
+    <div class="modal-card" style="max-width:880px;">
       <div class="modal-header">
-        <h3 id="adminPortalTitle">⚙️ CodeCastic Admin Portal</h3>
+        <div>
+          <h3 id="adminPortalTitle">⚙️ CodeCastic Admin Portal</h3>
+          <div id="adminSubtitleInfo" style="font-size:0.8rem; color:var(--gold-400); font-weight:600; margin-top:2px;">Logged in as: Super Admin (admin@ges.gov.gh)</div>
+        </div>
         <div style="display:flex; gap:8px;">
           <button class="btn btn-outline btn-sm" id="adminLogoutBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">🔒 Log Out</button>
           <button class="btn btn-outline btn-sm" id="adminCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
@@ -595,10 +602,11 @@
 
       <div class="modal-body">
         <!-- Admin Navigation Tabs -->
-        <div class="admin-tab-nav">
+        <div class="admin-tab-nav" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
           <button type="button" class="btn btn-gold btn-sm admin-tab-btn active" id="adminTabQBank">📚 Question Bank</button>
           <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabCandidates">🎓 Candidate Roster (<span id="adminCandidateCount">0</span>)</button>
           <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAudit">📊 Exam Audit Log (<span id="adminAuditCount">0</span>)</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAdmins">👥 Admin Management (<span id="adminCount">1</span>)</button>
         </div>
 
         <!-- TAB 1: QUESTION BANK VIEW -->
@@ -751,6 +759,84 @@
                 </tr>
               </thead>
               <tbody id="adminAuditTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: ADMIN USERS & SYSTEM DASHBOARD VIEW -->
+        <div id="adminViewAdmins" class="hidden">
+          <!-- System Overview Stats Grid -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:20px;">
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">System Admins</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatAdminCount">1</div>
+            </div>
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Registered Candidates</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--navy-900); margin-top:2px;" id="dashStatCandidateCount">0</div>
+            </div>
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Exam Attempts</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--emerald-700); margin-top:2px;" id="dashStatAttemptCount">0</div>
+            </div>
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Question Bank Items</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatQuestionCount">15</div>
+            </div>
+          </div>
+
+          <!-- Register New Admin Form Block -->
+          <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:18px; margin-bottom:20px;">
+            <strong style="font-size:0.95rem; color:var(--navy-900);">➕ Register New System Administrator Account</strong>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Add another administrator with access to manage questions, candidate rosters, and system performance.</p>
+
+            <form id="adminAddAdminForm">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Admin Full Name *</label>
+                  <input type="text" class="form-control" id="inputAdminName" placeholder="e.g. Dr. Kwame Osei" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Admin Email Address *</label>
+                  <input type="email" class="form-control" id="inputAdminEmail" placeholder="e.g. kwame.osei@ges.gov.gh" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Admin Password *</label>
+                  <input type="password" class="form-control" id="inputAdminPassword" placeholder="Create admin password" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Role Designation *</label>
+                  <select class="form-control" id="inputAdminRole" required>
+                    <option value="System Administrator" selected>System Administrator</option>
+                    <option value="Regional Exam Controller">Regional Exam Controller</option>
+                    <option value="GES Content Manager">GES Content Manager</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px;">
+                <span id="addAdminMsg" style="font-size:0.85rem; font-weight:700; color:var(--emerald-700);"></span>
+                <button type="submit" class="btn btn-gold btn-sm">+ Create Administrator Account</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Registered Administrators Master List -->
+          <strong style="font-size:0.95rem; color:var(--navy-900);">👥 Registered System Administrators Roster</strong>
+          <div style="overflow-x:auto; margin-top:8px;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Administrator Name</th>
+                  <th>Email Address</th>
+                  <th>Role Designation</th>
+                  <th>Created Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTableBody">
                 <!-- Populated by JS -->
               </tbody>
             </table>

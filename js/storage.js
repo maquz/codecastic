@@ -29,7 +29,9 @@ var STORAGE_KEYS = {
   ADMIN_PASS: "codecastic_admin_pass_v1",
   SETTINGS: "codecastic_settings_v1",
   CANDIDATE: "codecastic_candidate_profile_v1",
-  CANDIDATE_ACCOUNTS: "codecastic_candidate_accounts_v1"
+  CANDIDATE_ACCOUNTS: "codecastic_candidate_accounts_v1",
+  ADMIN_ACCOUNTS: "codecastic_admin_accounts_v1",
+  CURRENT_ADMIN: "codecastic_current_admin_v1"
 };
 
 var StorageManager = {
@@ -622,6 +624,209 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       return true;
     } catch (e) {
       console.error("Failed to update admin passcode:", e);
+      return false;
+    }
+  },
+
+  /**
+   * Get all registered Admin Accounts (includes default Super Admin)
+   */
+  getAdminAccounts: function () {
+    const defaultSuperAdmin = {
+      id: "admin_super_1",
+      name: "Super Admin",
+      email: "admin@ges.gov.gh",
+      password: this.getAdminPasscode() || "admin123",
+      role: "Super Administrator",
+      createdAt: 1789000000000
+    };
+
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.ADMIN_ACCOUNTS);
+      let list = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(list) || list.length === 0) {
+        list = [defaultSuperAdmin];
+        localStorage.setItem(STORAGE_KEYS.ADMIN_ACCOUNTS, JSON.stringify(list));
+      } else {
+        // Ensure superadmin exists in list
+        const exists = list.some(a => a.email.toLowerCase() === "admin@ges.gov.gh");
+        if (!exists) {
+          list.unshift(defaultSuperAdmin);
+          localStorage.setItem(STORAGE_KEYS.ADMIN_ACCOUNTS, JSON.stringify(list));
+        }
+      }
+      return list;
+    } catch (e) {
+      return [defaultSuperAdmin];
+    }
+  },
+
+  /**
+   * Register a new System Administrator Account
+   */
+  registerAdminAccount: async function (adminData) {
+    try {
+      const list = this.getAdminAccounts();
+      const cleanEmail = (adminData.email || "").toLowerCase().trim();
+
+      const existingIdx = list.findIndex(a => a.email.toLowerCase() === cleanEmail);
+      const newAdmin = {
+        id: 'admin_' + Date.now(),
+        name: adminData.name.trim(),
+        email: cleanEmail,
+        password: adminData.password,
+        role: adminData.role || "Administrator",
+        createdAt: Date.now()
+      };
+
+      if (existingIdx !== -1) {
+        list[existingIdx] = newAdmin;
+      } else {
+        list.push(newAdmin);
+      }
+
+      localStorage.setItem(STORAGE_KEYS.ADMIN_ACCOUNTS, JSON.stringify(list));
+
+      // Supabase Cloud Sync for Admin User
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        try {
+          await supabaseClient
+            .from('admin_users')
+            .upsert([{
+              full_name: newAdmin.name,
+              email: newAdmin.email,
+              password: newAdmin.password,
+              role: newAdmin.role
+            }], { onConflict: 'email' });
+        } catch (sbErr) {
+          console.warn("Supabase admin cloud sync warning:", sbErr);
+        }
+      }
+
+      return { success: true, admin: newAdmin };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Delete an Administrator Account
+   */
+  deleteAdminAccount: async function (email) {
+    try {
+      const cleanEmail = (email || "").toLowerCase().trim();
+      if (cleanEmail === "admin@ges.gov.gh") {
+        return { success: false, error: "Cannot delete default Super Administrator account." };
+      }
+
+      let list = this.getAdminAccounts();
+      list = list.filter(a => a.email.toLowerCase() !== cleanEmail);
+      localStorage.setItem(STORAGE_KEYS.ADMIN_ACCOUNTS, JSON.stringify(list));
+
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        try {
+          await supabaseClient
+            .from('admin_users')
+            .delete()
+            .eq('email', cleanEmail);
+        } catch (e) {}
+      }
+
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Log in Administrator by Email/Username and Password (Local & Cloud Sync)
+   */
+  loginAdmin: async function (email, password) {
+    const cleanEmail = (email || "").toLowerCase().trim();
+    const list = this.getAdminAccounts();
+
+    // Fallback for default admin login with passcode
+    if ((cleanEmail === "admin@ges.gov.gh" || cleanEmail === "admin") && password === this.getAdminPasscode()) {
+      const superAdmin = list.find(a => a.email.toLowerCase() === "admin@ges.gov.gh") || {
+        id: "admin_super_1",
+        name: "Super Admin",
+        email: "admin@ges.gov.gh",
+        password: password,
+        role: "Super Administrator"
+      };
+      this.saveCurrentAdmin(superAdmin);
+      return { success: true, admin: superAdmin };
+    }
+
+    const foundLocal = list.find(a => a.email.toLowerCase() === cleanEmail && a.password === password);
+
+    if (foundLocal) {
+      this.saveCurrentAdmin(foundLocal);
+      return { success: true, admin: foundLocal };
+    }
+
+    // Try cloud lookup on Supabase
+    if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('admin_users')
+          .select('*')
+          .eq('email', cleanEmail)
+          .eq('password', password)
+          .maybeSingle();
+
+        if (data) {
+          const cloudAdmin = {
+            id: 'admin_cloud_' + Date.now(),
+            name: data.full_name,
+            email: data.email,
+            password: data.password,
+            role: data.role || "Administrator",
+            createdAt: data.created_at ? new Date(data.created_at).getTime() : Date.now()
+          };
+
+          const idx = list.findIndex(a => a.email.toLowerCase() === cleanEmail);
+          if (idx !== -1) list[idx] = cloudAdmin;
+          else list.push(cloudAdmin);
+          localStorage.setItem(STORAGE_KEYS.ADMIN_ACCOUNTS, JSON.stringify(list));
+          this.saveCurrentAdmin(cloudAdmin);
+
+          return { success: true, admin: cloudAdmin };
+        }
+      } catch (e) {
+        console.warn("Supabase admin login lookup warning:", e);
+      }
+    }
+
+    return { success: false, error: "Invalid Admin Email or Password. Please check your credentials." };
+  },
+
+  /**
+   * Current Admin Session tracking
+   */
+  getCurrentAdmin: function () {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.CURRENT_ADMIN);
+      return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+      return null;
+    }
+  },
+
+  saveCurrentAdmin: function (admin) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.CURRENT_ADMIN, JSON.stringify(admin));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  },
+
+  clearCurrentAdmin: function () {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.CURRENT_ADMIN);
+      return true;
+    } catch (e) {
       return false;
     }
   },

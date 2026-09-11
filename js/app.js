@@ -105,6 +105,7 @@
   const adminLoginElements = {
     modal: document.getElementById("adminLoginModal"),
     form: document.getElementById("adminLoginForm"),
+    emailInput: document.getElementById("adminEmailInput"),
     passInput: document.getElementById("adminPassInput"),
     errorMsg: document.getElementById("adminLoginError"),
     closeBtn: document.getElementById("adminLoginCloseBtn"),
@@ -187,6 +188,13 @@
 
   function checkCandidateAuth() {
     const profile = StorageManager.getCandidateProfile();
+    const adminOpenBtn = document.getElementById("adminOpenBtn");
+    
+    // Explicitly hide admin gear button for candidates
+    if (adminOpenBtn && !isAdminAuthenticated) {
+      adminOpenBtn.classList.add("hidden");
+    }
+
     if (!profile) {
       // Unauthenticated visitor -> Show Public Landing Page & hide candidate chip
       candidateAuthElements.chip.classList.add("hidden");
@@ -723,13 +731,16 @@
   /* ================= ADMIN MANAGEMENT PORTAL ================= */
   function openAdminModal() {
     if (isAdminAuthenticated) {
-      switchAdminTab("questions");
+      switchAdminTab("admins");
       adminElements.modal.classList.add("active");
     } else {
-      adminLoginElements.passInput.value = "";
+      if (adminLoginElements.emailInput) adminLoginElements.emailInput.value = "admin@ges.gov.gh";
+      if (adminLoginElements.passInput) adminLoginElements.passInput.value = "";
       adminLoginElements.errorMsg.classList.add("hidden");
       adminLoginElements.modal.classList.add("active");
-      setTimeout(() => adminLoginElements.passInput.focus(), 150);
+      setTimeout(() => {
+        if (adminLoginElements.passInput) adminLoginElements.passInput.focus();
+      }, 150);
     }
   }
 
@@ -737,18 +748,20 @@
     const tabQBank = document.getElementById("adminTabQBank");
     const tabCandidates = document.getElementById("adminTabCandidates");
     const tabAudit = document.getElementById("adminTabAudit");
+    const tabAdmins = document.getElementById("adminTabAdmins");
 
     const viewQuestions = document.getElementById("adminViewQuestions");
     const viewCandidates = document.getElementById("adminViewCandidates");
     const viewAudit = document.getElementById("adminViewAudit");
+    const viewAdmins = document.getElementById("adminViewAdmins");
 
-    [tabQBank, tabCandidates, tabAudit].forEach(btn => {
+    [tabQBank, tabCandidates, tabAudit, tabAdmins].forEach(btn => {
       if (btn) {
         btn.classList.remove("active", "btn-gold");
         btn.classList.add("btn-outline");
       }
     });
-    [viewQuestions, viewCandidates, viewAudit].forEach(view => view?.classList.add("hidden"));
+    [viewQuestions, viewCandidates, viewAudit, viewAdmins].forEach(view => view?.classList.add("hidden"));
 
     if (tabName === "questions") {
       tabQBank?.classList.add("active", "btn-gold");
@@ -765,7 +778,75 @@
       tabAudit?.classList.remove("btn-outline");
       viewAudit?.classList.remove("hidden");
       renderAdminAuditLog();
+    } else if (tabName === "admins") {
+      tabAdmins?.classList.add("active", "btn-gold");
+      tabAdmins?.classList.remove("btn-outline");
+      viewAdmins?.classList.remove("hidden");
+      renderAdminAccountsList();
     }
+  }
+
+  function renderAdminDashboardStats() {
+    const adminAccounts = StorageManager.getAdminAccounts();
+    const candidateAccounts = StorageManager.getCandidateAccounts();
+    const attempts = StorageManager.getAttemptHistory();
+    const questions = StorageManager.getQuestions();
+
+    const adminCountEl = document.getElementById("adminCount");
+    const dashAdminCount = document.getElementById("dashStatAdminCount");
+    const dashCandCount = document.getElementById("dashStatCandidateCount");
+    const dashAttCount = document.getElementById("dashStatAttemptCount");
+    const dashQCount = document.getElementById("dashStatQuestionCount");
+
+    if (adminCountEl) adminCountEl.textContent = adminAccounts.length;
+    if (dashAdminCount) dashAdminCount.textContent = adminAccounts.length;
+    if (dashCandCount) dashCandCount.textContent = candidateAccounts.length;
+    if (dashAttCount) dashAttCount.textContent = attempts.length;
+    if (dashQCount) dashQCount.textContent = questions.length;
+  }
+
+  function renderAdminAccountsList() {
+    renderAdminDashboardStats();
+    const list = StorageManager.getAdminAccounts();
+    const tbody = document.getElementById("adminUsersTableBody");
+    if (!tbody) return;
+
+    if (list.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:16px;">No system administrator accounts found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map(admin => {
+      const isSuper = admin.email.toLowerCase() === "admin@ges.gov.gh";
+      const dateStr = admin.createdAt ? new Date(admin.createdAt).toLocaleDateString() : 'System Default';
+      const deleteBtnHtml = isSuper 
+        ? `<span class="badge badge-ad2" style="font-size:0.72rem; padding:3px 8px;">Super Admin</span>`
+        : `<button class="btn btn-outline btn-sm delete-admin-btn" data-email="${admin.email}" style="color:var(--crimson-600); border-color:var(--crimson-600); padding:3px 8px; font-size:0.75rem;">🗑️ Delete</button>`;
+
+      return `
+        <tr>
+          <td><strong>${admin.name}</strong></td>
+          <td><code>${admin.email}</code></td>
+          <td><span class="badge badge-ad1" style="font-size:0.72rem;">${admin.role || 'Administrator'}</span></td>
+          <td>${dateStr}</td>
+          <td>${deleteBtnHtml}</td>
+        </tr>
+      `;
+    }).join("");
+
+    tbody.querySelectorAll(".delete-admin-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const email = btn.getAttribute("data-email");
+        if (confirm(`Are you sure you want to delete administrator account ${email}?`)) {
+          const res = await StorageManager.deleteAdminAccount(email);
+          if (res.success) {
+            renderAdminAccountsList();
+          } else {
+            alert(res.error);
+          }
+        }
+      });
+    });
   }
 
   function renderAdminCandidatesList() {
@@ -1225,10 +1306,12 @@
     const tabQBank = document.getElementById("adminTabQBank");
     const tabCandidates = document.getElementById("adminTabCandidates");
     const tabAudit = document.getElementById("adminTabAudit");
+    const tabAdmins = document.getElementById("adminTabAdmins");
 
     if (tabQBank) tabQBank.addEventListener("click", () => switchAdminTab("questions"));
     if (tabCandidates) tabCandidates.addEventListener("click", () => switchAdminTab("candidates"));
     if (tabAudit) tabAudit.addEventListener("click", () => switchAdminTab("audit"));
+    if (tabAdmins) tabAdmins.addEventListener("click", () => switchAdminTab("admins"));
 
     // Candidate Master Roster Filters & Search
     const candidateSearch = document.getElementById("adminCandidateSearch");
@@ -1253,6 +1336,33 @@
       });
     }
 
+    // Register New Admin Form Listener
+    const adminAddAdminForm = document.getElementById("adminAddAdminForm");
+    if (adminAddAdminForm) {
+      adminAddAdminForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = document.getElementById("inputAdminName")?.value.trim();
+        const email = document.getElementById("inputAdminEmail")?.value.trim();
+        const password = document.getElementById("inputAdminPassword")?.value;
+        const role = document.getElementById("inputAdminRole")?.value;
+        const msgSpan = document.getElementById("addAdminMsg");
+
+        if (name && email && password && role) {
+          const res = await StorageManager.registerAdminAccount({ name, email, password, role });
+          if (res.success) {
+            adminAddAdminForm.reset();
+            if (msgSpan) {
+              msgSpan.textContent = `✅ Administrator ${res.admin.name} registered successfully!`;
+              setTimeout(() => { msgSpan.textContent = ""; }, 4000);
+            }
+            renderAdminAccountsList();
+          } else {
+            alert("Error adding administrator: " + res.error);
+          }
+        }
+      });
+    }
+
     adminLoginElements.closeBtn.addEventListener("click", () => {
       adminLoginElements.modal.classList.remove("active");
     });
@@ -1260,13 +1370,23 @@
       adminLoginElements.modal.classList.remove("active");
     });
 
-    adminLoginElements.form.addEventListener("submit", (e) => {
+    adminLoginElements.form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const inputPass = adminLoginElements.passInput.value;
-      if (StorageManager.verifyAdminPasscode(inputPass)) {
+      const email = adminLoginElements.emailInput ? adminLoginElements.emailInput.value.trim() : "admin@ges.gov.gh";
+      const password = adminLoginElements.passInput.value;
+
+      const res = await StorageManager.loginAdmin(email, password);
+      if (res.success) {
         isAdminAuthenticated = true;
+        adminLoginElements.errorMsg.classList.add("hidden");
         adminLoginElements.modal.classList.remove("active");
-        switchAdminTab("questions");
+
+        const subtitleInfo = document.getElementById("adminSubtitleInfo");
+        if (subtitleInfo) {
+          subtitleInfo.textContent = `Logged in as: ${res.admin.name} (${res.admin.email})`;
+        }
+
+        switchAdminTab("admins");
         adminElements.modal.classList.add("active");
       } else {
         adminLoginElements.errorMsg.classList.remove("hidden");
@@ -1276,6 +1396,7 @@
 
     adminLoginElements.logoutBtn.addEventListener("click", () => {
       isAdminAuthenticated = false;
+      StorageManager.clearCurrentAdmin();
       adminElements.modal.classList.remove("active");
     });
 
