@@ -1515,6 +1515,28 @@ body.dark-mode .landing-rank-pill {
   }
 }
 
+}
+
+/* Full-Page Admin Portal Screen Styling */
+#screen-admin .admin-fullpage-panel {
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.admin-fullpage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-tab-nav .btn-sm {
+  font-weight: 700;
+  padding: 8px 16px;
+}
+
 /* Footer */
 footer {
   margin-top: 48px;
@@ -1522,4 +1544,5 @@ footer {
   color: var(--text-muted);
   font-size: 0.85rem;
 }
+
 

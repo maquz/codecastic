@@ -392,6 +392,267 @@
       </div>
     </section>
 
+    <!-- ================= SCREEN 4: FULL-PAGE CODECASTIC ADMIN PORTAL ================= -->
+    <section id="screen-admin" class="hidden">
+      <div class="panel admin-fullpage-panel">
+        
+        <!-- Header Banner & User Profile -->
+        <div class="admin-fullpage-header" style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-bottom:16px; border-bottom:2px solid var(--line-color); margin-bottom:20px;">
+          <div>
+            <h2 id="adminPortalTitle" style="margin:0; font-size:1.5rem; color:var(--navy-900);">⚙️ CodeCastic Admin Portal</h2>
+            <div id="adminSubtitleInfo" style="font-size:0.85rem; color:var(--gold-600); font-weight:700; margin-top:4px;">Logged in as: Super Admin (admin@ges.gov.gh)</div>
+          </div>
+          <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" id="adminCloseBtn">🏠 Exit to Portal Home</button>
+            <button class="btn btn-outline btn-sm" id="adminLogoutBtn" style="color:var(--crimson-600); border-color:var(--crimson-600);">🔒 Log Out</button>
+          </div>
+        </div>
+
+        <!-- Admin Navigation Tabs -->
+        <div class="admin-tab-nav" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;">
+          <button type="button" class="btn btn-gold btn-sm admin-tab-btn active" id="adminTabQBank">📚 Question Bank</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabCandidates">🎓 Candidate Roster (<span id="adminCandidateCount">0</span>)</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAudit">📊 Exam Audit Log (<span id="adminAuditCount">0</span>)</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAdmins">👥 Admin Management (<span id="adminCount">1</span>)</button>
+        </div>
+
+        <!-- TAB 1: QUESTION BANK VIEW -->
+        <div id="adminViewQuestions">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <label style="font-weight:600; font-size:0.9rem;">Filter Rank:</label>
+              <select class="form-control" id="adminRankFilter" style="width:auto;">
+                <option value="ALL">All Levels</option>
+                <option value="AD_II">Assistant Director II</option>
+                <option value="AD_I">Assistant Director I</option>
+                <option value="DD">Deputy Director</option>
+                <option value="DIR_II">Director II</option>
+              </select>
+            </div>
+
+            <div style="display:flex; gap:8px;">
+              <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add Question</button>
+              <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
+            </div>
+          </div>
+
+          <!-- Question Bank List -->
+          <div id="adminQuestionsList">
+            <!-- Populated by JS -->
+          </div>
+
+          <!-- Bulk Question Templates & Import -->
+          <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
+            <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions at once.</p>
+
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <button class="btn btn-gold btn-sm" id="downloadWordTemplateBtn">📝 Word Template (.doc)</button>
+                <button class="btn btn-outline btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
+                <button class="btn btn-outline btn-sm" id="downloadJsonTemplateBtn">📄 JSON Template</button>
+              </div>
+
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <label class="btn btn-primary btn-sm" style="margin:0; cursor:pointer;">
+                  📤 Upload File (Word/CSV/JSON)
+                  <input type="file" id="adminImportInput" accept=".doc,.docx,.txt,.csv,.json" style="display:none;">
+                </label>
+                <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security & Passcode Change -->
+          <div style="margin-top:18px; border-top:1px solid var(--line-color); padding-top:16px;">
+            <strong style="font-size:0.9rem;">Security & Passcode Settings</strong>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
+
+            <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" style="max-width:200px;" required>
+              <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
+              <span id="changePassMsg" style="font-size:0.8rem; color:var(--emerald-600); font-weight:600;"></span>
+            </form>
+          </div>
+        </div>
+
+        <!-- TAB 2: CANDIDATE MASTER ROSTER VIEW -->
+        <div id="adminViewCandidates" class="hidden">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <strong style="font-size:1rem;">Registered Candidates Master Roster</strong>
+            <div style="display:flex; gap:8px;">
+              <input type="text" class="form-control" id="adminCandidateSearch" placeholder="Search by name, email, or region..." style="width:260px;">
+              <select class="form-control" id="adminCandidateRegionFilter" style="width:auto;">
+                <option value="ALL">All 16 Regions</option>
+                <option value="Ahafo Region">Ahafo Region</option>
+                <option value="Ashanti Region">Ashanti Region</option>
+                <option value="Bono Region">Bono Region</option>
+                <option value="Bono East Region">Bono East Region</option>
+                <option value="Central Region">Central Region</option>
+                <option value="Eastern Region">Eastern Region</option>
+                <option value="Greater Accra Region">Greater Accra Region</option>
+                <option value="North East Region">North East Region</option>
+                <option value="Northern Region">Northern Region</option>
+                <option value="Oti Region">Oti Region</option>
+                <option value="Savannah Region">Savannah Region</option>
+                <option value="Upper East Region">Upper East Region</option>
+                <option value="Upper West Region">Upper West Region</option>
+                <option value="Volta Region">Volta Region</option>
+                <option value="Western Region">Western Region</option>
+                <option value="Western North Region">Western North Region</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Candidate Name</th>
+                  <th>Email Address</th>
+                  <th>Ghana Region</th>
+                  <th>Assigned Rank</th>
+                  <th>Exams Taken</th>
+                  <th>Best Score</th>
+                </tr>
+              </thead>
+              <tbody id="adminCandidateTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 3: GLOBAL EXAM AUDIT LOG VIEW -->
+        <div id="adminViewAudit" class="hidden">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <strong style="font-size:1rem;">Global Examination Audit Log</strong>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <input type="text" class="form-control" id="adminAuditSearch" placeholder="Search candidate or email..." style="width:220px;">
+              <select class="form-control" id="adminAuditRegionFilter" style="width:auto;">
+                <option value="ALL">All Regions</option>
+                <option value="Ahafo Region">Ahafo Region</option>
+                <option value="Ashanti Region">Ashanti Region</option>
+                <option value="Bono Region">Bono Region</option>
+                <option value="Bono East Region">Bono East Region</option>
+                <option value="Central Region">Central Region</option>
+                <option value="Eastern Region">Eastern Region</option>
+                <option value="Greater Accra Region">Greater Accra Region</option>
+                <option value="North East Region">North East Region</option>
+                <option value="Northern Region">Northern Region</option>
+                <option value="Oti Region">Oti Region</option>
+                <option value="Savannah Region">Savannah Region</option>
+                <option value="Upper East Region">Upper East Region</option>
+                <option value="Upper West Region">Upper West Region</option>
+                <option value="Volta Region">Volta Region</option>
+                <option value="Western Region">Western Region</option>
+                <option value="Western North Region">Western North Region</option>
+              </select>
+              <button class="btn btn-outline btn-sm" id="adminClearAuditBtn" style="color:var(--crimson-600); border-color:var(--crimson-600);">Clear Audit History</button>
+            </div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Date & Time</th>
+                  <th>Candidate Name</th>
+                  <th>Email</th>
+                  <th>Region</th>
+                  <th>Exam Rank</th>
+                  <th>Score</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="adminAuditTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- TAB 4: ADMIN USERS & SYSTEM DASHBOARD VIEW -->
+        <div id="adminViewAdmins" class="hidden">
+          <!-- System Overview Stats Grid -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:20px;">
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">System Admins</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatAdminCount">1</div>
+            </div>
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Registered Candidates</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--navy-900); margin-top:2px;" id="dashStatCandidateCount">0</div>
+            </div>
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Exam Attempts</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--emerald-700); margin-top:2px;" id="dashStatAttemptCount">0</div>
+            </div>
+            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Question Bank Items</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatQuestionCount">15</div>
+            </div>
+          </div>
+
+          <!-- Register New Admin Form Block -->
+          <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:18px; margin-bottom:20px;">
+            <strong style="font-size:0.95rem; color:var(--navy-900);">➕ Register New System Administrator Account</strong>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Add another administrator with access to manage questions, candidate rosters, and system performance.</p>
+
+            <form id="adminAddAdminForm">
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Admin Full Name *</label>
+                  <input type="text" class="form-control" id="inputAdminName" placeholder="e.g. Dr. Kwame Osei" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Admin Email Address *</label>
+                  <input type="email" class="form-control" id="inputAdminEmail" placeholder="e.g. kwame.osei@ges.gov.gh" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Admin Password *</label>
+                  <input type="password" class="form-control" id="inputAdminPassword" placeholder="Create admin password" required>
+                </div>
+                <div class="form-group" style="margin:0;">
+                  <label style="font-size:0.82rem; font-weight:700;">Role Designation *</label>
+                  <select class="form-control" id="inputAdminRole" required>
+                    <option value="System Administrator" selected>System Administrator</option>
+                    <option value="Regional Exam Controller">Regional Exam Controller</option>
+                    <option value="GES Content Manager">GES Content Manager</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px;">
+                <span id="addAdminMsg" style="font-size:0.85rem; font-weight:700; color:var(--emerald-700);"></span>
+                <button type="submit" class="btn btn-gold btn-sm">+ Create Administrator Account</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Registered Administrators Master List -->
+          <strong style="font-size:0.95rem; color:var(--navy-900);">👥 Registered System Administrators Roster</strong>
+          <div style="overflow-x:auto; margin-top:8px;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Administrator Name</th>
+                  <th>Email Address</th>
+                  <th>Role Designation</th>
+                  <th>Created Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminUsersTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
   </main>
 
   <!-- ================= CANDIDATE REGISTRATION & AUTHENTICATION MODAL ================= -->
@@ -650,266 +911,7 @@
     </div>
   </div>
 
-  <!-- ================= ADMIN MANAGEMENT MODAL ================= -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-card" style="max-width:880px;">
-      <div class="modal-header">
-        <div>
-          <h3 id="adminPortalTitle">⚙️ CodeCastic Admin Portal</h3>
-          <div id="adminSubtitleInfo" style="font-size:0.8rem; color:var(--gold-400); font-weight:600; margin-top:2px;">Logged in as: Super Admin (admin@ges.gov.gh)</div>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn btn-outline btn-sm" id="adminLogoutBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">🔒 Log Out</button>
-          <button class="btn btn-outline btn-sm" id="adminCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
-        </div>
-      </div>
-
-      <div class="modal-body">
-        <!-- Admin Navigation Tabs -->
-        <div class="admin-tab-nav" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px;">
-          <button type="button" class="btn btn-gold btn-sm admin-tab-btn active" id="adminTabQBank">📚 Question Bank</button>
-          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabCandidates">🎓 Candidate Roster (<span id="adminCandidateCount">0</span>)</button>
-          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAudit">📊 Exam Audit Log (<span id="adminAuditCount">0</span>)</button>
-          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAdmins">👥 Admin Management (<span id="adminCount">1</span>)</button>
-        </div>
-
-        <!-- TAB 1: QUESTION BANK VIEW -->
-        <div id="adminViewQuestions">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <label style="font-weight:600; font-size:0.9rem;">Filter Rank:</label>
-              <select class="form-control" id="adminRankFilter" style="width:auto;">
-                <option value="ALL">All Levels</option>
-                <option value="AD_II">Assistant Director II</option>
-                <option value="AD_I">Assistant Director I</option>
-                <option value="DD">Deputy Director</option>
-                <option value="DIR_II">Director II</option>
-              </select>
-            </div>
-
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add Question</button>
-              <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
-            </div>
-          </div>
-
-          <!-- Question Bank List -->
-          <div id="adminQuestionsList">
-            <!-- Populated by JS -->
-          </div>
-
-          <!-- Bulk Question Templates & Import -->
-          <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
-            <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions at once.</p>
-
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <button class="btn btn-gold btn-sm" id="downloadWordTemplateBtn">📝 Word Template (.doc)</button>
-                <button class="btn btn-outline btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
-                <button class="btn btn-outline btn-sm" id="downloadJsonTemplateBtn">📄 JSON Template</button>
-              </div>
-
-              <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                <label class="btn btn-primary btn-sm" style="margin:0; cursor:pointer;">
-                  📤 Upload File (Word/CSV/JSON)
-                  <input type="file" id="adminImportInput" accept=".doc,.docx,.txt,.csv,.json" style="display:none;">
-                </label>
-                <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Security & Passcode Change -->
-          <div style="margin-top:18px; border-top:1px solid var(--line-color); padding-top:16px;">
-            <strong style="font-size:0.9rem;">Security & Passcode Settings</strong>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
-
-            <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-              <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" style="max-width:200px;" required>
-              <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
-              <span id="changePassMsg" style="font-size:0.8rem; color:var(--emerald-600); font-weight:600;"></span>
-            </form>
-          </div>
-        </div>
-
-        <!-- TAB 2: CANDIDATE MASTER ROSTER VIEW -->
-        <div id="adminViewCandidates" class="hidden">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
-            <strong style="font-size:1rem;">Registered Candidates Master Roster</strong>
-            <div style="display:flex; gap:8px;">
-              <input type="text" class="form-control" id="adminCandidateSearch" placeholder="Search by name, email, or region..." style="width:260px;">
-              <select class="form-control" id="adminCandidateRegionFilter" style="width:auto;">
-                <option value="ALL">All 16 Regions</option>
-                <option value="Ahafo Region">Ahafo Region</option>
-                <option value="Ashanti Region">Ashanti Region</option>
-                <option value="Bono Region">Bono Region</option>
-                <option value="Bono East Region">Bono East Region</option>
-                <option value="Central Region">Central Region</option>
-                <option value="Eastern Region">Eastern Region</option>
-                <option value="Greater Accra Region">Greater Accra Region</option>
-                <option value="North East Region">North East Region</option>
-                <option value="Northern Region">Northern Region</option>
-                <option value="Oti Region">Oti Region</option>
-                <option value="Savannah Region">Savannah Region</option>
-                <option value="Upper East Region">Upper East Region</option>
-                <option value="Upper West Region">Upper West Region</option>
-                <option value="Volta Region">Volta Region</option>
-                <option value="Western Region">Western Region</option>
-                <option value="Western North Region">Western North Region</option>
-              </select>
-            </div>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Candidate Name</th>
-                  <th>Email Address</th>
-                  <th>Ghana Region</th>
-                  <th>Assigned Rank</th>
-                  <th>Exams Taken</th>
-                  <th>Best Score</th>
-                </tr>
-              </thead>
-              <tbody id="adminCandidateTableBody">
-                <!-- Populated by JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- TAB 3: GLOBAL EXAM AUDIT LOG VIEW -->
-        <div id="adminViewAudit" class="hidden">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
-            <strong style="font-size:1rem;">Global Examination Audit Log</strong>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <input type="text" class="form-control" id="adminAuditSearch" placeholder="Search candidate or email..." style="width:220px;">
-              <select class="form-control" id="adminAuditRegionFilter" style="width:auto;">
-                <option value="ALL">All Regions</option>
-                <option value="Ahafo Region">Ahafo Region</option>
-                <option value="Ashanti Region">Ashanti Region</option>
-                <option value="Bono Region">Bono Region</option>
-                <option value="Bono East Region">Bono East Region</option>
-                <option value="Central Region">Central Region</option>
-                <option value="Eastern Region">Eastern Region</option>
-                <option value="Greater Accra Region">Greater Accra Region</option>
-                <option value="North East Region">North East Region</option>
-                <option value="Northern Region">Northern Region</option>
-                <option value="Oti Region">Oti Region</option>
-                <option value="Savannah Region">Savannah Region</option>
-                <option value="Upper East Region">Upper East Region</option>
-                <option value="Upper West Region">Upper West Region</option>
-                <option value="Volta Region">Volta Region</option>
-                <option value="Western Region">Western Region</option>
-                <option value="Western North Region">Western North Region</option>
-              </select>
-              <button class="btn btn-outline btn-sm" id="adminClearAuditBtn" style="color:var(--crimson-600); border-color:var(--crimson-600);">Clear Audit History</button>
-            </div>
-          </div>
-
-          <div style="overflow-x:auto;">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Date & Time</th>
-                  <th>Candidate Name</th>
-                  <th>Email</th>
-                  <th>Region</th>
-                  <th>Exam Rank</th>
-                  <th>Score</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="adminAuditTableBody">
-                <!-- Populated by JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- TAB 4: ADMIN USERS & SYSTEM DASHBOARD VIEW -->
-        <div id="adminViewAdmins" class="hidden">
-          <!-- System Overview Stats Grid -->
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:20px;">
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">System Admins</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatAdminCount">1</div>
-            </div>
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Registered Candidates</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--navy-900); margin-top:2px;" id="dashStatCandidateCount">0</div>
-            </div>
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Exam Attempts</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--emerald-700); margin-top:2px;" id="dashStatAttemptCount">0</div>
-            </div>
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Question Bank Items</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatQuestionCount">15</div>
-            </div>
-          </div>
-
-          <!-- Register New Admin Form Block -->
-          <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:18px; margin-bottom:20px;">
-            <strong style="font-size:0.95rem; color:var(--navy-900);">➕ Register New System Administrator Account</strong>
-            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Add another administrator with access to manage questions, candidate rosters, and system performance.</p>
-
-            <form id="adminAddAdminForm">
-              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                <div class="form-group" style="margin:0;">
-                  <label style="font-size:0.82rem; font-weight:700;">Admin Full Name *</label>
-                  <input type="text" class="form-control" id="inputAdminName" placeholder="e.g. Dr. Kwame Osei" required>
-                </div>
-                <div class="form-group" style="margin:0;">
-                  <label style="font-size:0.82rem; font-weight:700;">Admin Email Address *</label>
-                  <input type="email" class="form-control" id="inputAdminEmail" placeholder="e.g. kwame.osei@ges.gov.gh" required>
-                </div>
-                <div class="form-group" style="margin:0;">
-                  <label style="font-size:0.82rem; font-weight:700;">Admin Password *</label>
-                  <input type="password" class="form-control" id="inputAdminPassword" placeholder="Create admin password" required>
-                </div>
-                <div class="form-group" style="margin:0;">
-                  <label style="font-size:0.82rem; font-weight:700;">Role Designation *</label>
-                  <select class="form-control" id="inputAdminRole" required>
-                    <option value="System Administrator" selected>System Administrator</option>
-                    <option value="Regional Exam Controller">Regional Exam Controller</option>
-                    <option value="GES Content Manager">GES Content Manager</option>
-                  </select>
-                </div>
-              </div>
-
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px;">
-                <span id="addAdminMsg" style="font-size:0.85rem; font-weight:700; color:var(--emerald-700);"></span>
-                <button type="submit" class="btn btn-gold btn-sm">+ Create Administrator Account</button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Registered Administrators Master List -->
-          <strong style="font-size:0.95rem; color:var(--navy-900);">👥 Registered System Administrators Roster</strong>
-          <div style="overflow-x:auto; margin-top:8px;">
-            <table class="admin-table">
-              <thead>
-                <tr>
-                  <th>Administrator Name</th>
-                  <th>Email Address</th>
-                  <th>Role Designation</th>
-                  <th>Created Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody id="adminUsersTableBody">
-                <!-- Populated by JS -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
+  <!-- Admin portal now rendered full-page inside #screen-admin in main container -->
 
   <!-- ================= ADD / EDIT QUESTION FORM MODAL ================= -->
   <div class="modal-overlay" id="qFormModal">

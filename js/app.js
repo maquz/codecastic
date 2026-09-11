@@ -26,7 +26,8 @@
     landing: document.getElementById("screen-landing"),
     select: document.getElementById("screen-select"),
     quiz: document.getElementById("screen-quiz"),
-    results: document.getElementById("screen-results")
+    results: document.getElementById("screen-results"),
+    admin: document.getElementById("screen-admin")
   };
 
   const navElements = {
@@ -755,7 +756,7 @@
   function openAdminModal() {
     if (isAdminAuthenticated) {
       switchAdminTab("admins");
-      adminElements.modal.classList.add("active");
+      showScreen("admin");
     } else {
       if (adminLoginElements.emailInput) adminLoginElements.emailInput.value = "admin@ges.gov.gh";
       if (adminLoginElements.passInput) adminLoginElements.passInput.value = "";
@@ -1439,9 +1440,11 @@
           if (subtitleInfo) {
             subtitleInfo.textContent = `Logged in as: ${res.admin.name} (${res.admin.email})`;
           }
+          const adminOpenBtn = document.getElementById("adminOpenBtn");
+          if (adminOpenBtn) adminOpenBtn.classList.remove("hidden");
 
           switchAdminTab("admins");
-          adminElements.modal.classList.add("active");
+          showScreen("admin");
           alert(`🎉 Welcome Administrator ${res.admin.name}! Your account has been registered and system access granted.`);
         } else {
           adminLoginElements.regErrorMsg.textContent = "⚠️ " + res.error;
@@ -1471,20 +1474,36 @@
         if (subtitleInfo) {
           subtitleInfo.textContent = `Logged in as: ${res.admin.name} (${res.admin.email})`;
         }
+        const adminOpenBtn = document.getElementById("adminOpenBtn");
+        if (adminOpenBtn) adminOpenBtn.classList.remove("hidden");
 
-        switchAdminTab("admins");
-        adminElements.modal.classList.add("active");
+        switchAdminTab("qbank");
+        showScreen("admin");
       } else {
         adminLoginElements.errorMsg.classList.remove("hidden");
         adminLoginElements.passInput.select();
       }
     });
 
-    adminLoginElements.logoutBtn.addEventListener("click", () => {
-      isAdminAuthenticated = false;
-      StorageManager.clearCurrentAdmin();
-      adminElements.modal.classList.remove("active");
-    });
+    const adminLogoutBtn = document.getElementById("adminLogoutBtn");
+    const adminCloseBtn = document.getElementById("adminCloseBtn");
+
+    if (adminLogoutBtn) {
+      adminLogoutBtn.addEventListener("click", () => {
+        isAdminAuthenticated = false;
+        StorageManager.clearCurrentAdmin();
+        const adminOpenBtn = document.getElementById("adminOpenBtn");
+        if (adminOpenBtn) adminOpenBtn.classList.add("hidden");
+        showScreen("landing");
+      });
+    }
+
+    if (adminCloseBtn) {
+      adminCloseBtn.addEventListener("click", () => {
+        const candidate = StorageManager.getCandidateProfile();
+        showScreen(candidate ? "select" : "landing");
+      });
+    }
 
     adminLoginElements.changePassForm.addEventListener("submit", (e) => {
       e.preventDefault();
