@@ -177,10 +177,15 @@
             <option value="35">35 Questions</option>
             <option value="40">40 Questions</option>
             <option value="45">45 Questions</option>
-            <option value="50">50 Questions (Comprehensive)</option>
+            <option value="50">50 Questions</option>
+            <option value="55">55 Questions</option>
+            <option value="60">60 Questions</option>
+            <option value="65">65 Questions</option>
+            <option value="70">70 Questions</option>
+            <option value="75">75 Questions (Comprehensive Exam)</option>
             <option value="ALL">All Available Questions</option>
           </select>
-          <span style="font-size:0.8rem; color:var(--text-muted);">Starts at 25 questions minimum, continuing in multiples of 5.</span>
+          <span style="font-size:0.8rem; color:var(--text-muted);">Starts at 25 questions minimum, continuing in multiples of 5 up to 75.</span>
         </div>
 
         <div class="action-row">
@@ -550,26 +555,33 @@
     </div>
   </div>
 
-  <!-- ================= ADMIN LOGIN MODAL ================= -->
+  <!-- ================= ADMIN AUTHENTICATION & REGISTRATION MODAL ================= -->
   <div class="modal-overlay" id="adminLoginModal">
-    <div class="modal-card" style="max-width:440px;">
+    <div class="modal-card" style="max-width:460px;">
       <div class="modal-header">
-        <h3>🔐 System Admin Authentication</h3>
+        <h3>⚙️ Administrator Portal</h3>
         <button class="btn btn-outline btn-sm" id="adminLoginCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
       </div>
       <div class="modal-body">
-        <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:16px;">
-          Enter your registered Administrator Email Address and Password to access system controls, manage administrators, and view candidate audit logs.
-        </p>
+        <!-- Auth Mode Toggle Buttons -->
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+          <button type="button" class="btn btn-gold btn-sm active" id="adminTabLoginBtn" style="flex:1;">🔑 Admin Sign In</button>
+          <button type="button" class="btn btn-outline btn-sm" id="adminTabRegisterBtn" style="flex:1;">➕ Register Admin</button>
+        </div>
 
+        <!-- FORM 1: ADMIN LOGIN -->
         <form id="adminLoginForm">
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:14px; text-align:left;">
+            Sign in with your registered Administrator email address and password.
+          </p>
+
           <div class="form-group">
-            <label for="adminEmailInput" style="font-weight:700; font-size:0.88rem;">Admin Email / Username *</label>
+            <label for="adminEmailInput" style="font-weight:700; font-size:0.85rem;">Admin Email / Username *</label>
             <input type="email" class="form-control" id="adminEmailInput" placeholder="e.g. admin@ges.gov.gh" value="admin@ges.gov.gh" required autofocus>
           </div>
 
           <div class="form-group">
-            <label for="adminPassInput" style="font-weight:700; font-size:0.88rem;">Admin Password *</label>
+            <label for="adminPassInput" style="font-weight:700; font-size:0.85rem;">Admin Password *</label>
             <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password" required>
           </div>
 
@@ -577,9 +589,61 @@
             ⚠️ Invalid Admin Email or Password. Please check your credentials.
           </div>
 
-          <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
-            <button type="button" class="btn btn-outline" id="adminLoginCancelBtn">Cancel</button>
-            <button type="submit" class="btn btn-gold" id="adminLoginSubmitBtn">Unlock Admin Portal</button>
+          <button type="submit" class="btn btn-gold" id="adminLoginSubmitBtn" style="width:100%; margin-top:14px;">
+            Unlock Admin Portal →
+          </button>
+
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:16px; text-align:center;">
+            Don't have an admin account? <a href="#" id="toAdminRegisterLink" style="color:var(--gold-600); font-weight:700;">Register as Administrator</a>
+          </div>
+        </form>
+
+        <!-- FORM 2: DEDICATED ADMIN REGISTRATION -->
+        <form id="adminRegisterForm" class="hidden">
+          <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:14px; text-align:left;">
+            Register a new system administrator profile to manage exam questions, candidate rosters, and portal settings.
+          </p>
+
+          <div class="form-group">
+            <label for="adminRegName" style="font-weight:700; font-size:0.85rem;">Full Name (Administrator) *</label>
+            <input type="text" class="form-control" id="adminRegName" placeholder="e.g. Dr. Kwame Osei" required>
+          </div>
+
+          <div class="form-group">
+            <label for="adminRegEmail" style="font-weight:700; font-size:0.85rem;">Official Admin Email Address *</label>
+            <input type="email" class="form-control" id="adminRegEmail" placeholder="e.g. kwame.osei@ges.gov.gh" required>
+          </div>
+
+          <div class="form-group">
+            <label for="adminRegMasterKey" style="font-weight:700; font-size:0.85rem;">Master Authorization Code *</label>
+            <input type="password" class="form-control" id="adminRegMasterKey" placeholder="Enter master key (Default: admin123)" required>
+            <small style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px;">Authorization code required for admin registration (Master Passcode: <code>admin123</code> or <code>GES-ADMIN-2026</code>).</small>
+          </div>
+
+          <div class="form-group">
+            <label for="adminRegPassword" style="font-weight:700; font-size:0.85rem;">Admin Password *</label>
+            <input type="password" class="form-control" id="adminRegPassword" placeholder="Create your account password" required>
+          </div>
+
+          <div class="form-group">
+            <label for="adminRegRole" style="font-weight:700; font-size:0.85rem;">Administrative Role *</label>
+            <select class="form-control" id="adminRegRole" required>
+              <option value="System Administrator" selected>System Administrator</option>
+              <option value="Regional Exam Controller">Regional Exam Controller</option>
+              <option value="GES Content Manager">GES Content Manager</option>
+            </select>
+          </div>
+
+          <div class="feedback-box incorrect hidden" id="adminRegError" style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
+            ⚠️ Admin Registration Error.
+          </div>
+
+          <button type="submit" class="btn btn-gold" style="width:100%; margin-top:14px;">
+            Register Administrator Account & Launch →
+          </button>
+
+          <div style="font-size:0.85rem; color:var(--text-muted); margin-top:16px; text-align:center;">
+            Already registered as an administrator? <a href="#" id="toAdminLoginLink" style="color:var(--gold-600); font-weight:700;">Sign In</a>
           </div>
         </form>
       </div>

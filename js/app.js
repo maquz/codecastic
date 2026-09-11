@@ -109,11 +109,23 @@
     passInput: document.getElementById("adminPassInput"),
     errorMsg: document.getElementById("adminLoginError"),
     closeBtn: document.getElementById("adminLoginCloseBtn"),
-    cancelBtn: document.getElementById("adminLoginCancelBtn"),
     logoutBtn: document.getElementById("adminLogoutBtn"),
     changePassForm: document.getElementById("changePassForm"),
     newPassInput: document.getElementById("newPassInput"),
-    changePassMsg: document.getElementById("changePassMsg")
+    changePassMsg: document.getElementById("changePassMsg"),
+
+    // Dedicated Admin Registration Elements
+    regForm: document.getElementById("adminRegisterForm"),
+    regNameInput: document.getElementById("adminRegName"),
+    regEmailInput: document.getElementById("adminRegEmail"),
+    regKeyInput: document.getElementById("adminRegMasterKey"),
+    regPassInput: document.getElementById("adminRegPassword"),
+    regRoleInput: document.getElementById("adminRegRole"),
+    regErrorMsg: document.getElementById("adminRegError"),
+    toRegisterLink: document.getElementById("toAdminRegisterLink"),
+    toLoginLink: document.getElementById("toAdminLoginLink"),
+    tabLoginBtn: document.getElementById("adminTabLoginBtn"),
+    tabRegisterBtn: document.getElementById("adminTabRegisterBtn")
   };
 
   const certificateElements = {
@@ -1363,12 +1375,75 @@
       });
     }
 
-    adminLoginElements.closeBtn.addEventListener("click", () => {
-      adminLoginElements.modal.classList.remove("active");
-    });
-    adminLoginElements.cancelBtn.addEventListener("click", () => {
-      adminLoginElements.modal.classList.remove("active");
-    });
+    // Admin Auth Form Mode Toggle (Sign In vs Register)
+    const setAdminAuthMode = (mode) => {
+      if (mode === "register") {
+        adminLoginElements.form?.classList.add("hidden");
+        adminLoginElements.regForm?.classList.remove("hidden");
+        adminLoginElements.tabLoginBtn?.classList.remove("active", "btn-gold");
+        adminLoginElements.tabLoginBtn?.classList.add("btn-outline");
+        adminLoginElements.tabRegisterBtn?.classList.add("active", "btn-gold");
+        adminLoginElements.tabRegisterBtn?.classList.remove("btn-outline");
+      } else {
+        adminLoginElements.regForm?.classList.add("hidden");
+        adminLoginElements.form?.classList.remove("hidden");
+        adminLoginElements.tabRegisterBtn?.classList.remove("active", "btn-gold");
+        adminLoginElements.tabRegisterBtn?.classList.add("btn-outline");
+        adminLoginElements.tabLoginBtn?.classList.add("active", "btn-gold");
+        adminLoginElements.tabLoginBtn?.classList.remove("btn-outline");
+      }
+    };
+
+    if (adminLoginElements.tabLoginBtn) adminLoginElements.tabLoginBtn.addEventListener("click", () => setAdminAuthMode("login"));
+    if (adminLoginElements.tabRegisterBtn) adminLoginElements.tabRegisterBtn.addEventListener("click", () => setAdminAuthMode("register"));
+    if (adminLoginElements.toRegisterLink) adminLoginElements.toRegisterLink.addEventListener("click", (e) => { e.preventDefault(); setAdminAuthMode("register"); });
+    if (adminLoginElements.toLoginLink) adminLoginElements.toLoginLink.addEventListener("click", (e) => { e.preventDefault(); setAdminAuthMode("login"); });
+
+    // Dedicated Admin Registration Submit Listener
+    if (adminLoginElements.regForm) {
+      adminLoginElements.regForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const name = adminLoginElements.regNameInput.value.trim();
+        const email = adminLoginElements.regEmailInput.value.trim();
+        const masterKey = adminLoginElements.regKeyInput.value.trim();
+        const password = adminLoginElements.regPassInput.value;
+        const role = adminLoginElements.regRoleInput.value;
+
+        // Verify Master Authorization Code (admin123 or GES-ADMIN-2026 or current passcode)
+        const isValidKey = masterKey === "admin123" || masterKey === "GES-ADMIN-2026" || masterKey === StorageManager.getAdminPasscode();
+        if (!isValidKey) {
+          adminLoginElements.regErrorMsg.textContent = "⚠️ Invalid Master Authorization Code. Registration restricted to authorized administrators.";
+          adminLoginElements.regErrorMsg.classList.remove("hidden");
+          return;
+        }
+
+        const res = await StorageManager.registerAdminAccount({ name, email, password, role });
+        if (res.success) {
+          isAdminAuthenticated = true;
+          StorageManager.saveCurrentAdmin(res.admin);
+          adminLoginElements.regErrorMsg.classList.add("hidden");
+          adminLoginElements.modal.classList.remove("active");
+
+          const subtitleInfo = document.getElementById("adminSubtitleInfo");
+          if (subtitleInfo) {
+            subtitleInfo.textContent = `Logged in as: ${res.admin.name} (${res.admin.email})`;
+          }
+
+          switchAdminTab("admins");
+          adminElements.modal.classList.add("active");
+          alert(`🎉 Welcome Administrator ${res.admin.name}! Your account has been registered and system access granted.`);
+        } else {
+          adminLoginElements.regErrorMsg.textContent = "⚠️ " + res.error;
+          adminLoginElements.regErrorMsg.classList.remove("hidden");
+        }
+      });
+    }
+
+    if (adminLoginElements.closeBtn) {
+      adminLoginElements.closeBtn.addEventListener("click", () => {
+        adminLoginElements.modal.classList.remove("active");
+      });
+    }
 
     adminLoginElements.form.addEventListener("submit", async (e) => {
       e.preventDefault();
