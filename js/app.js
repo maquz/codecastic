@@ -243,6 +243,14 @@
     const candidate = StorageManager.getCandidateProfile();
     const assignedRank = candidate ? candidate.assignedRank : null;
 
+    if (assignedRank) {
+      currentRank = assignedRank;
+      if (candidateAuthElements && candidateAuthElements.rankNav) {
+        const rObj = GES_RANKS.find(r => r.id === assignedRank);
+        candidateAuthElements.rankNav.textContent = rObj ? rObj.name : assignedRank;
+      }
+    }
+
     // Strictly filter ranks: if a registered candidate is logged in, show ONLY their target promotion rank
     const visibleRanks = assignedRank 
       ? GES_RANKS.filter(r => r.id === assignedRank) 
@@ -977,6 +985,7 @@
           alert(`✅ Successfully updated assigned rank for candidate ${res.account.name || email} to "${rankLabel}"!`);
           renderAdminCandidatesList();
           renderRankCards();
+          checkCandidateAuth();
         } else {
           alert(`❌ Failed to update candidate rank: ${res.error}`);
         }

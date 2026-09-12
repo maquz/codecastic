@@ -971,7 +971,18 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   getCandidateProfile: function () {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.CANDIDATE);
-      return raw ? JSON.parse(raw) : null;
+      if (!raw) return null;
+      const profile = JSON.parse(raw);
+      if (!profile || !profile.email) return profile;
+
+      // Always resolve latest assignedRank from candidate accounts list
+      const accounts = this.getCandidateAccounts();
+      const account = accounts.find(a => a.email.toLowerCase() === profile.email.toLowerCase());
+      if (account && account.assignedRank && account.assignedRank !== profile.assignedRank) {
+        profile.assignedRank = account.assignedRank;
+        localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(profile));
+      }
+      return profile;
     } catch (e) {
       return null;
     }
@@ -1282,6 +1293,9 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
 
       if (data && Array.isArray(data) && data.length > 0) {
         const accounts = this.getCandidateAccounts();
+        const rawProfile = localStorage.getItem(STORAGE_KEYS.CANDIDATE);
+        let activeProfile = rawProfile ? JSON.parse(rawProfile) : null;
+
         data.forEach(item => {
           const cleanEmail = (item.email || "").toLowerCase().trim();
           const cloudAccount = {
@@ -1296,6 +1310,14 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
           const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
           if (idx !== -1) accounts[idx] = cloudAccount;
           else accounts.push(cloudAccount);
+
+          if (activeProfile && activeProfile.email && activeProfile.email.toLowerCase() === cleanEmail) {
+            activeProfile.assignedRank = item.assigned_rank;
+            activeProfile.name = item.full_name;
+            activeProfile.region = item.region;
+            activeProfile.password = item.password;
+            localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(activeProfile));
+          }
         });
 
         localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
