@@ -894,7 +894,7 @@
     if (!tbody) return;
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:var(--text-muted); padding:16px;">No candidate accounts found matching criteria.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:16px;">No candidate accounts found matching criteria.</td></tr>`;
       return;
     }
 
@@ -902,11 +902,18 @@
       const cStats = StorageManager.getStats(acct.email);
       const rankObj = GES_RANKS.find(r => r.id === acct.assignedRank);
       const rankName = rankObj ? rankObj.name : (acct.assignedRank || "All");
+      const candPass = acct.password || "ges123";
 
       return `
         <tr>
           <td><strong>${acct.name}</strong></td>
           <td><code>${acct.email}</code></td>
+          <td>
+            <div class="candidate-pass-wrapper" data-password="${candPass}">
+              <span class="candidate-pass-text" data-hidden="true">••••••••</span>
+              <button type="button" class="btn-pass-toggle" title="Reveal Password" onclick="toggleCandidatePassword(this)">👁️</button>
+            </div>
+          </td>
           <td>${acct.region || 'Ghana'}</td>
           <td><span class="badge badge-ad2" style="font-size:0.7rem;">${rankName}</span></td>
           <td>${cStats.totalAttempts}</td>
@@ -1261,8 +1268,12 @@
         if (res.success) {
           candidateAuthElements.forgotResultBox.className = "feedback-box correct";
           candidateAuthElements.forgotResultBox.innerHTML = `
-            <strong>🔑 Account Found!</strong><br>
-            Hello ${res.name}, your recovered password is: <strong style="font-size:1.1rem; color:var(--navy-950);">${res.password}</strong>
+            <strong>🔑 Account Credentials Found!</strong><br>
+            Hello <strong>${res.name}</strong>, your registered password is:<br>
+            <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+              <code style="font-size:1.1rem; color:var(--navy-950); font-weight:700; background:#FFFFFF; padding:5px 12px; border-radius:6px; border:1px solid #CBD5E1;">${res.password}</code>
+              <button type="button" class="btn btn-outline btn-sm" onclick="navigator.clipboard.writeText('${res.password}'); alert('Copied password to clipboard!');">📋 Copy Password</button>
+            </div>
           `;
         } else {
           candidateAuthElements.forgotResultBox.className = "feedback-box incorrect";
@@ -1733,6 +1744,34 @@
     }
   }
 
+  // Global Password Input Toggle Handler (Eye Icon)
+  document.addEventListener("click", (e) => {
+    const toggleBtn = e.target.closest(".password-toggle-btn");
+    if (!toggleBtn) return;
+
+    e.preventDefault();
+    const wrapper = toggleBtn.closest(".password-input-group");
+    const input = wrapper ? wrapper.querySelector("input") : (toggleBtn.dataset.target ? document.querySelector(toggleBtn.dataset.target) : null);
+    if (!input) return;
+
+    const eyeOff = toggleBtn.querySelector(".eye-off");
+    const eyeOn = toggleBtn.querySelector(".eye-on");
+
+    if (input.type === "password") {
+      input.type = "text";
+      toggleBtn.setAttribute("aria-label", "Hide password");
+      toggleBtn.title = "Hide password";
+      if (eyeOff) eyeOff.classList.add("hidden");
+      if (eyeOn) eyeOn.classList.remove("hidden");
+    } else {
+      input.type = "password";
+      toggleBtn.setAttribute("aria-label", "Show password");
+      toggleBtn.title = "Show password";
+      if (eyeOff) eyeOff.classList.remove("hidden");
+      if (eyeOn) eyeOn.classList.add("hidden");
+    }
+  });
+
   // Run app on DOMReady
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", initApp);
@@ -1740,3 +1779,29 @@
     initApp();
   }
 })();
+
+/**
+ * Global helper to toggle candidate password visibility in Admin Master Roster table
+ */
+window.toggleCandidatePassword = function(btn) {
+  const wrapper = btn.closest(".candidate-pass-wrapper");
+  if (!wrapper) return;
+  const maskSpan = wrapper.querySelector(".candidate-pass-text");
+  if (!maskSpan) return;
+
+  const pass = wrapper.dataset.password || "";
+  const isHidden = maskSpan.dataset.hidden !== "false";
+
+  if (isHidden) {
+    maskSpan.textContent = pass;
+    maskSpan.dataset.hidden = "false";
+    btn.textContent = "🙈";
+    btn.title = "Hide Password";
+  } else {
+    maskSpan.textContent = "••••••••";
+    maskSpan.dataset.hidden = "true";
+    btn.textContent = "👁️";
+    btn.title = "Reveal Password";
+  }
+};
+

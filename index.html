@@ -503,7 +503,13 @@
             <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
 
             <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-              <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" style="max-width:200px;" required>
+              <div class="password-input-group" style="max-width:220px;">
+                <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" required>
+                <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                  <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                  <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                </button>
+              </div>
               <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
               <span id="changePassMsg" style="font-size:0.8rem; color:var(--emerald-600); font-weight:600;"></span>
             </form>
@@ -544,6 +550,7 @@
                 <tr>
                   <th>Candidate Name</th>
                   <th>Email Address</th>
+                  <th>Password</th>
                   <th>Ghana Region</th>
                   <th>Assigned Rank</th>
                   <th>Exams Taken</th>
@@ -645,7 +652,13 @@
                 </div>
                 <div class="form-group" style="margin:0;">
                   <label style="font-size:0.82rem; font-weight:700;">Admin Password *</label>
-                  <input type="password" class="form-control" id="inputAdminPassword" placeholder="Create admin password" required>
+                  <div class="password-input-group">
+                    <input type="password" class="form-control" id="inputAdminPassword" placeholder="Create admin password" required>
+                    <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                      <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                      <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                  </div>
                 </div>
                 <div class="form-group" style="margin:0;">
                   <label style="font-size:0.82rem; font-weight:700;">Role Designation *</label>
@@ -711,7 +724,13 @@
 
           <div class="form-group">
             <label for="loginPassword" class="auth-label">Password</label>
-            <input type="password" class="form-control auth-input" id="loginPassword" placeholder="••••••••" required>
+            <div class="password-input-group">
+              <input type="password" class="form-control auth-input" id="loginPassword" placeholder="••••••••" required>
+              <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
           </div>
 
           <div class="auth-meta-row">
@@ -773,7 +792,13 @@
 
           <div class="form-group">
             <label for="regPassword" class="auth-label">Candidate Password *</label>
-            <input type="password" class="form-control auth-input" id="regPassword" placeholder="Create your account password" required>
+            <div class="password-input-group">
+              <input type="password" class="form-control auth-input" id="regPassword" placeholder="Create your account password" required>
+              <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
           </div>
 
           <div class="form-group">
@@ -877,7 +902,13 @@
 
           <div class="form-group">
             <label for="adminPassInput" style="font-weight:700; font-size:0.85rem;">Admin Password *</label>
-            <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password" required>
+            <div class="password-input-group">
+              <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password" required>
+              <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
           </div>
 
           <div class="feedback-box incorrect hidden" id="adminLoginError" style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
@@ -911,13 +942,25 @@
 
           <div class="form-group">
             <label for="adminRegMasterKey" style="font-weight:700; font-size:0.85rem;">Master Authorization Code *</label>
-            <input type="password" class="form-control" id="adminRegMasterKey" placeholder="Enter master key (Default: admin123)" required>
+            <div class="password-input-group">
+              <input type="password" class="form-control" id="adminRegMasterKey" placeholder="Enter master key (Default: admin123)" required>
+              <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
             <small style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px;">Authorization code required for admin registration (Master Passcode: <code>admin123</code> or <code>GES-ADMIN-2026</code>).</small>
           </div>
 
           <div class="form-group">
             <label for="adminRegPassword" style="font-weight:700; font-size:0.85rem;">Admin Password *</label>
-            <input type="password" class="form-control" id="adminRegPassword" placeholder="Create your account password" required>
+            <div class="password-input-group">
+              <input type="password" class="form-control" id="adminRegPassword" placeholder="Create your account password" required>
+              <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+              </button>
+            </div>
           </div>
 
           <div class="form-group">
