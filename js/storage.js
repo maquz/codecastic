@@ -59,6 +59,9 @@ var StorageManager = {
   saveQuestions: function (questions) {
     try {
       localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(questions));
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        this.syncQuestionsToSupabase().catch(err => console.warn("Background question sync error:", err));
+      }
       return true;
     } catch (e) {
       console.error("Failed to save questions to localStorage:", e);
@@ -1334,6 +1337,81 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       }
     } catch (e) {
       console.warn("Error fetching cloud accounts from Supabase:", e);
+    }
+    return [];
+  },
+
+  /**
+   * Sync all local questions to Supabase cloud database
+   */
+  syncQuestionsToSupabase: async function () {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return { success: false, error: "Supabase not connected" };
+    try {
+      const questions = this.getQuestions();
+      if (questions.length === 0) return { success: true, count: 0 };
+
+      const records = questions.map(q => ({
+        id: String(q.id),
+        level: q.level,
+        level_name: q.levelName || q.level_name || "",
+        category: q.category || "",
+        q: q.q,
+        options: q.options || [],
+        correct: typeof q.correct === 'number' ? q.correct : (parseInt(q.correct, 10) || 0),
+        explanation: q.explanation || ""
+      }));
+
+      const { data, error } = await supabaseClient
+        .from('questions')
+        .upsert(records, { onConflict: 'id' });
+
+      if (error) {
+        console.warn("Supabase questions bulk sync error:", error);
+        return { success: false, error: error.message };
+      }
+      return { success: true, count: questions.length };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Fetch all questions from Supabase cloud into local storage
+   */
+  fetchQuestionsFromSupabase: async function () {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return [];
+    try {
+      const { data, error } = await supabaseClient
+        .from('questions')
+        .select('*');
+
+      if (data && Array.isArray(data) && data.length > 0) {
+        const localQuestions = this.getQuestions();
+        const mappedCloud = data.map(item => ({
+          id: item.id,
+          level: item.level,
+          levelName: item.level_name || item.level,
+          category: item.category || "",
+          q: item.q,
+          options: Array.isArray(item.options) ? item.options : (typeof item.options === 'string' ? JSON.parse(item.options) : []),
+          correct: Number(item.correct) || 0,
+          explanation: item.explanation || ""
+        }));
+
+        const cloudIdSet = new Set(mappedCloud.map(q => q.id));
+        const merged = [...mappedCloud];
+
+        localQuestions.forEach(lq => {
+          if (!cloudIdSet.has(lq.id) && !this.isDuplicateQuestion(lq.q, mappedCloud)) {
+            merged.push(lq);
+          }
+        });
+
+        localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(merged));
+        return merged;
+      }
+    } catch (e) {
+      console.warn("Error fetching questions from Supabase:", e);
     }
     return [];
   }

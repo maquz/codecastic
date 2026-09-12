@@ -185,11 +185,13 @@
   async function initApp() {
     setupTheme();
     
-    // Auto-sync & fetch candidate accounts from Supabase Cloud on startup
+    // Auto-sync & fetch candidate accounts & question bank from Supabase Cloud on startup
     if (typeof StorageManager !== 'undefined') {
       try {
         await StorageManager.syncLocalAccountsToSupabase();
         await StorageManager.fetchCloudAccountsSupabase();
+        await StorageManager.syncQuestionsToSupabase();
+        await StorageManager.fetchQuestionsFromSupabase();
       } catch (e) {
         console.warn("Cloud startup sync notice:", e);
       }
@@ -1657,6 +1659,23 @@
       });
     }
     adminElements.qForm.addEventListener("submit", handleQFormSubmit);
+
+    // Manual Supabase Questions Sync
+    const adminSyncSupabaseBtn = document.getElementById("adminSyncSupabaseBtn");
+    if (adminSyncSupabaseBtn) {
+      adminSyncSupabaseBtn.addEventListener("click", async () => {
+        adminSyncSupabaseBtn.disabled = true;
+        adminSyncSupabaseBtn.textContent = "⌛ Syncing...";
+        const res = await StorageManager.syncQuestionsToSupabase();
+        adminSyncSupabaseBtn.disabled = false;
+        adminSyncSupabaseBtn.textContent = "☁️ Sync to Supabase";
+        if (res.success) {
+          alert(`✅ Successfully synced ${res.count} questions to Supabase cloud database!`);
+        } else {
+          alert(`⚠️ Supabase Sync Error: ${res.error}`);
+        }
+      });
+    }
 
     // Reset Defaults
     adminElements.resetBtn.addEventListener("click", () => {
