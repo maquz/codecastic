@@ -40,8 +40,8 @@
   --shadow-md: 0 4px 14px -2px rgba(15, 23, 42, 0.12);
   --shadow-lg: 0 12px 28px -6px rgba(15, 23, 42, 0.18);
 
-  --font-heading: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-body: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
 }
 
 /* Dark Theme Overrides */
@@ -1528,19 +1528,20 @@ body.dark-mode .landing-rank-pill {
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 20px;
   padding: 4px 14px;
-  font-size: 0.8rem;
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 600;
   color: #FFFFFF;
+  font-family: var(--font-body);
 }
 
 .cu-back-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   border: 1.5px solid var(--navy-900);
   background: #FFFFFF;
   color: var(--navy-900);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -1556,27 +1557,31 @@ body.dark-mode .landing-rank-pill {
 
 .cu-question-card {
   background: #FFFFFF;
-  border-radius: 14px;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
   border: 1px solid var(--line-color);
-  padding: 22px;
+  padding: 20px 22px;
   margin-bottom: 20px;
+  font-family: var(--font-body);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .cu-question-card:hover {
   border-color: var(--navy-900);
-  box-shadow: 0 6px 22px rgba(11, 30, 104, 0.08);
+  box-shadow: 0 6px 20px rgba(11, 30, 104, 0.07);
 }
 
 .cu-q-prompt-box {
   width: 100%;
   border: 1px solid var(--line-color);
   border-radius: 8px;
-  padding: 12px 16px;
-  font-size: 0.95rem;
-  color: var(--text-main);
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #1E293B;
   background: #FAFAFA;
+  font-family: var(--font-body);
 }
 
 .cu-options-grid {
@@ -1596,11 +1601,14 @@ body.dark-mode .landing-rank-pill {
   background: #FFFFFF;
   border: 1px solid var(--line-color);
   border-radius: 8px;
-  padding: 12px 16px;
+  padding: 10px 14px;
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 0.92rem;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #1E293B;
+  font-family: var(--font-body);
   transition: all 0.15s ease;
 }
 
@@ -1610,8 +1618,8 @@ body.dark-mode .landing-rank-pill {
 }
 
 .cu-radio-dot {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   border: 2px solid var(--text-light);
   display: flex;
@@ -1626,8 +1634,8 @@ body.dark-mode .landing-rank-pill {
 
 .cu-option-item.selected .cu-radio-dot::after {
   content: '';
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #DC2626;
 }
