@@ -470,17 +470,12 @@
             </div>
           </div>
 
-          <!-- Question Bank List -->
-          <div id="adminQuestionsList">
-            <!-- Populated by JS -->
-          </div>
+          <!-- Bulk Question Templates & Upload (Top Control Panel) -->
+          <div class="cu-bulk-card" style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:20px; margin-bottom:24px;">
+            <strong style="font-size:0.95rem; color:var(--navy-900);">📁 Bulk Question Templates & File Upload</strong>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions instantly.</p>
 
-          <!-- Bulk Question Templates & Import -->
-          <div style="margin-top:24px; border-top:1px solid var(--line-color); padding-top:16px;">
-            <strong style="font-size:0.9rem;">Bulk Question Templates & Upload</strong>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions at once.</p>
-
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <button class="btn btn-gold btn-sm" id="downloadWordTemplateBtn">📝 Word Template (.doc)</button>
                 <button class="btn btn-outline btn-sm" id="downloadCsvTemplateBtn">📊 Excel/CSV Template</button>
@@ -495,6 +490,11 @@
                 <button class="btn btn-outline btn-sm" id="adminExportBtn">📥 Export Backup</button>
               </div>
             </div>
+          </div>
+
+          <!-- Question Bank List -->
+          <div id="adminQuestionsList">
+            <!-- Populated by JS -->
           </div>
 
           <!-- Security & Passcode Change -->
