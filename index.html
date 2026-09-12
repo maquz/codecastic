@@ -132,7 +132,7 @@
             </div>
             <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
               <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">2. Select Exam Test</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Choose your desired question count (25, 30, 35, 40, 50, or All).</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Choose your desired question count (25, 30, 35, 40, 50, or Custom 25–50).</div>
             </div>
             <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
               <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">3. Complete Assessment</div>
@@ -172,23 +172,24 @@
         </div>
 
         <!-- Question Count Selector -->
-        <div style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:12px 16px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-          <label for="questionCountSelect" style="font-weight:600; font-size:0.9rem; margin:0;">📝 Number of Exam Questions:</label>
+        <div style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:14px 18px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+          <label for="questionCountSelect" style="font-weight:700; font-size:0.9rem; margin:0; color:var(--navy-900);">📝 Number of Exam Questions:</label>
           <select class="form-control" id="questionCountSelect" style="width:auto; max-width:280px; font-weight:600;">
             <option value="25" selected>25 Questions (Standard Exam)</option>
             <option value="30">30 Questions</option>
             <option value="35">35 Questions</option>
             <option value="40">40 Questions</option>
             <option value="45">45 Questions</option>
-            <option value="50">50 Questions</option>
-            <option value="55">55 Questions</option>
-            <option value="60">60 Questions</option>
-            <option value="65">65 Questions</option>
-            <option value="70">70 Questions</option>
-            <option value="75">75 Questions (Comprehensive Exam)</option>
+            <option value="50">50 Questions (Full Exam)</option>
+            <option value="CUSTOM">Custom Count (25 to 50)...</option>
             <option value="ALL">All Available Questions</option>
           </select>
-          <span style="font-size:0.8rem; color:var(--text-muted);">Starts at 25 questions minimum, continuing in multiples of 5 up to 75.</span>
+          <div id="customCountContainer" class="hidden" style="display:inline-flex; align-items:center; gap:8px; background:var(--card-bg); padding:4px 10px; border-radius:8px; border:1.5px solid var(--gold-500);">
+            <label for="customQuestionCountInput" style="font-size:0.82rem; font-weight:700; color:var(--navy-900);">Custom Count:</label>
+            <input type="number" class="form-control" id="customQuestionCountInput" min="25" max="50" value="25" style="width:75px; height:34px; font-weight:700; text-align:center; padding:4px 6px;">
+            <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(25 – 50)</span>
+          </div>
+          <span style="font-size:0.82rem; color:var(--text-muted);" id="qCountHelpText">Select or specify a customized question count between 25 and 50 questions.</span>
         </div>
 
         <div class="action-row">
@@ -430,7 +431,7 @@
 
           <!-- Exam Configuration Card (CU Style) -->
           <div class="cu-config-card" style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:22px; margin-bottom:24px;">
-            <div style="display:grid; grid-template-columns: 2fr 1fr 1.5fr; gap:18px; align-items:flex-start;">
+            <div style="display:grid; grid-template-columns: 2fr 1.2fr 1fr 1.5fr; gap:14px; align-items:flex-start;">
               
               <!-- Quiz Title / Target Rank Selection -->
               <div>
@@ -444,9 +445,22 @@
                 </select>
               </div>
 
+              <!-- Question Count Config (25 to 50) -->
+              <div>
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">📝 Default Question Count</label>
+                <select class="form-control" id="cuQuizQuestionCount" style="height:44px; border-radius:8px; font-weight:600; font-size:0.88rem;">
+                  <option value="25">25 Questions (Standard)</option>
+                  <option value="30">30 Questions</option>
+                  <option value="35">35 Questions</option>
+                  <option value="40">40 Questions</option>
+                  <option value="45">45 Questions</option>
+                  <option value="50" selected>50 Questions (Full Exam)</option>
+                </select>
+              </div>
+
               <!-- Time Limit (Minutes) -->
               <div>
-                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Time Limit (Minutes)</label>
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Time Limit (Mins)</label>
                 <input type="number" class="form-control" id="cuQuizTimeLimit" value="45" min="5" max="180" style="height:44px; border-radius:8px; font-weight:600;">
               </div>
 

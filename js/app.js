@@ -461,12 +461,23 @@
       return;
     }
 
-    // Read selected question count
+    // Read selected question count (supporting custom selection 25 to 50)
     const selectElem = document.getElementById("questionCountSelect");
+    const customInput = document.getElementById("customQuestionCountInput");
     const chosenVal = selectElem ? selectElem.value : "25";
     
     let targetCount;
-    if (chosenVal === "ALL") {
+    if (chosenVal === "CUSTOM") {
+      let val = parseInt(customInput?.value || "25", 10);
+      if (isNaN(val) || val < 25) {
+        val = 25;
+        if (customInput) customInput.value = "25";
+      } else if (val > 50) {
+        val = 50;
+        if (customInput) customInput.value = "50";
+      }
+      targetCount = val;
+    } else if (chosenVal === "ALL") {
       targetCount = pool.length;
     } else {
       targetCount = parseInt(chosenVal, 10) || 25;
@@ -1726,6 +1737,56 @@
         reader.readAsText(file);
       }
     });
+
+    // Question Count Selector Change Handler (Custom Range 25-50)
+    const qCountSelect = document.getElementById("questionCountSelect");
+    const customContainer = document.getElementById("customCountContainer");
+    const customInput = document.getElementById("customQuestionCountInput");
+
+    if (qCountSelect && customContainer) {
+      qCountSelect.addEventListener("change", () => {
+        if (qCountSelect.value === "CUSTOM") {
+          customContainer.classList.remove("hidden");
+          if (customInput) customInput.focus();
+        } else {
+          customContainer.classList.add("hidden");
+        }
+      });
+    }
+
+    if (customInput) {
+      customInput.addEventListener("change", () => {
+        let val = parseInt(customInput.value, 10);
+        if (isNaN(val) || val < 25) customInput.value = 25;
+        else if (val > 50) customInput.value = 50;
+      });
+    }
+
+    // Admin Quiz Default Question Count Setting Handler
+    const adminQCountSelect = document.getElementById("cuQuizQuestionCount");
+    if (adminQCountSelect) {
+      // Load stored preference
+      const currentSettings = StorageManager.getSettings();
+      if (currentSettings.defaultQuestionCount) {
+        adminQCountSelect.value = currentSettings.defaultQuestionCount;
+        if (qCountSelect) {
+          qCountSelect.value = currentSettings.defaultQuestionCount;
+          if (currentSettings.defaultQuestionCount === "CUSTOM" && customContainer) {
+            customContainer.classList.remove("hidden");
+          }
+        }
+      }
+
+      adminQCountSelect.addEventListener("change", () => {
+        const val = adminQCountSelect.value;
+        StorageManager.saveSettings({ defaultQuestionCount: val });
+        if (qCountSelect) {
+          qCountSelect.value = val;
+          if (val === "CUSTOM" && customContainer) customContainer.classList.remove("hidden");
+          else if (customContainer) customContainer.classList.add("hidden");
+        }
+      });
+    }
 
     // Purge Duplicate Questions Handler
     const adminPurgeDupesBtn = document.getElementById("adminPurgeDupesBtn");
