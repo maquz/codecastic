@@ -1276,6 +1276,8 @@ body.dark-mode .landing-rank-pill {
   font-size: 0.9rem;
   color: var(--text-muted);
   line-height: 1.5;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 /* Centered Responsive Screen & Content Layout */
@@ -1298,6 +1300,12 @@ body.dark-mode .landing-rank-pill {
 #screen-landing .landing-hero,
 #screen-landing .panel {
   text-align: center;
+}
+
+.landing-hero-lede,
+.lede-text {
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .landing-hero > div,
