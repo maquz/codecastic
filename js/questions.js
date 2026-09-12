@@ -359,16 +359,16 @@ var GES_RANKS = [
   {
     id: "DD",
     name: "Deputy Director",
-    description: "DEOC Governance, ESP 2018-2030, NaSIA Inspections & Labour Act 651",
+    description: "DEOC Governance, ESP 2018-2030, Executive ARIC, NaSIA & Labour Act (Shared Pool with Director II)",
     badgeClass: "badge-dd",
-    count: 4
+    count: 7
   },
   {
     id: "DIR_II",
     name: "Director II",
-    description: "Executive ARIC Governance, 1992 Constitution Directives, Free SHS Policy & Risk Management",
+    description: "Executive ARIC Governance, 1992 Constitution Directives, Free SHS Policy & Risk Management (Shared Pool with Deputy Director)",
     badgeClass: "badge-dir2",
-    count: 3
+    count: 7
   }
 ];
 

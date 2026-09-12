@@ -1065,6 +1065,62 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
   },
 
   /**
+   * Admin method to update a candidate's assigned rank
+   */
+  updateCandidateRank: async function (email, newRank) {
+    try {
+      const accounts = this.getCandidateAccounts();
+      const cleanEmail = (email || "").toLowerCase().trim();
+      const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+      if (idx === -1) return { success: false, error: "Candidate account not found" };
+
+      accounts[idx].assignedRank = newRank;
+      localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+
+      // Update active candidate profile if currently logged in
+      const currentProfile = this.getCandidateProfile();
+      if (currentProfile && currentProfile.email && currentProfile.email.toLowerCase() === cleanEmail) {
+        currentProfile.assignedRank = newRank;
+        this.saveCandidateProfile(currentProfile);
+      }
+
+      // Sync to Supabase cloud database if available
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        try {
+          await supabaseClient
+            .from('candidates')
+            .update({ assigned_rank: newRank })
+            .eq('email', cleanEmail);
+        } catch (sbErr) {
+          console.warn("Supabase candidate rank update warning:", sbErr);
+        }
+      }
+
+      return { success: true, account: accounts[idx] };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Admin method to update an admin's role
+   */
+  updateAdminRole: async function (email, newRole) {
+    try {
+      const accounts = this.getAdminAccounts();
+      const cleanEmail = (email || "").toLowerCase().trim();
+      const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+      if (idx === -1) return { success: false, error: "Admin account not found" };
+
+      accounts[idx].role = newRole;
+      localStorage.setItem(STORAGE_KEYS.ADMIN_ACCOUNTS, JSON.stringify(accounts));
+      return { success: true, account: accounts[idx] };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
    * Log in candidate with Email and Password across local & cloud (Supabase)
    */
   /**

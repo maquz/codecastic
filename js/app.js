@@ -251,7 +251,9 @@
     selectElements.rankGrid.innerHTML = visibleRanks.map(rank => {
       const count = rank.id === "ALL" 
         ? questions.length 
-        : questions.filter(q => q.level === rank.id).length;
+        : (rank.id === "DD" || rank.id === "DIR_II")
+          ? questions.filter(q => q.level === "DD" || q.level === "DIR_II").length
+          : questions.filter(q => q.level === rank.id).length;
 
       const isEligible = !assignedRank || rank.id === assignedRank;
       const isSelected = rank.id === currentRank || visibleRanks.length === 1;
@@ -448,10 +450,12 @@
   function startQuiz() {
     const allQuestions = StorageManager.getQuestions();
     
-    // Filter questions by rank
+    // Filter questions by rank (Deputy Director & Director II share the same question pool)
     let pool = [];
     if (currentRank === "ALL") {
       pool = [...allQuestions];
+    } else if (currentRank === "DD" || currentRank === "DIR_II") {
+      pool = allQuestions.filter(q => q.level === "DD" || q.level === "DIR_II");
     } else {
       pool = allQuestions.filter(q => q.level === currentRank);
     }
@@ -858,16 +862,38 @@
         ? `<span class="badge badge-ad2" style="font-size:0.72rem; padding:3px 8px;">Super Admin</span>`
         : `<button class="btn btn-outline btn-sm delete-admin-btn" data-email="${admin.email}" style="color:var(--crimson-600); border-color:var(--crimson-600); padding:3px 8px; font-size:0.75rem;">🗑️ Delete</button>`;
 
+      const roleCellHtml = isSuper
+        ? `<span class="badge badge-ad1" style="font-size:0.72rem;">Super Administrator</span>`
+        : `<select class="form-control admin-role-change-select" data-email="${admin.email}" style="height:32px; padding:2px 8px; font-size:0.78rem; font-weight:600; border-radius:6px; border:1px solid var(--line-color); width:auto; cursor:pointer;">
+            <option value="System Administrator" ${admin.role === 'System Administrator' ? 'selected' : ''}>System Administrator</option>
+            <option value="Regional Exam Controller" ${admin.role === 'Regional Exam Controller' ? 'selected' : ''}>Regional Exam Controller</option>
+            <option value="GES Content Manager" ${admin.role === 'GES Content Manager' ? 'selected' : ''}>GES Content Manager</option>
+           </select>`;
+
       return `
         <tr>
           <td><strong>${admin.name}</strong></td>
           <td><code>${admin.email}</code></td>
-          <td><span class="badge badge-ad1" style="font-size:0.72rem;">${admin.role || 'Administrator'}</span></td>
+          <td>${roleCellHtml}</td>
           <td>${dateStr}</td>
           <td>${deleteBtnHtml}</td>
         </tr>
       `;
     }).join("");
+
+    tbody.querySelectorAll(".admin-role-change-select").forEach(select => {
+      select.addEventListener("change", async () => {
+        const email = select.getAttribute("data-email");
+        const newRole = select.value;
+        const res = await StorageManager.updateAdminRole(email, newRole);
+        if (res.success) {
+          alert(`✅ Successfully updated role for administrator ${res.account.name || email} to "${newRole}"!`);
+          renderAdminAccountsList();
+        } else {
+          alert(`❌ Failed to update admin role: ${res.error}`);
+        }
+      });
+    });
 
     tbody.querySelectorAll(".delete-admin-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
@@ -911,9 +937,16 @@
 
     tbody.innerHTML = filtered.map(acct => {
       const cStats = StorageManager.getStats(acct.email);
-      const rankObj = GES_RANKS.find(r => r.id === acct.assignedRank);
-      const rankName = rankObj ? rankObj.name : (acct.assignedRank || "All");
       const candPass = acct.password || "ges123";
+
+      const rankSelectHtml = `
+        <select class="form-control admin-candidate-rank-select" data-email="${acct.email}" style="height:32px; padding:2px 8px; font-size:0.78rem; font-weight:700; border-radius:6px; border:1.5px solid var(--gold-500); background:#FFFFFF; color:var(--navy-950); width:auto; cursor:pointer;">
+          <option value="AD_II" ${acct.assignedRank === 'AD_II' ? 'selected' : ''}>AD II (Assistant Director II)</option>
+          <option value="AD_I" ${acct.assignedRank === 'AD_I' ? 'selected' : ''}>AD I (Assistant Director I)</option>
+          <option value="DD" ${acct.assignedRank === 'DD' ? 'selected' : ''}>DD (Deputy Director)</option>
+          <option value="DIR_II" ${acct.assignedRank === 'DIR_II' ? 'selected' : ''}>DIR II (Director II)</option>
+        </select>
+      `;
 
       return `
         <tr>
@@ -926,12 +959,29 @@
             </div>
           </td>
           <td>${acct.region || 'Ghana'}</td>
-          <td><span class="badge badge-ad2" style="font-size:0.7rem;">${rankName}</span></td>
+          <td>${rankSelectHtml}</td>
           <td>${cStats.totalAttempts}</td>
           <td><strong>${cStats.overallBest > 0 ? cStats.overallBest + '%' : '—'}</strong></td>
         </tr>
       `;
     }).join("");
+
+    tbody.querySelectorAll(".admin-candidate-rank-select").forEach(select => {
+      select.addEventListener("change", async () => {
+        const email = select.getAttribute("data-email");
+        const newRank = select.value;
+        const res = await StorageManager.updateCandidateRank(email, newRank);
+        if (res.success) {
+          const rankObj = GES_RANKS.find(r => r.id === newRank);
+          const rankLabel = rankObj ? rankObj.name : newRank;
+          alert(`✅ Successfully updated assigned rank for candidate ${res.account.name || email} to "${rankLabel}"!`);
+          renderAdminCandidatesList();
+          renderRankCards();
+        } else {
+          alert(`❌ Failed to update candidate rank: ${res.error}`);
+        }
+      });
+    });
   }
 
   function renderAdminAuditLog() {
@@ -985,7 +1035,11 @@
     let questions = StorageManager.getQuestions();
 
     if (selectedRank !== "ALL") {
-      questions = questions.filter(q => q.level === selectedRank);
+      if (selectedRank === "DD" || selectedRank === "DIR_II") {
+        questions = questions.filter(q => q.level === "DD" || q.level === "DIR_II");
+      } else {
+        questions = questions.filter(q => q.level === selectedRank);
+      }
     }
 
     if (questions.length === 0) {
