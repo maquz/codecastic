@@ -734,7 +734,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       const stored = localStorage.getItem(STORAGE_KEYS.SETTINGS);
       if (stored) {
         return Object.assign({
-          defaultQuestionCount: "25",
+          defaultQuestionCount: "75",
           timeLimitMinutes: 45
         }, JSON.parse(stored));
       }
@@ -742,7 +742,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       console.warn("Error loading settings from localStorage:", e);
     }
     return {
-      defaultQuestionCount: "25",
+      defaultQuestionCount: "75",
       timeLimitMinutes: 45
     };
   },

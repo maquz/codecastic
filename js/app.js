@@ -473,10 +473,10 @@
       return;
     }
 
-    // Read selected question count (supporting custom selection 25 to 50)
+    // Read selected question count (supporting custom selection 25 to 75)
     const selectElem = document.getElementById("questionCountSelect");
     const customInput = document.getElementById("customQuestionCountInput");
-    const chosenVal = selectElem ? selectElem.value : "25";
+    const chosenVal = selectElem ? selectElem.value : "75";
     
     let targetCount;
     if (chosenVal === "CUSTOM") {
@@ -484,9 +484,9 @@
       if (isNaN(val) || val < 25) {
         val = 25;
         if (customInput) customInput.value = "25";
-      } else if (val > 50) {
-        val = 50;
-        if (customInput) customInput.value = "50";
+      } else if (val > 75) {
+        val = 75;
+        if (customInput) customInput.value = "75";
       }
       targetCount = val;
     } else if (chosenVal === "ALL") {
@@ -1801,7 +1801,7 @@
       }
     });
 
-    // Question Count Selector Change Handler (Custom Range 25-50)
+    // Question Count Selector Change Handler (Custom Range 25-75)
     const qCountSelect = document.getElementById("questionCountSelect");
     const customContainer = document.getElementById("customCountContainer");
     const customInput = document.getElementById("customQuestionCountInput");
@@ -1821,7 +1821,7 @@
       customInput.addEventListener("change", () => {
         let val = parseInt(customInput.value, 10);
         if (isNaN(val) || val < 25) customInput.value = 25;
-        else if (val > 50) customInput.value = 50;
+        else if (val > 75) customInput.value = 75;
       });
     }
 
