@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CodeCastic — Ghana Education Service Promotion Exam Portal</title>
-  <meta name="description" content="Online readiness exam portal for Ghana Education Service workers preparing for Assistant Director II, Assistant Director I, Deputy Director, and Director II promotion exams.">
-  
+  <meta name="description"
+    content="Online readiness exam portal for Ghana Education Service workers preparing for Assistant Director II, Assistant Director I, Deputy Director, and Director II promotion exams.">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
   <!-- Styles -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
+
 <body>
 
   <!-- ================= TOP NAVIGATION BAR ================= -->
@@ -28,9 +33,13 @@
       </div>
 
       <div class="header-actions">
-        <div class="stat-chip hidden" id="candidateProfileChip" title="Registered Candidate Profile" style="background:rgba(217,119,6,0.2); border-color:var(--gold-500);">
-          <span style="color:#FFF;">🎓 <strong id="candidateNameNav">Candidate</strong> (<span id="candidateRankNav">AD II</span>)</span>
-          <button class="btn btn-outline btn-sm" id="candidateLogoutBtn" style="padding:2px 8px; font-size:0.75rem; color:#FFF; border-color:rgba(255,255,255,0.4); margin-left:6px;" title="Switch / Re-register Candidate">Exit Profile</button>
+        <div class="stat-chip hidden" id="candidateProfileChip" title="Registered Candidate Profile"
+          style="background:rgba(217,119,6,0.2); border-color:var(--gold-500);">
+          <span style="color:#FFF;">🎓 <strong id="candidateNameNav">Candidate</strong> (<span id="candidateRankNav">AD
+              II</span>)</span>
+          <button class="btn btn-outline btn-sm" id="candidateLogoutBtn"
+            style="padding:2px 8px; font-size:0.75rem; color:#FFF; border-color:rgba(255,255,255,0.4); margin-left:6px;"
+            title="Switch / Re-register Candidate">Exit Profile</button>
         </div>
 
         <div class="stat-chip" title="Personal Best Percentage">
@@ -39,7 +48,8 @@
         <div class="stat-chip" title="Total Exam Attempts">
           <span>Attempts:</span> <strong id="navAttemptsCount">0</strong>
         </div>
-        <button class="btn btn-outline btn-sm" id="themeToggle" title="Toggle Light/Dark Theme" style="color:#FFF; border-color:rgba(255,255,255,0.3);">
+        <button class="btn btn-outline btn-sm" id="themeToggle" title="Toggle Light/Dark Theme"
+          style="color:#FFF; border-color:rgba(255,255,255,0.3);">
           🌙 Theme
         </button>
         <button class="btn btn-gold btn-sm hidden" id="adminOpenBtn" title="Open Admin Portal">
@@ -57,7 +67,8 @@
       <!-- Hero Banner -->
       <div class="panel landing-hero">
         <div class="landing-hero-brand-wrap" style="text-align:center; margin-bottom:16px;">
-          <img src="images/logo.png" alt="CodeCastic Logo" class="landing-hero-logo" style="max-height:95px; width:auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
+          <img src="images/logo.png" alt="CodeCastic Logo" class="landing-hero-logo"
+            style="max-height:95px; width:auto; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
         </div>
         <div class="landing-hero-badge-row">
           <span class="badge badge-ad2" style="font-size:0.8rem; padding:4px 12px;">Official GES Readiness Portal</span>
@@ -67,7 +78,9 @@
           Master Your GES Promotion Examination With Confidence
         </h2>
         <p class="landing-hero-lede">
-          CodeCastic is the authoritative digital prep platform built specifically for Ghanaian education officers preparing for official GES promotion interviews and competitive promotion exams across all 16 regions of Ghana.
+          CodeCastic is the authoritative digital prep platform built specifically for Ghanaian education officers
+          preparing for official GES promotion interviews and competitive promotion exams across all 16 regions of
+          Ghana.
         </p>
 
         <!-- Promotion Rank Badges Row -->
@@ -100,47 +113,64 @@
           <div class="landing-feature-card">
             <div class="landing-feature-icon">📜</div>
             <h3>Authentic GES Policy & Law</h3>
-            <p>Comprehensive questions covering Act 1023 (NTC/NaSIA/NaCCA), Act 921 (Public Financial Management), Act 663 (Procurement), SPAS appraisals, and NaCCA Standards-Based Curriculum.</p>
+            <p>Comprehensive questions covering Act 1023 (NTC/NaSIA/NaCCA), Act 921 (Public Financial Management), Act
+              663 (Procurement), SPAS appraisals, and NaCCA Standards-Based Curriculum.</p>
           </div>
 
           <div class="landing-feature-card">
             <div class="landing-feature-icon">⏱️</div>
             <h3>Timed Exam Simulations</h3>
-            <p>Experience realistic examination conditions with a 45-second per question timer clock, custom question count selection (25 to 50 questions), and instant feedback with authoritative rationale.</p>
+            <p>Experience realistic examination conditions with a 45-second per question timer clock, customised
+              question count selection (25 to 50 questions), and instant feedback with authoritative rationale.</p>
           </div>
 
           <div class="landing-feature-card">
             <div class="landing-feature-icon">🔒</div>
             <h3>Anti-Cheating & Integrity System</h3>
-            <p>Strict security protection featuring anti-text-copying, anti-highlighting, keyboard shortcut blocking, screenshot detection with automatic screen blur, and dynamic candidate watermarking.</p>
+            <p>Strict security protection featuring anti-text-copying, anti-highlighting, keyboard shortcut blocking,
+              screenshot detection with automatic screen blur, and dynamic candidate watermarking.</p>
           </div>
 
           <div class="landing-feature-card">
             <div class="landing-feature-icon">🏆</div>
             <h3>Personalized Audit & Certificates</h3>
-            <p>Private personal scorecards, historical attempt performance tracking, and printable Official Certificates of Achievement upon meeting the 70% passing benchmark.</p>
+            <p>Private personal scorecards, historical attempt performance tracking, and printable Official Certificates
+              of Achievement upon meeting the 70% passing benchmark.</p>
           </div>
         </div>
 
         <!-- How It Works Step Banner -->
-        <div style="margin-top:32px; background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:24px;">
+        <div
+          style="margin-top:32px; background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:24px;">
           <h3 style="font-size:1.2rem; margin-bottom:14px; color:var(--navy-900);">📋 Candidate Examination Process</h3>
           <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
-            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">1. Register Account</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Sign up with your email, Ghana region, and eligible promotion rank level.</div>
+            <div
+              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">1. Register
+                Account</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Sign up with your email, Ghana region, and
+                eligible promotion rank level.</div>
             </div>
-            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">2. Select Exam Test</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Choose your desired question count (25, 30, 35, 40, 50, or Custom 25–50).</div>
+            <div
+              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">2. Select Exam
+                Test</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Choose your desired question count (25, 30, 35,
+                40, 50, or Custom 25–50).</div>
             </div>
-            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">3. Complete Assessment</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Answer timed questions with Fisher-Yates randomized options & instant explanations.</div>
+            <div
+              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">3. Complete
+                Assessment</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Answer timed questions with Fisher-Yates
+                randomized options & instant explanations.</div>
             </div>
-            <div style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">4. Track & Print Cert</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Review private performance analytics and print your official certificate of excellence.</div>
+            <div
+              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">4. Track & Print
+                Cert</div>
+              <div style="font-size:0.85rem; color:var(--text-muted);">Review private performance analytics and print
+                your official certificate of excellence.</div>
             </div>
           </div>
         </div>
@@ -163,7 +193,9 @@
         </div>
         <h2 class="heading-lg">Ghana Education Service Promotion Exams</h2>
         <p class="lede-text">
-          Prepare for your official GES promotion interview and written examination. Choose your target promotion rank below to begin a timed, 45-second per question simulation with instant feedback and authoritative explanations.
+          Prepare for your official GES promotion interview and written examination. Choose your target promotion rank
+          below to begin a timed, 45-second per question simulation with instant feedback and authoritative
+          explanations.
         </p>
 
         <!-- Rank Grid -->
@@ -172,8 +204,11 @@
         </div>
 
         <!-- Question Count Selector -->
-        <div style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:14px 18px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-          <label for="questionCountSelect" style="font-weight:700; font-size:0.9rem; margin:0; color:var(--navy-900);">📝 Number of Exam Questions:</label>
+        <div
+          style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:14px 18px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+          <label for="questionCountSelect"
+            style="font-weight:700; font-size:0.9rem; margin:0; color:var(--navy-900);">📝 Number of Exam
+            Questions:</label>
           <select class="form-control" id="questionCountSelect" style="width:auto; max-width:280px; font-weight:600;">
             <option value="25" selected>25 Questions (Standard Exam)</option>
             <option value="30">30 Questions</option>
@@ -184,12 +219,16 @@
             <option value="CUSTOM">Custom Count (25 to 50)...</option>
             <option value="ALL">All Available Questions</option>
           </select>
-          <div id="customCountContainer" class="hidden" style="display:inline-flex; align-items:center; gap:8px; background:var(--card-bg); padding:4px 10px; border-radius:8px; border:1.5px solid var(--gold-500);">
-            <label for="customQuestionCountInput" style="font-size:0.82rem; font-weight:700; color:var(--navy-900);">Custom Count:</label>
-            <input type="number" class="form-control" id="customQuestionCountInput" min="25" max="50" value="25" style="width:75px; height:34px; font-weight:700; text-align:center; padding:4px 6px;">
+          <div id="customCountContainer" class="hidden"
+            style="display:inline-flex; align-items:center; gap:8px; background:var(--card-bg); padding:4px 10px; border-radius:8px; border:1.5px solid var(--gold-500);">
+            <label for="customQuestionCountInput"
+              style="font-size:0.82rem; font-weight:700; color:var(--navy-900);">Custom Count:</label>
+            <input type="number" class="form-control" id="customQuestionCountInput" min="25" max="50" value="25"
+              style="width:75px; height:34px; font-weight:700; text-align:center; padding:4px 6px;">
             <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(25 – 50)</span>
           </div>
-          <span style="font-size:0.82rem; color:var(--text-muted);" id="qCountHelpText">Select or specify a customized question count between 25 and 50 questions.</span>
+          <span style="font-size:0.82rem; color:var(--text-muted);" id="qCountHelpText">Select or specify a customized
+            question count between 25 and 50 questions.</span>
         </div>
 
         <div class="action-row">
@@ -208,7 +247,7 @@
           <span>Performance Record & History</span>
           <span class="rule"></span>
         </div>
-        
+
         <div class="stats-summary">
           <div class="stat-box">
             <div class="val" id="statTotal">0</div>
@@ -292,7 +331,8 @@
         </div>
 
         <div class="quiz-footer" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-          <button class="btn btn-outline btn-sm" id="endQuizBtn" style="color:var(--crimson-600); border-color:var(--line-color);">🛑 End Quiz Early</button>
+          <button class="btn btn-outline btn-sm" id="endQuizBtn"
+            style="color:var(--crimson-600); border-color:var(--line-color);">🛑 End Quiz Early</button>
           <button class="btn btn-primary hidden" id="nextBtn">Next Question →</button>
         </div>
       </div>
@@ -306,14 +346,18 @@
         </div>
         <div class="modal-body" style="text-align:center; padding:24px;">
           <div style="font-size:2.8rem; margin-bottom:10px;">📷 🚫</div>
-          <h4 style="color:var(--crimson-700); font-size:1.15rem; margin-bottom:10px;">Screenshot / Text Copying Attempt Blocked</h4>
+          <h4 style="color:var(--crimson-700); font-size:1.15rem; margin-bottom:10px;">Screenshot / Text Copying Attempt
+            Blocked</h4>
           <p style="font-size:0.9rem; color:var(--text-muted); line-height:1.5;">
-            Highlighting text, right-clicking, keyboard shortcuts (PrintScreen / Copy), and switching windows are <strong>strictly disabled</strong> during Ghana Education Service promotion examinations.
+            Highlighting text, right-clicking, keyboard shortcuts (PrintScreen / Copy), and switching windows are
+            <strong>strictly disabled</strong> during Ghana Education Service promotion examinations.
           </p>
-          <div style="background:var(--crimson-100); color:var(--crimson-800); font-size:0.82rem; padding:10px; border-radius:var(--radius-sm); margin-top:14px; font-weight:600;">
+          <div
+            style="background:var(--crimson-100); color:var(--crimson-800); font-size:0.82rem; padding:10px; border-radius:var(--radius-sm); margin-top:14px; font-weight:600;">
             🔒 Security Watermark active. All actions logged under candidate profile.
           </div>
-          <button class="btn btn-gold" id="securityDismissBtn" style="margin-top:18px; width:100%;">I Understand — Return to Exam</button>
+          <button class="btn btn-gold" id="securityDismissBtn" style="margin-top:18px; width:100%;">I Understand —
+            Return to Exam</button>
         </div>
       </div>
     </div>
@@ -323,17 +367,20 @@
       <div class="modal-card" style="max-width:460px;">
         <div class="modal-header">
           <h3>🛑 End Quiz Early</h3>
-          <button class="btn btn-outline btn-sm" id="endQuizCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
+          <button class="btn btn-outline btn-sm" id="endQuizCloseBtn"
+            style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
         </div>
         <div class="modal-body">
           <p style="color:var(--text-muted); font-size:0.95rem; margin-bottom:16px;">
-            Would you like to finish the exam now and view your scorecard for answered questions, or exit to the main dashboard to continue later?
+            Would you like to finish the exam now and view your scorecard for answered questions, or exit to the main
+            dashboard to continue later?
           </p>
 
           <div style="display:flex; flex-direction:column; gap:10px; margin-top:20px;">
             <button class="btn btn-gold" id="endQuizFinishBtn">📊 View Scorecard for Answered Questions</button>
             <button class="btn btn-outline" id="endQuizDashboardBtn">🏠 Exit to Main Dashboard</button>
-            <button class="btn btn-outline btn-sm" id="endQuizResumeBtn" style="margin-top:6px;">▶️ Resume Current Question</button>
+            <button class="btn btn-outline btn-sm" id="endQuizResumeBtn" style="margin-top:6px;">▶️ Resume Current
+              Question</button>
           </div>
         </div>
       </div>
@@ -345,8 +392,9 @@
         <div class="results-hero">
           <div class="score-ring-container">
             <svg width="140" height="140" viewBox="0 0 140 140">
-              <circle cx="70" cy="70" r="58" fill="none" stroke="var(--line-color)" stroke-width="12"/>
-              <circle id="ringProgress" cx="70" cy="70" r="58" fill="none" stroke="var(--gold-500)" stroke-width="12" stroke-linecap="round"/>
+              <circle cx="70" cy="70" r="58" fill="none" stroke="var(--line-color)" stroke-width="12" />
+              <circle id="ringProgress" cx="70" cy="70" r="58" fill="none" stroke="var(--gold-500)" stroke-width="12"
+                stroke-linecap="round" />
             </svg>
             <div class="score-ring-val" id="ringVal">0%</div>
           </div>
@@ -399,30 +447,39 @@
     <!-- ================= SCREEN 4: FULL-PAGE CODECASTIC ADMIN PORTAL ================= -->
     <section id="screen-admin" class="hidden">
       <div class="panel admin-fullpage-panel">
-        
+
         <!-- Header Banner & User Profile -->
-        <div class="admin-fullpage-header" style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-bottom:16px; border-bottom:2px solid var(--line-color); margin-bottom:20px;">
+        <div class="admin-fullpage-header"
+          style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding-bottom:16px; border-bottom:2px solid var(--line-color); margin-bottom:20px;">
           <div>
-            <h2 id="adminPortalTitle" style="margin:0; font-size:1.5rem; color:var(--navy-900);">⚙️ CodeCastic Admin Portal</h2>
-            <div id="adminSubtitleInfo" style="font-size:0.85rem; color:var(--gold-600); font-weight:700; margin-top:4px;">Logged in as: Super Admin (admin@ges.gov.gh)</div>
+            <h2 id="adminPortalTitle" style="margin:0; font-size:1.5rem; color:var(--navy-900);">⚙️ CodeCastic Admin
+              Portal</h2>
+            <div id="adminSubtitleInfo"
+              style="font-size:0.85rem; color:var(--gold-600); font-weight:700; margin-top:4px;">Logged in as: Super
+              Admin (admin@ges.gov.gh)</div>
           </div>
           <div style="display:flex; gap:10px; flex-wrap:wrap;">
             <button class="btn btn-outline btn-sm" id="adminCloseBtn">🏠 Exit to Portal Home</button>
-            <button class="btn btn-outline btn-sm" id="adminLogoutBtn" style="color:var(--crimson-600); border-color:var(--crimson-600);">🔒 Log Out</button>
+            <button class="btn btn-outline btn-sm" id="adminLogoutBtn"
+              style="color:var(--crimson-600); border-color:var(--crimson-600);">🔒 Log Out</button>
           </div>
         </div>
 
         <!-- Admin Navigation Tabs -->
         <div class="admin-tab-nav" style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;">
-          <button type="button" class="btn btn-gold btn-sm admin-tab-btn active" id="adminTabQBank">📚 Question Bank</button>
-          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabCandidates">🎓 Candidate Roster (<span id="adminCandidateCount">0</span>)</button>
-          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAudit">📊 Exam Audit Log (<span id="adminAuditCount">0</span>)</button>
-          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAdmins">👥 Admin Management (<span id="adminCount">1</span>)</button>
+          <button type="button" class="btn btn-gold btn-sm admin-tab-btn active" id="adminTabQBank">📚 Question
+            Bank</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabCandidates">🎓 Candidate Roster
+            (<span id="adminCandidateCount">0</span>)</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAudit">📊 Exam Audit Log (<span
+              id="adminAuditCount">0</span>)</button>
+          <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAdmins">👥 Admin Management
+            (<span id="adminCount">1</span>)</button>
         </div>
 
         <!-- TAB 1: QUESTION BANK & EXAM EDITOR VIEW -->
         <div id="adminViewQuestions">
-          
+
           <!-- Sub-Header Page Navigation Row (CU Style) -->
           <div class="cu-page-header" style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
             <button type="button" class="cu-back-btn" id="adminBackBtn" title="Back to Home Dashboard">←</button>
@@ -430,13 +487,17 @@
           </div>
 
           <!-- Exam Configuration Card (CU Style) -->
-          <div class="cu-config-card" style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:22px; margin-bottom:24px;">
+          <div class="cu-config-card"
+            style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:22px; margin-bottom:24px;">
             <div style="display:grid; grid-template-columns: 2fr 1.2fr 1fr 1.5fr; gap:14px; align-items:flex-start;">
-              
+
               <!-- Quiz Title / Target Rank Selection -->
               <div>
-                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Quiz Title</label>
-                <select class="form-control" id="adminRankFilter" style="width:100%; height:44px; border-radius:8px; font-weight:600; font-size:0.9rem;">
+                <label
+                  style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Quiz
+                  Title</label>
+                <select class="form-control" id="adminRankFilter"
+                  style="width:100%; height:44px; border-radius:8px; font-weight:600; font-size:0.9rem;">
                   <option value="ALL">GES PROMOTION EXAM — ALL RANKS</option>
                   <option value="AD_II" selected>ASSISTANT DIRECTOR II — COURSE CODE: GES 201</option>
                   <option value="AD_I">ASSISTANT DIRECTOR I — COURSE CODE: GES 202</option>
@@ -447,8 +508,11 @@
 
               <!-- Question Count Config (25 to 50) -->
               <div>
-                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">📝 Default Question Count</label>
-                <select class="form-control" id="cuQuizQuestionCount" style="height:44px; border-radius:8px; font-weight:600; font-size:0.88rem;">
+                <label
+                  style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">📝
+                  Default Question Count</label>
+                <select class="form-control" id="cuQuizQuestionCount"
+                  style="height:44px; border-radius:8px; font-weight:600; font-size:0.88rem;">
                   <option value="25">25 Questions (Standard)</option>
                   <option value="30">30 Questions</option>
                   <option value="35">35 Questions</option>
@@ -460,34 +524,46 @@
 
               <!-- Time Limit (Minutes) -->
               <div>
-                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Time Limit (Mins)</label>
-                <input type="number" class="form-control" id="cuQuizTimeLimit" value="45" min="5" max="180" style="height:44px; border-radius:8px; font-weight:600;">
+                <label
+                  style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Time
+                  Limit (Mins)</label>
+                <input type="number" class="form-control" id="cuQuizTimeLimit" value="45" min="5" max="180"
+                  style="height:44px; border-radius:8px; font-weight:600;">
               </div>
 
               <!-- Scheduled Start Date & Time -->
               <div>
-                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">📅 Scheduled Start Date & Time</label>
-                <input type="datetime-local" class="form-control" id="cuQuizStartDate" style="height:44px; border-radius:8px; font-weight:500; font-size:0.88rem;">
-                <div style="font-size:0.75rem; color:#B45309; font-weight:600; margin-top:5px;" id="cuScheduleNotice">Candidates cannot start before scheduled date & time</div>
+                <label
+                  style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">📅
+                  Scheduled Start Date & Time</label>
+                <input type="datetime-local" class="form-control" id="cuQuizStartDate"
+                  style="height:44px; border-radius:8px; font-weight:500; font-size:0.88rem;">
+                <div style="font-size:0.75rem; color:#B45309; font-weight:600; margin-top:5px;" id="cuScheduleNotice">
+                  Candidates cannot start before scheduled date & time</div>
               </div>
 
             </div>
 
             <!-- Action Bar Row -->
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:14px; border-top:1px solid var(--line-color); flex-wrap:wrap; gap:10px;">
-              <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Status: Active Online GES Exam Readiness Assessment</span>
+            <div
+              style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:14px; border-top:1px solid var(--line-color); flex-wrap:wrap; gap:10px;">
+              <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Status: Active Online GES Exam
+                Readiness Assessment</span>
               <div style="display:flex; gap:10px; flex-wrap:wrap;">
                 <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add New Question</button>
-                <button class="btn btn-outline btn-sm" id="adminPurgeDupesBtn" title="Scan & Purge Duplicate Questions">🧹 Purge Duplicates</button>
+                <button class="btn btn-outline btn-sm" id="adminPurgeDupesBtn"
+                  title="Scan & Purge Duplicate Questions">🧹 Purge Duplicates</button>
                 <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
               </div>
             </div>
           </div>
 
           <!-- Bulk Question Templates & Upload (Top Control Panel) -->
-          <div class="cu-bulk-card" style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:20px; margin-bottom:24px;">
+          <div class="cu-bulk-card"
+            style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:20px; margin-bottom:24px;">
             <strong style="font-size:0.95rem; color:var(--navy-900);">📁 Bulk Question Templates & File Upload</strong>
-            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Download a blank template (Word, Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions instantly.</p>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Download a blank template (Word,
+              Excel/CSV, or JSON), fill in your questions, and upload the file to import all questions instantly.</p>
 
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
               <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -514,14 +590,25 @@
           <!-- Security & Passcode Change -->
           <div style="margin-top:18px; border-top:1px solid var(--line-color); padding-top:16px;">
             <strong style="font-size:0.9rem;">Security & Passcode Settings</strong>
-            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode for future access.</p>
+            <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Change your admin login passcode
+              for future access.</p>
 
             <form id="changePassForm" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
               <div class="password-input-group" style="max-width:220px;">
                 <input type="password" class="form-control" id="newPassInput" placeholder="New Passcode" required>
                 <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                  <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                  <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path
+                      d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                    </path>
+                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                  </svg>
+                  <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
                 </button>
               </div>
               <button type="submit" class="btn btn-outline btn-sm">Update Passcode</button>
@@ -532,10 +619,12 @@
 
         <!-- TAB 2: CANDIDATE MASTER ROSTER VIEW -->
         <div id="adminViewCandidates" class="hidden">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+          <div
+            style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
             <strong style="font-size:1rem;">Registered Candidates Master Roster</strong>
             <div style="display:flex; gap:8px;">
-              <input type="text" class="form-control" id="adminCandidateSearch" placeholder="Search by name, email, or region..." style="width:260px;">
+              <input type="text" class="form-control" id="adminCandidateSearch"
+                placeholder="Search by name, email, or region..." style="width:260px;">
               <select class="form-control" id="adminCandidateRegionFilter" style="width:auto;">
                 <option value="ALL">All 16 Regions</option>
                 <option value="Ahafo Region">Ahafo Region</option>
@@ -580,10 +669,12 @@
 
         <!-- TAB 3: GLOBAL EXAM AUDIT LOG VIEW -->
         <div id="adminViewAudit" class="hidden">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+          <div
+            style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
             <strong style="font-size:1rem;">Global Examination Audit Log</strong>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <input type="text" class="form-control" id="adminAuditSearch" placeholder="Search candidate or email..." style="width:220px;">
+              <input type="text" class="form-control" id="adminAuditSearch" placeholder="Search candidate or email..."
+                style="width:220px;">
               <select class="form-control" id="adminAuditRegionFilter" style="width:auto;">
                 <option value="ALL">All Regions</option>
                 <option value="Ahafo Region">Ahafo Region</option>
@@ -603,7 +694,8 @@
                 <option value="Western Region">Western Region</option>
                 <option value="Western North Region">Western North Region</option>
               </select>
-              <button class="btn btn-outline btn-sm" id="adminClearAuditBtn" style="color:var(--crimson-600); border-color:var(--crimson-600);">Clear Audit History</button>
+              <button class="btn btn-outline btn-sm" id="adminClearAuditBtn"
+                style="color:var(--crimson-600); border-color:var(--crimson-600);">Clear Audit History</button>
             </div>
           </div>
 
@@ -630,47 +722,77 @@
         <!-- TAB 4: ADMIN USERS & SYSTEM DASHBOARD VIEW -->
         <div id="adminViewAdmins" class="hidden">
           <!-- System Overview Stats Grid -->
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:20px;">
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">System Admins</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatAdminCount">1</div>
+          <div
+            style="display:grid; grid-template-columns:repeat(auto-fit, minmax(170px, 1fr)); gap:14px; margin-bottom:20px;">
+            <div
+              style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">System
+                Admins</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;"
+                id="dashStatAdminCount">1</div>
             </div>
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Registered Candidates</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--navy-900); margin-top:2px;" id="dashStatCandidateCount">0</div>
+            <div
+              style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">
+                Registered Candidates</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--navy-900); margin-top:2px;"
+                id="dashStatCandidateCount">0</div>
             </div>
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Exam Attempts</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--emerald-700); margin-top:2px;" id="dashStatAttemptCount">0</div>
+            <div
+              style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Exam
+                Attempts</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--emerald-700); margin-top:2px;"
+                id="dashStatAttemptCount">0</div>
             </div>
-            <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
-              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">Question Bank Items</div>
-              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;" id="dashStatQuestionCount">15</div>
+            <div
+              style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-sm); padding:14px; text-align:center;">
+              <div style="font-size:0.78rem; color:var(--text-muted); font-weight:700; text-transform:uppercase;">
+                Question Bank Items</div>
+              <div style="font-size:1.8rem; font-weight:800; color:var(--gold-600); margin-top:2px;"
+                id="dashStatQuestionCount">15</div>
             </div>
           </div>
 
           <!-- Register New Admin Form Block -->
-          <div style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:18px; margin-bottom:20px;">
-            <strong style="font-size:0.95rem; color:var(--navy-900);">➕ Register New System Administrator Account</strong>
-            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Add another administrator with access to manage questions, candidate rosters, and system performance.</p>
+          <div
+            style="background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:18px; margin-bottom:20px;">
+            <strong style="font-size:0.95rem; color:var(--navy-900);">➕ Register New System Administrator
+              Account</strong>
+            <p style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">Add another administrator with
+              access to manage questions, candidate rosters, and system performance.</p>
 
             <form id="adminAddAdminForm">
               <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
                 <div class="form-group" style="margin:0;">
                   <label style="font-size:0.82rem; font-weight:700;">Admin Full Name *</label>
-                  <input type="text" class="form-control" id="inputAdminName" placeholder="e.g. Dr. Kwame Osei" required>
+                  <input type="text" class="form-control" id="inputAdminName" placeholder="e.g. Dr. Kwame Osei"
+                    required>
                 </div>
                 <div class="form-group" style="margin:0;">
                   <label style="font-size:0.82rem; font-weight:700;">Admin Email Address *</label>
-                  <input type="email" class="form-control" id="inputAdminEmail" placeholder="e.g. kwame.osei@ges.gov.gh" required>
+                  <input type="email" class="form-control" id="inputAdminEmail" placeholder="e.g. kwame.osei@ges.gov.gh"
+                    required>
                 </div>
                 <div class="form-group" style="margin:0;">
                   <label style="font-size:0.82rem; font-weight:700;">Admin Password *</label>
                   <div class="password-input-group">
-                    <input type="password" class="form-control" id="inputAdminPassword" placeholder="Create admin password" required>
+                    <input type="password" class="form-control" id="inputAdminPassword"
+                      placeholder="Create admin password" required>
                     <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                      <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                      <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path
+                          d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                        </path>
+                        <line x1="1" y1="1" x2="23" y2="23"></line>
+                      </svg>
+                      <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                      </svg>
                     </button>
                   </div>
                 </div>
@@ -684,7 +806,8 @@
                 </div>
               </div>
 
-              <div style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px;">
+              <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-top:14px; flex-wrap:wrap; gap:10px;">
                 <span id="addAdminMsg" style="font-size:0.85rem; font-weight:700; color:var(--emerald-700);"></span>
                 <button type="submit" class="btn btn-gold btn-sm">+ Create Administrator Account</button>
               </div>
@@ -719,10 +842,11 @@
   <!-- ================= CANDIDATE REGISTRATION & AUTHENTICATION MODAL ================= -->
   <div class="modal-overlay auth-modal-overlay" id="candidateAuthModal">
     <div class="auth-card">
-      
+
       <!-- Top Branding Logo & Title -->
       <div class="auth-card-header" style="text-align:center;">
-        <img src="images/logo.png" alt="CodeCastic Logo" class="auth-card-logo-img" style="max-height:75px; width:auto; margin-bottom:12px;">
+        <img src="images/logo.png" alt="CodeCastic Logo" class="auth-card-logo-img"
+          style="max-height:75px; width:auto; margin-bottom:12px;">
         <h2 class="auth-card-title" id="authHeaderTitle">Welcome Back</h2>
         <p class="auth-card-subtitle" id="authHeaderSubtitle">Login to access your GES promotion exam portal</p>
       </div>
@@ -733,7 +857,8 @@
         <form id="candidateLoginForm">
           <div class="form-group">
             <label for="loginEmail" class="auth-label">Username or Email</label>
-            <input type="email" class="form-control auth-input" id="loginEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
+            <input type="email" class="form-control auth-input" id="loginEmail"
+              placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
           </div>
 
           <div class="form-group">
@@ -741,8 +866,18 @@
             <div class="password-input-group">
               <input type="password" class="form-control auth-input" id="loginPassword" placeholder="••••••••" required>
               <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                  </path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
               </button>
             </div>
           </div>
@@ -754,7 +889,8 @@
             <a href="#" id="forgotPassLink" class="auth-link">Forgot password?</a>
           </div>
 
-          <div class="feedback-box incorrect hidden" id="candidateLoginError" style="margin-top:10px; margin-bottom:12px; padding:10px 12px; border-radius:10px;">
+          <div class="feedback-box incorrect hidden" id="candidateLoginError"
+            style="margin-top:10px; margin-bottom:12px; padding:10px 12px; border-radius:10px;">
             ⚠️ Invalid email or password.
           </div>
 
@@ -773,12 +909,14 @@
         <form id="candidateRegForm" class="hidden">
           <div class="form-group">
             <label for="regFullName" class="auth-label">Full Name (Candidate) *</label>
-            <input type="text" class="form-control auth-input" id="regFullName" placeholder="e.g. Kwaku Mensah Addo" required>
+            <input type="text" class="form-control auth-input" id="regFullName" placeholder="e.g. Kwaku Mensah Addo"
+              required>
           </div>
 
           <div class="form-group">
             <label for="regEmail" class="auth-label">Candidate Email Address *</label>
-            <input type="email" class="form-control auth-input" id="regEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh" required>
+            <input type="email" class="form-control auth-input" id="regEmail" placeholder="e.g. kwaku.mensah@ges.gov.gh"
+              required>
           </div>
 
           <div class="form-group">
@@ -807,10 +945,21 @@
           <div class="form-group">
             <label for="regPassword" class="auth-label">Candidate Password *</label>
             <div class="password-input-group">
-              <input type="password" class="form-control auth-input" id="regPassword" placeholder="Create your account password" required>
+              <input type="password" class="form-control auth-input" id="regPassword"
+                placeholder="Create your account password" required>
               <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                  </path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
               </button>
             </div>
           </div>
@@ -826,7 +975,8 @@
             </select>
           </div>
 
-          <button type="submit" class="btn auth-primary-btn" style="margin-top:14px;">Register Account & Launch Portal →</button>
+          <button type="submit" class="btn auth-primary-btn" style="margin-top:14px;">Register Account & Launch Portal
+            →</button>
 
           <div class="auth-switch-text" style="margin-top:18px;">
             Already have an account? <a href="#" id="toLoginLink" class="auth-link-bold">Login now</a>
@@ -842,7 +992,8 @@
     <div class="modal-card" style="max-width:440px;">
       <div class="modal-header">
         <h3>🔑 Candidate Password Recovery</h3>
-        <button class="btn btn-outline btn-sm" id="forgotCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
+        <button class="btn btn-outline btn-sm" id="forgotCloseBtn"
+          style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
       </div>
       <div class="modal-body">
         <p style="color:var(--text-muted); font-size:0.88rem; margin-bottom:14px;">
@@ -852,7 +1003,8 @@
         <form id="forgotPassForm">
           <div class="form-group">
             <label for="forgotEmail">Registered Email Address</label>
-            <input type="email" class="form-control" id="forgotEmail" placeholder="Enter your registered email" required>
+            <input type="email" class="form-control" id="forgotEmail" placeholder="Enter your registered email"
+              required>
           </div>
 
           <div class="form-group">
@@ -878,7 +1030,8 @@
             </select>
           </div>
 
-          <div id="forgotResultBox" class="hidden" style="margin-top:12px; padding:12px; border-radius:var(--radius-sm); font-size:0.9rem;"></div>
+          <div id="forgotResultBox" class="hidden"
+            style="margin-top:12px; padding:12px; border-radius:var(--radius-sm); font-size:0.9rem;"></div>
 
           <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:18px;">
             <button type="button" class="btn btn-outline" id="forgotCancelBtn">Back to Login</button>
@@ -894,13 +1047,16 @@
     <div class="modal-card" style="max-width:460px;">
       <div class="modal-header">
         <h3>⚙️ Administrator Portal</h3>
-        <button class="btn btn-outline btn-sm" id="adminLoginCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
+        <button class="btn btn-outline btn-sm" id="adminLoginCloseBtn"
+          style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕</button>
       </div>
       <div class="modal-body">
         <!-- Auth Mode Toggle Buttons -->
         <div style="display:flex; gap:8px; margin-bottom:16px;">
-          <button type="button" class="btn btn-gold btn-sm active" id="adminTabLoginBtn" style="flex:1;">🔑 Admin Sign In</button>
-          <button type="button" class="btn btn-outline btn-sm" id="adminTabRegisterBtn" style="flex:1;">➕ Register Admin</button>
+          <button type="button" class="btn btn-gold btn-sm active" id="adminTabLoginBtn" style="flex:1;">🔑 Admin Sign
+            In</button>
+          <button type="button" class="btn btn-outline btn-sm" id="adminTabRegisterBtn" style="flex:1;">➕ Register
+            Admin</button>
         </div>
 
         <!-- FORM 1: ADMIN LOGIN -->
@@ -911,21 +1067,34 @@
 
           <div class="form-group">
             <label for="adminEmailInput" style="font-weight:700; font-size:0.85rem;">Admin Email / Username *</label>
-            <input type="email" class="form-control" id="adminEmailInput" placeholder="e.g. admin@ges.gov.gh" value="admin@ges.gov.gh" required autofocus>
+            <input type="email" class="form-control" id="adminEmailInput" placeholder="e.g. admin@ges.gov.gh"
+              value="admin@ges.gov.gh" required autofocus>
           </div>
 
           <div class="form-group">
             <label for="adminPassInput" style="font-weight:700; font-size:0.85rem;">Admin Password *</label>
             <div class="password-input-group">
-              <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password" required>
+              <input type="password" class="form-control" id="adminPassInput" placeholder="Enter admin password"
+                required>
               <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                  </path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
               </button>
             </div>
           </div>
 
-          <div class="feedback-box incorrect hidden" id="adminLoginError" style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
+          <div class="feedback-box incorrect hidden" id="adminLoginError"
+            style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
             ⚠️ Invalid Admin Email or Password. Please check your credentials.
           </div>
 
@@ -934,14 +1103,16 @@
           </button>
 
           <div style="font-size:0.85rem; color:var(--text-muted); margin-top:16px; text-align:center;">
-            Don't have an admin account? <a href="#" id="toAdminRegisterLink" style="color:var(--gold-600); font-weight:700;">Register as Administrator</a>
+            Don't have an admin account? <a href="#" id="toAdminRegisterLink"
+              style="color:var(--gold-600); font-weight:700;">Register as Administrator</a>
           </div>
         </form>
 
         <!-- FORM 2: DEDICATED ADMIN REGISTRATION -->
         <form id="adminRegisterForm" class="hidden">
           <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:14px; text-align:left;">
-            Register a new system administrator profile to manage exam questions, candidate rosters, and portal settings.
+            Register a new system administrator profile to manage exam questions, candidate rosters, and portal
+            settings.
           </p>
 
           <div class="form-group">
@@ -950,29 +1121,56 @@
           </div>
 
           <div class="form-group">
-            <label for="adminRegEmail" style="font-weight:700; font-size:0.85rem;">Official Admin Email Address *</label>
-            <input type="email" class="form-control" id="adminRegEmail" placeholder="e.g. kwame.osei@ges.gov.gh" required>
+            <label for="adminRegEmail" style="font-weight:700; font-size:0.85rem;">Official Admin Email Address
+              *</label>
+            <input type="email" class="form-control" id="adminRegEmail" placeholder="e.g. kwame.osei@ges.gov.gh"
+              required>
           </div>
 
           <div class="form-group">
-            <label for="adminRegMasterKey" style="font-weight:700; font-size:0.85rem;">Master Authorization Code *</label>
+            <label for="adminRegMasterKey" style="font-weight:700; font-size:0.85rem;">Master Authorization Code
+              *</label>
             <div class="password-input-group">
-              <input type="password" class="form-control" id="adminRegMasterKey" placeholder="Enter master key (Default: admin123)" required>
+              <input type="password" class="form-control" id="adminRegMasterKey"
+                placeholder="Enter master key (Default: admin123)" required>
               <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                  </path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
               </button>
             </div>
-            <small style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px;">Authorization code required for admin registration (Master Passcode: <code>admin123</code> or <code>GES-ADMIN-2026</code>).</small>
+            <small style="font-size:0.75rem; color:var(--text-muted); display:block; margin-top:2px;">Authorization code
+              required for admin registration (Master Passcode: <code>admin123</code> or
+              <code>GES-ADMIN-2026</code>).</small>
           </div>
 
           <div class="form-group">
             <label for="adminRegPassword" style="font-weight:700; font-size:0.85rem;">Admin Password *</label>
             <div class="password-input-group">
-              <input type="password" class="form-control" id="adminRegPassword" placeholder="Create your account password" required>
+              <input type="password" class="form-control" id="adminRegPassword"
+                placeholder="Create your account password" required>
               <button type="button" class="password-toggle-btn" aria-label="Show password" title="Show password">
-                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>
-                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <svg class="eye-icon eye-off" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24">
+                  </path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+                <svg class="eye-icon eye-on hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
               </button>
             </div>
           </div>
@@ -986,7 +1184,8 @@
             </select>
           </div>
 
-          <div class="feedback-box incorrect hidden" id="adminRegError" style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
+          <div class="feedback-box incorrect hidden" id="adminRegError"
+            style="margin-top:10px; margin-bottom:14px; padding:10px 14px;">
             ⚠️ Admin Registration Error.
           </div>
 
@@ -995,7 +1194,8 @@
           </button>
 
           <div style="font-size:0.85rem; color:var(--text-muted); margin-top:16px; text-align:center;">
-            Already registered as an administrator? <a href="#" id="toAdminLoginLink" style="color:var(--gold-600); font-weight:700;">Sign In</a>
+            Already registered as an administrator? <a href="#" id="toAdminLoginLink"
+              style="color:var(--gold-600); font-weight:700;">Sign In</a>
           </div>
         </form>
       </div>
@@ -1009,7 +1209,8 @@
     <div class="modal-card" style="max-width:600px;">
       <div class="modal-header">
         <h3 id="qFormTitle">Add New Promotion Question</h3>
-        <button class="btn btn-outline btn-sm" id="qFormCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
+        <button class="btn btn-outline btn-sm" id="qFormCloseBtn"
+          style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
       </div>
 
       <div class="modal-body">
@@ -1026,12 +1227,14 @@
 
           <div class="form-group">
             <label>Category / Topic Area</label>
-            <input type="text" class="form-control" id="inputCategory" placeholder="e.g. Public Financial Management, NaCCA Curriculum" required>
+            <input type="text" class="form-control" id="inputCategory"
+              placeholder="e.g. Public Financial Management, NaCCA Curriculum" required>
           </div>
 
           <div class="form-group">
             <label>Question Text *</label>
-            <textarea class="form-control" id="inputQ" rows="3" placeholder="Enter the full question statement..." required></textarea>
+            <textarea class="form-control" id="inputQ" rows="3" placeholder="Enter the full question statement..."
+              required></textarea>
           </div>
 
           <div class="form-group">
@@ -1066,7 +1269,9 @@
 
           <div class="form-group">
             <label>Authoritative Explanation *</label>
-            <textarea class="form-control" id="inputExplanation" rows="3" placeholder="Explain why this is the correct answer according to GES policies or Ghanaian law..." required></textarea>
+            <textarea class="form-control" id="inputExplanation" rows="3"
+              placeholder="Explain why this is the correct answer according to GES policies or Ghanaian law..."
+              required></textarea>
           </div>
 
           <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:20px;">
@@ -1083,19 +1288,25 @@
     <div class="modal-card" style="max-width:700px;">
       <div class="modal-header">
         <h3>🏆 Official Certificate of Achievement</h3>
-        <button class="btn btn-outline btn-sm" id="certCloseBtn" style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
+        <button class="btn btn-outline btn-sm" id="certCloseBtn"
+          style="color:#FFF; border-color:rgba(255,255,255,0.3);">✕ Close</button>
       </div>
 
       <div class="modal-body">
         <div class="certificate-frame">
-          <div style="color:var(--gold-600); font-weight:800; letter-spacing:0.1em; font-size:0.85rem; text-transform:uppercase;">Ghana Education Service Promotion Portal</div>
+          <div
+            style="color:var(--gold-600); font-weight:800; letter-spacing:0.1em; font-size:0.85rem; text-transform:uppercase;">
+            Ghana Education Service Promotion Portal</div>
           <h2>Certificate of Exam Excellence</h2>
           <p>This is to certify that</p>
           <div class="certificate-name" id="certRecipientName">GES Officer</div>
           <p>has successfully passed the simulated promotion assessment for</p>
-          <h3 id="certRankName" style="color:var(--navy-900); font-size:1.3rem; margin-top:8px;">Assistant Director I</h3>
-          <p style="margin-top:14px; font-size:1rem;">Score Achieved: <strong id="certScoreVal">90</strong>% (Passing Benchmark: 70%)</p>
-          <div style="margin-top:24px; font-size:0.85rem; color:var(--text-muted);" id="certDateVal">September 10, 2026</div>
+          <h3 id="certRankName" style="color:var(--navy-900); font-size:1.3rem; margin-top:8px;">Assistant Director I
+          </h3>
+          <p style="margin-top:14px; font-size:1rem;">Score Achieved: <strong id="certScoreVal">90</strong>% (Passing
+            Benchmark: 70%)</p>
+          <div style="margin-top:24px; font-size:0.85rem; color:var(--text-muted);" id="certDateVal">September 10, 2026
+          </div>
         </div>
 
         <div style="display:flex; justify-content:flex-end; margin-top:16px;">
@@ -1108,7 +1319,8 @@
   <!-- ================= FOOTER ================= -->
   <footer>
     <p>CodeCastic &copy; 2026 — Ghana Education Service Promotion Exam Preparation Portal.</p>
-    <p style="font-size:0.78rem; margin-top:4px; opacity:0.8;">Scores, attempt records, and customized questions are stored locally in your browser.</p>
+    <p style="font-size:0.78rem; margin-top:4px; opacity:0.8;">Scores, attempt records, and customized questions are
+      stored locally in your browser.</p>
   </footer>
 
   <!-- ================= SCRIPTS ================= -->
@@ -1118,4 +1330,5 @@
   <script src="js/storage.js"></script>
   <script src="js/app.js"></script>
 </body>
+
 </html>
