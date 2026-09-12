@@ -978,8 +978,10 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       // Always resolve latest assignedRank from candidate accounts list
       const accounts = this.getCandidateAccounts();
       const account = accounts.find(a => a.email.toLowerCase() === profile.email.toLowerCase());
-      if (account && account.assignedRank && account.assignedRank !== profile.assignedRank) {
-        profile.assignedRank = account.assignedRank;
+      const latestRank = account ? (account.assignedRank || account.assigned_rank) : null;
+      if (latestRank && latestRank !== profile.assignedRank) {
+        profile.assignedRank = latestRank;
+        profile.assigned_rank = latestRank;
         localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(profile));
       }
       return profile;
@@ -1086,13 +1088,20 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       if (idx === -1) return { success: false, error: "Candidate account not found" };
 
       accounts[idx].assignedRank = newRank;
+      accounts[idx].assigned_rank = newRank;
       localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
 
-      // Update active candidate profile if currently logged in
-      const currentProfile = this.getCandidateProfile();
-      if (currentProfile && currentProfile.email && currentProfile.email.toLowerCase() === cleanEmail) {
-        currentProfile.assignedRank = newRank;
-        this.saveCandidateProfile(currentProfile);
+      // Update active candidate profile directly if currently logged in
+      const rawProfile = localStorage.getItem(STORAGE_KEYS.CANDIDATE);
+      if (rawProfile) {
+        try {
+          const currentProfile = JSON.parse(rawProfile);
+          if (currentProfile && currentProfile.email && currentProfile.email.toLowerCase() === cleanEmail) {
+            currentProfile.assignedRank = newRank;
+            currentProfile.assigned_rank = newRank;
+            localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(currentProfile));
+          }
+        } catch (pErr) {}
       }
 
       // Sync to Supabase cloud database if available

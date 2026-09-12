@@ -1614,16 +1614,14 @@
 
     if (adminCloseBtn) {
       adminCloseBtn.addEventListener("click", () => {
-        const candidate = StorageManager.getCandidateProfile();
-        showScreen(candidate ? "select" : "landing");
+        checkCandidateAuth();
       });
     }
 
     const adminBackBtn = document.getElementById("adminBackBtn");
     if (adminBackBtn) {
       adminBackBtn.addEventListener("click", () => {
-        const candidate = StorageManager.getCandidateProfile();
-        showScreen(candidate ? "select" : "landing");
+        checkCandidateAuth();
       });
     }
 
