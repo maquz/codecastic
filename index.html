@@ -419,23 +419,53 @@
           <button type="button" class="btn btn-outline btn-sm admin-tab-btn" id="adminTabAdmins">👥 Admin Management (<span id="adminCount">1</span>)</button>
         </div>
 
-        <!-- TAB 1: QUESTION BANK VIEW -->
+        <!-- TAB 1: QUESTION BANK & EXAM EDITOR VIEW -->
         <div id="adminViewQuestions">
-          <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:18px;">
-            <div style="display:flex; align-items:center; gap:10px;">
-              <label style="font-weight:600; font-size:0.9rem;">Filter Rank:</label>
-              <select class="form-control" id="adminRankFilter" style="width:auto;">
-                <option value="ALL">All Levels</option>
-                <option value="AD_II">Assistant Director II</option>
-                <option value="AD_I">Assistant Director I</option>
-                <option value="DD">Deputy Director</option>
-                <option value="DIR_II">Director II</option>
-              </select>
+          
+          <!-- Sub-Header Page Navigation Row (CU Style) -->
+          <div class="cu-page-header" style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+            <button type="button" class="cu-back-btn" id="adminBackBtn" title="Back to Home Dashboard">←</button>
+            <h2 style="font-size:1.6rem; font-weight:800; color:var(--navy-900); margin:0;">Edit Quiz</h2>
+          </div>
+
+          <!-- Exam Configuration Card (CU Style) -->
+          <div class="cu-config-card" style="background:#FFF; border-radius:14px; box-shadow:0 4px 18px rgba(0,0,0,0.05); border:1px solid var(--line-color); padding:22px; margin-bottom:24px;">
+            <div style="display:grid; grid-template-columns: 2fr 1fr 1.5fr; gap:18px; align-items:flex-start;">
+              
+              <!-- Quiz Title / Target Rank Selection -->
+              <div>
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Quiz Title</label>
+                <select class="form-control" id="adminRankFilter" style="width:100%; height:44px; border-radius:8px; font-weight:600; font-size:0.9rem;">
+                  <option value="ALL">GES PROMOTION EXAM — ALL RANKS</option>
+                  <option value="AD_II" selected>ASSISTANT DIRECTOR II — COURSE CODE: GES 201</option>
+                  <option value="AD_I">ASSISTANT DIRECTOR I — COURSE CODE: GES 202</option>
+                  <option value="DD">DEPUTY DIRECTOR — COURSE CODE: GES 301</option>
+                  <option value="DIR_II">DIRECTOR II — COURSE CODE: GES 401</option>
+                </select>
+              </div>
+
+              <!-- Time Limit (Minutes) -->
+              <div>
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">Time Limit (Minutes)</label>
+                <input type="number" class="form-control" id="cuQuizTimeLimit" value="45" min="5" max="180" style="height:44px; border-radius:8px; font-weight:600;">
+              </div>
+
+              <!-- Scheduled Start Date & Time -->
+              <div>
+                <label style="font-size:0.85rem; font-weight:700; color:var(--text-muted); display:block; margin-bottom:6px;">📅 Scheduled Start Date & Time</label>
+                <input type="datetime-local" class="form-control" id="cuQuizStartDate" style="height:44px; border-radius:8px; font-weight:500; font-size:0.88rem;">
+                <div style="font-size:0.75rem; color:#B45309; font-weight:600; margin-top:5px;" id="cuScheduleNotice">Candidates cannot start before scheduled date & time</div>
+              </div>
+
             </div>
 
-            <div style="display:flex; gap:8px;">
-              <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add Question</button>
-              <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
+            <!-- Action Bar Row -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-top:18px; padding-top:14px; border-top:1px solid var(--line-color); flex-wrap:wrap; gap:10px;">
+              <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">Status: Active Online GES Exam Readiness Assessment</span>
+              <div style="display:flex; gap:10px;">
+                <button class="btn btn-gold btn-sm" id="adminAddQBtn">+ Add New Question</button>
+                <button class="btn btn-outline btn-sm" id="adminResetBtn">Reset Defaults</button>
+              </div>
             </div>
           </div>
 

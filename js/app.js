@@ -975,19 +975,42 @@
       return;
     }
 
-    adminElements.questionsList.innerHTML = questions.map((q, idx) => `
-      <div style="padding:14px; border:1px solid var(--line-color); border-radius:var(--radius-sm); margin-bottom:10px; background:var(--paper-bg); display:flex; align-items:flex-start; justify-content:space-between; gap:12px;">
-        <div>
-          <span class="badge badge-ad2" style="font-size:0.7rem;">${q.levelName || q.level}</span>
-          <div style="font-weight:600; margin-top:4px;">${idx + 1}. ${q.q}</div>
-          <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Category: ${q.category || 'General'}</div>
+    adminElements.questionsList.innerHTML = questions.map((q, idx) => {
+      const optionsHtml = (q.options || []).map((opt, optIdx) => {
+        const isCorrect = optIdx === q.correct;
+        return `
+          <div class="cu-option-item ${isCorrect ? 'selected' : ''}">
+            <div class="cu-radio-dot"></div>
+            <div style="flex:1;">${opt}</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="cu-question-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <div style="display:flex; align-items:center; gap:10px;">
+              <strong style="color:var(--crimson-700); font-size:1.1rem;">Question ${idx + 1}</strong>
+              <span class="badge badge-ad2" style="font-size:0.7rem;">${q.levelName || q.level}</span>
+            </div>
+            <button class="delete-q-btn" data-id="${q.id}" title="Delete Question" style="background:none; border:none; color:var(--crimson-600); cursor:pointer; font-size:1.2rem; padding:2px 6px;">🗑️</button>
+          </div>
+
+          <div class="cu-q-prompt-box">
+            ${q.q}
+          </div>
+
+          <div class="cu-options-grid">
+            ${optionsHtml}
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:10px; border-top:1px dashed var(--line-color); flex-wrap:wrap; gap:8px;">
+            <span style="font-size:0.8rem; color:var(--text-muted);">Topic: <strong>${q.category || 'General GES Administration'}</strong></span>
+            <button class="btn btn-outline btn-sm edit-q-btn" data-id="${q.id}" style="padding:4px 12px; font-size:0.8rem;">✏️ Edit Question & Explanation</button>
+          </div>
         </div>
-        <div style="display:flex; gap:6px; flex-shrink:0;">
-          <button class="btn btn-outline btn-sm edit-q-btn" data-id="${q.id}">Edit</button>
-          <button class="btn btn-danger btn-sm delete-q-btn" data-id="${q.id}">Delete</button>
-        </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
 
     // Attach Edit & Delete Handlers
     adminElements.questionsList.querySelectorAll(".edit-q-btn").forEach(btn => {
@@ -1500,6 +1523,14 @@
 
     if (adminCloseBtn) {
       adminCloseBtn.addEventListener("click", () => {
+        const candidate = StorageManager.getCandidateProfile();
+        showScreen(candidate ? "select" : "landing");
+      });
+    }
+
+    const adminBackBtn = document.getElementById("adminBackBtn");
+    if (adminBackBtn) {
+      adminBackBtn.addEventListener("click", () => {
         const candidate = StorageManager.getCandidateProfile();
         showScreen(candidate ? "select" : "landing");
       });
