@@ -4,17 +4,17 @@
    ========================================================================== */
 
 :root {
-  /* Brand Palette */
-  --navy-950: #0B132B;
-  --navy-900: #1C2541;
-  --navy-800: #2A365B;
-  --navy-700: #3A4B7C;
+  /* Brand Palette — Official CodeCastic Navy Blue & White Theme */
+  --navy-950: #001242;
+  --navy-900: #0B1E68;
+  --navy-800: #152C80;
+  --navy-700: #1F3AA0;
   --navy-100: #EBF0FA;
   
-  --gold-600: #B45309;
-  --gold-500: #D97706;
-  --gold-400: #F59E0B;
-  --gold-100: #FEF3C7;
+  --gold-600: #0B1E68;
+  --gold-500: #0B1E68;
+  --gold-400: #1F3AA0;
+  --gold-100: #EBF0FA;
   
   --emerald-700: #047857;
   --emerald-600: #059669;
@@ -112,8 +112,8 @@ a {
 
 /* Header & Top Bar */
 .topbar {
-  background: var(--navy-950);
-  border-bottom: 4px solid var(--gold-500);
+  background: linear-gradient(135deg, #001242, #0B1E68);
+  border-bottom: 3px solid #152C80;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -139,30 +139,23 @@ a {
   gap: 14px;
 }
 
-.brand-logo {
-  width: 42px;
-  height: 42px;
-  background: linear-gradient(135deg, var(--gold-400), var(--gold-600));
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--navy-950);
-  font-weight: 800;
-  font-size: 1.4rem;
-  box-shadow: 0 2px 8px rgba(217, 119, 6, 0.4);
+.brand-logo-img {
+  height: 38px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
 }
 
 .brand-text h1 {
   font-size: 1.4rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #FFFFFF;
   letter-spacing: -0.02em;
 }
 
 .brand-text span {
   font-size: 0.78rem;
-  color: var(--gold-400);
+  color: #E2E8F0;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -264,33 +257,25 @@ a {
   transform: translateY(1px);
 }
 
-.btn-primary {
-  background: var(--navy-900);
+.btn-primary, .btn-gold {
+  background: #0B1E68;
   color: #FFFFFF;
-  border-color: var(--navy-900);
+  border-color: #0B1E68;
+  font-weight: 700;
 }
 
-.btn-primary:hover {
-  background: var(--navy-800);
-  box-shadow: var(--shadow-sm);
+.btn-primary:hover, .btn-gold:hover {
+  background: #001242;
+  border-color: #001242;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(11, 30, 104, 0.35);
 }
 
-.btn-primary:disabled {
+.btn-primary:disabled, .btn-gold:disabled {
   background: var(--text-light);
   border-color: var(--text-light);
   cursor: not-allowed;
   opacity: 0.6;
-}
-
-.btn-gold {
-  background: var(--gold-500);
-  color: var(--navy-950);
-  font-weight: 700;
-}
-
-.btn-gold:hover {
-  background: var(--gold-400);
-  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
 }
 
 .btn-outline {
