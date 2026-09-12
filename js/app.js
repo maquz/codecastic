@@ -1071,10 +1071,16 @@
       explanation: adminElements.inputExplanation.value.trim()
     };
 
+    let res;
     if (editingQuestionId) {
-      StorageManager.updateQuestion(editingQuestionId, questionData);
+      res = StorageManager.updateQuestion(editingQuestionId, questionData);
     } else {
-      StorageManager.addQuestion(questionData);
+      res = StorageManager.addQuestion(questionData);
+    }
+
+    if (res && res.success === false) {
+      alert("⚠️ " + (res.error || "Could not save question."));
+      return;
     }
 
     adminElements.formModal.classList.remove("active");
@@ -1693,7 +1699,11 @@
           }
 
           if (res.success) {
-            alert(`🎉 Success! Uploaded and imported ${res.count} question(s) into CodeCastic!`);
+            let msg = `🎉 Import Complete!\n\n✅ Successfully added ${res.count} new question(s) into CodeCastic.`;
+            if (res.duplicateCount > 0) {
+              msg += `\n⚠️ Skipped ${res.duplicateCount} duplicate question(s) to avoid repetition.`;
+            }
+            alert(msg);
             renderAdminQuestionsList();
             renderRankCards();
             updateDashboardStats();
@@ -1705,6 +1715,22 @@
         reader.readAsText(file);
       }
     });
+
+    // Purge Duplicate Questions Handler
+    const adminPurgeDupesBtn = document.getElementById("adminPurgeDupesBtn");
+    if (adminPurgeDupesBtn) {
+      adminPurgeDupesBtn.addEventListener("click", () => {
+        const res = StorageManager.deduplicateQuestionBank();
+        if (res.totalRemoved > 0) {
+          alert(`🧹 Deduplication Complete!\n\nRemoved ${res.totalRemoved} duplicate question(s).\nRemaining unique questions in bank: ${res.remainingCount}`);
+          renderAdminQuestionsList();
+          renderRankCards();
+          updateDashboardStats();
+        } else {
+          alert("✅ No duplicate questions found in your question bank!");
+        }
+      });
+    }
   }
 
   // Run app on DOMReady

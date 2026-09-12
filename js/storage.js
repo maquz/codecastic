@@ -80,14 +80,91 @@ var StorageManager = {
   },
 
   /**
-   * Add a new question to storage
+   * Normalize question text for strict duplicate detection
+   */
+  normalizeQuestionText: function (text) {
+    if (!text) return "";
+    return text.toString()
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "")
+      .trim();
+  },
+
+  /**
+   * Check if a question statement already exists in the question bank
+   */
+  isDuplicateQuestion: function (questionText, existingList, excludeId) {
+    const normNew = this.normalizeQuestionText(questionText);
+    if (!normNew) return false;
+    const list = existingList || this.getQuestions();
+    return list.some(item => {
+      if (excludeId && item.id === excludeId) return false;
+      return this.normalizeQuestionText(item.q) === normNew;
+    });
+  },
+
+  /**
+   * Filter out duplicate questions from incoming question list
+   */
+  filterUniqueQuestions: function (incomingQuestions, existingList) {
+    const existing = existingList || this.getQuestions();
+    const seenHashes = new Set(existing.map(q => this.normalizeQuestionText(q.q)));
+    const uniqueIncoming = [];
+    let duplicatesSkipped = 0;
+
+    (incomingQuestions || []).forEach(q => {
+      if (!q || !q.q) return;
+      const hash = this.normalizeQuestionText(q.q);
+      if (seenHashes.has(hash)) {
+        duplicatesSkipped++;
+      } else {
+        seenHashes.add(hash);
+        uniqueIncoming.push(q);
+      }
+    });
+
+    return { unique: uniqueIncoming, skippedCount: duplicatesSkipped };
+  },
+
+  /**
+   * Scan and purge existing duplicate entries in the question bank
+   */
+  deduplicateQuestionBank: function () {
+    const list = this.getQuestions();
+    const seen = new Set();
+    const uniqueList = [];
+    let duplicatesCount = 0;
+
+    for (let i = 0; i < list.length; i++) {
+      const q = list[i];
+      const norm = this.normalizeQuestionText(q.q);
+      if (seen.has(norm)) {
+        duplicatesCount++;
+      } else {
+        seen.add(norm);
+        uniqueList.push(q);
+      }
+    }
+
+    if (duplicatesCount > 0) {
+      this.saveQuestions(uniqueList);
+    }
+
+    return { totalRemoved: duplicatesCount, remainingCount: uniqueList.length };
+  },
+
+  /**
+   * Add a new question to storage (with deduplication check)
    */
   addQuestion: function (newQ) {
     const list = this.getQuestions();
+    if (this.isDuplicateQuestion(newQ.q, list)) {
+      return { success: false, isDuplicate: true, error: "Duplicate question statement detected. This question already exists in your question bank." };
+    }
     newQ.id = 'codecastic_q_' + Date.now();
     list.unshift(newQ);
     this.saveQuestions(list);
-    return newQ;
+    return { success: true, question: newQ };
   },
 
   /**
@@ -97,11 +174,14 @@ var StorageManager = {
     const list = this.getQuestions();
     const index = list.findIndex(q => q.id === id);
     if (index !== -1) {
+      if (updatedData.q && this.isDuplicateQuestion(updatedData.q, list, id)) {
+        return { success: false, isDuplicate: true, error: "Another question with identical wording already exists in your question bank." };
+      }
       list[index] = { ...list[index], ...updatedData };
       this.saveQuestions(list);
-      return true;
+      return { success: true };
     }
-    return false;
+    return { success: false, error: "Question not found." };
   },
 
   /**
@@ -249,17 +329,29 @@ var StorageManager = {
   importJSON: function (jsonString) {
     try {
       const parsed = JSON.parse(jsonString);
+      let incomingQuestions = [];
       if (parsed.questions && Array.isArray(parsed.questions)) {
-        this.saveQuestions(parsed.questions);
+        incomingQuestions = parsed.questions;
       } else if (Array.isArray(parsed)) {
-        // Direct array of question objects
-        this.saveQuestions(parsed);
-        return { success: true, count: parsed.length };
+        incomingQuestions = parsed;
       }
+
       if (parsed.attempts && Array.isArray(parsed.attempts)) {
         localStorage.setItem(STORAGE_KEYS.ATTEMPTS, JSON.stringify(parsed.attempts));
       }
-      return { success: true, count: parsed.questions ? parsed.questions.length : 0 };
+
+      const existing = this.getQuestions();
+      const dedupeResult = this.filterUniqueQuestions(incomingQuestions, existing);
+      if (dedupeResult.unique.length > 0) {
+        const updatedList = [...dedupeResult.unique, ...existing];
+        this.saveQuestions(updatedList);
+      }
+
+      return {
+        success: true,
+        count: dedupeResult.unique.length,
+        duplicateCount: dedupeResult.skippedCount
+      };
     } catch (e) {
       return { success: false, error: e.message };
     }
@@ -397,15 +489,18 @@ DIR_II,Executive Leadership,"The Free SHS policy incorporates which constitution
         }
       }
 
-      if (newQuestions.length === 0) {
-        return { success: false, error: "No valid question rows found in CSV." };
+      const existing = this.getQuestions();
+      const dedupeResult = this.filterUniqueQuestions(newQuestions, existing);
+      if (dedupeResult.unique.length > 0) {
+        const updatedList = [...dedupeResult.unique, ...existing];
+        this.saveQuestions(updatedList);
       }
 
-      const existing = this.getQuestions();
-      const updatedList = [...newQuestions, ...existing];
-      this.saveQuestions(updatedList);
-
-      return { success: true, count: newQuestions.length };
+      return {
+        success: true,
+        count: dedupeResult.unique.length,
+        duplicateCount: dedupeResult.skippedCount
+      };
     } catch (e) {
       return { success: false, error: e.message };
     }
@@ -582,15 +677,18 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
         }
       });
 
-      if (newQuestions.length === 0) {
-        return { success: false, error: "No structured question blocks found in the Word document. Please follow the Word template format." };
+      const existing = this.getQuestions();
+      const dedupeResult = this.filterUniqueQuestions(newQuestions, existing);
+      if (dedupeResult.unique.length > 0) {
+        const updatedList = [...dedupeResult.unique, ...existing];
+        this.saveQuestions(updatedList);
       }
 
-      const existing = this.getQuestions();
-      const updatedList = [...newQuestions, ...existing];
-      this.saveQuestions(updatedList);
-
-      return { success: true, count: newQuestions.length };
+      return {
+        success: true,
+        count: dedupeResult.unique.length,
+        duplicateCount: dedupeResult.skippedCount
+      };
     } catch (e) {
       return { success: false, error: e.message };
     }
