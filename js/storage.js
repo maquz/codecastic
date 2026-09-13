@@ -982,7 +982,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       const accounts = this.getCandidateAccounts();
       const account = accounts.find(a => a.email.toLowerCase() === profile.email.toLowerCase());
       const latestRank = account ? (account.assignedRank || account.assigned_rank) : null;
-      const latestPaid = account ? Boolean(account.isPaid || account.is_paid) : false;
+      const latestPaid = Boolean((account && (account.isPaid || account.is_paid)) || profile.isPaid || profile.is_paid);
       
       let updated = false;
       if (latestRank && latestRank !== profile.assignedRank) {
@@ -990,7 +990,7 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
         profile.assigned_rank = latestRank;
         updated = true;
       }
-      if (profile.isPaid !== latestPaid) {
+      if (profile.isPaid !== latestPaid || profile.is_paid !== latestPaid) {
         profile.isPaid = latestPaid;
         profile.is_paid = latestPaid;
         updated = true;
@@ -1372,7 +1372,11 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
 
         data.forEach(item => {
           const cleanEmail = (item.email || "").toLowerCase().trim();
-          const isPaidVal = Boolean(item.is_paid || item.isPaid);
+          const existingAcc = accounts.find(a => a.email.toLowerCase() === cleanEmail);
+          const isPaidVal = (item.is_paid !== undefined && item.is_paid !== null) 
+            ? Boolean(item.is_paid || item.isPaid) 
+            : Boolean(existingAcc ? (existingAcc.isPaid || existingAcc.is_paid) : false);
+
           const cloudAccount = {
             name: item.full_name,
             email: cleanEmail,

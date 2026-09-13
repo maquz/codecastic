@@ -312,9 +312,48 @@
       }
     }
 
-    // Update Question Count Help Text based on Candidate Payment Status
+    // Update Question Count Help Text & Banner based on Candidate Payment Status
     const isPaid = candidate ? Boolean(candidate.isPaid || candidate.is_paid) : false;
     const qCountHelpText = document.getElementById("qCountHelpText");
+    const dashPaystackBanner = document.getElementById("dashPaystackBanner");
+
+    if (dashPaystackBanner) {
+      if (isPaid) {
+        dashPaystackBanner.style.background = "linear-gradient(135deg, rgba(4,120,87,0.08) 0%, rgba(5,150,105,0.14) 100%)";
+        dashPaystackBanner.style.borderColor = "var(--emerald-600)";
+        dashPaystackBanner.innerHTML = `
+          <div>
+            <strong style="font-size:1.05rem; color:var(--emerald-700); display:block; margin-bottom:4px;">
+              ✅ Full GES Examination Access Unlocked
+            </strong>
+            <span style="font-size:0.88rem; color:var(--text-muted);">
+              Your candidate account has full access enabled. You can take complete 25 to 75 question promotion exam simulations with instant rationale and official achievement certificates.
+            </span>
+          </div>
+          <span class="badge" style="background:var(--emerald-100); color:var(--emerald-700); font-weight:800; padding:8px 14px; font-size:0.85rem; white-space:nowrap;">
+            ✅ FULL ACCESS PAID
+          </span>
+        `;
+      } else {
+        dashPaystackBanner.style.background = "linear-gradient(135deg, rgba(11, 164, 219, 0.08) 0%, rgba(0, 118, 163, 0.12) 100%)";
+        dashPaystackBanner.style.borderColor = "rgba(11, 164, 219, 0.4)";
+        dashPaystackBanner.innerHTML = `
+          <div>
+            <strong style="font-size:1.05rem; color:var(--navy-900); display:block; margin-bottom:4px;">
+              💳 Unlock Full GES Examination Access
+            </strong>
+            <span style="font-size:0.88rem; color:var(--text-muted);">
+              Complete your payment securely via Paystack to get full unrestricted access to all promotion exam questions, custom question counts (25 to 75 questions), and official certificates.
+            </span>
+          </div>
+          <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
+            class="btn btn-paystack" style="white-space:nowrap; text-decoration:none;">
+            💳 Pay via Paystack →
+          </a>
+        `;
+      }
+    }
+
     if (qCountHelpText) {
       if (!isPaid) {
         qCountHelpText.innerHTML = `<strong style="color:var(--crimson-600);">🔒 Preview Mode (Unpaid Account):</strong> Exam limited to 5 questions maximum. Complete payment on Paystack to unlock 25 to 75 questions.`;
