@@ -308,6 +308,41 @@ body.dark-mode .btn-outline {
   background: var(--crimson-700);
 }
 
+/* Paystack Payment Brand Button & Banner */
+.btn-paystack {
+  background: linear-gradient(135deg, #0ba4db 0%, #0076a3 100%);
+  color: #FFFFFF !important;
+  border: none;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(11, 164, 219, 0.3);
+  transition: all 0.2s ease;
+}
+
+.btn-paystack:hover {
+  background: linear-gradient(135deg, #0994c6 0%, #006085 100%);
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 18px rgba(11, 164, 219, 0.45);
+  transform: translateY(-1px);
+}
+
+.paystack-banner {
+  background: linear-gradient(135deg, rgba(11, 164, 219, 0.08) 0%, rgba(0, 118, 163, 0.12) 100%);
+  border: 1.5px solid rgba(11, 164, 219, 0.4);
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+body.dark-mode .paystack-banner {
+  background: linear-gradient(135deg, rgba(11, 164, 219, 0.15) 0%, rgba(0, 118, 163, 0.25) 100%);
+  border-color: rgba(11, 164, 219, 0.5);
+}
+
 /* Badges for Promotion Levels */
 .badge {
   display: inline-block;
