@@ -53,8 +53,8 @@
           🌙 Theme
         </button>
         <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
-          class="btn btn-paystack btn-sm" id="paystackHeaderBtn" title="Pay for Full Question Access on Paystack">
-          💳 Pay for Full Access
+          class="btn btn-momo btn-sm" id="paystackHeaderBtn" title="Pay via MTN Mobile Money (MoMo)">
+          <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img"> Pay via MTN MoMo
         </a>
         <button class="btn btn-gold btn-sm hidden" id="adminOpenBtn" title="Open Admin Portal">
           ⚙️ Admin
@@ -101,8 +101,9 @@
             🎓 Candidate Sign In / Register →
           </button>
           <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
-            class="btn btn-paystack btn-lg" style="text-decoration:none;">
-            💳 Pay for Full Access (Paystack) →
+            class="btn btn-momo btn-lg" style="text-decoration:none;">
+            <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img" style="height:26px;">
+            Pay via MTN Mobile Money (MoMo) →
           </a>
           <button class="btn btn-outline btn-lg" id="landingAdminBtn">
             ⚙️ Administrator Portal
@@ -206,19 +207,19 @@
           explanations.
         </p>
 
-        <!-- Paystack Access Payment Banner -->
-        <div class="paystack-banner" id="dashPaystackBanner">
+        <!-- MTN MoMo Access Payment Banner -->
+        <div class="momo-banner" id="dashPaystackBanner">
           <div>
             <strong style="font-size:1.05rem; color:var(--navy-900); display:block; margin-bottom:4px;">
-              💳 Unlock Full GES Examination Access
+              💳 Unlock Full GES Examination Access via MTN MoMo
             </strong>
             <span style="font-size:0.88rem; color:var(--text-muted);">
-              Complete your payment securely via Paystack to get full unrestricted access to all promotion exam questions, custom question counts (25 to 75 questions), and official certificates.
+              Complete your payment securely via MTN Mobile Money to get full unrestricted access to all promotion exam questions, custom question counts (25 to 75 questions), and official certificates.
             </span>
           </div>
           <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
-            class="btn btn-paystack" style="white-space:nowrap; text-decoration:none;">
-            💳 Pay via Paystack →
+            class="btn btn-momo" style="white-space:nowrap; text-decoration:none;">
+            <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img"> Pay via MTN MoMo →
           </a>
         </div>
 
@@ -931,9 +932,11 @@
             ⚠️ Invalid email or password.
           </div>
 
-          <div style="margin-top:14px; margin-bottom:14px; padding:12px; background:rgba(11,164,219,0.08); border:1px solid rgba(11,164,219,0.3); border-radius:8px; text-align:center;">
+          <div style="margin-top:14px; margin-bottom:14px; padding:12px; background:rgba(255,204,0,0.12); border:1.5px solid #FFCC00; border-radius:8px; text-align:center;">
             <span style="font-size:0.82rem; color:var(--text-muted); display:block; margin-bottom:6px;">Need to complete your registration payment?</span>
-            <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer" class="btn btn-paystack btn-sm" style="width:100%; text-decoration:none;">💳 Pay via Paystack for Full Access →</a>
+            <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer" class="btn btn-momo btn-sm" style="width:100%; text-decoration:none;">
+              <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img"> Pay via MTN Mobile Money (MoMo) →
+            </a>
           </div>
 
           <button type="submit" class="btn auth-primary-btn">Login</button>
@@ -1355,6 +1358,38 @@
           <button class="btn btn-primary" id="certPrintBtn">🖨️ Print / Download Certificate</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ================= GLOSSY UNPAID TRIAL LOCK MODAL ================= -->
+  <div class="modal-overlay" id="unpaidGlossyPayModal">
+    <div class="modal-card glossy-modal-card" style="max-width:520px; text-align:center; padding:32px 24px;">
+      <div style="margin-bottom:16px;">
+        <img src="images/mtn_momo.jpg" alt="MTN Mobile Money Logo" style="max-height:85px; width:auto; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.2);">
+      </div>
+      <h2 style="font-size:1.6rem; color:var(--navy-950); margin-bottom:8px; font-weight:800;">🔒 Free Trial Preview Completed</h2>
+      <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.6; margin-bottom:20px;">
+        You have completed your <strong>free trial preview assessment</strong>. Access to additional questions, exam simulations (25 to 75 questions), and official certificates is restricted until your account is upgraded via MTN Mobile Money.
+      </p>
+
+      <div style="background:rgba(255,204,0,0.15); border:1.5px solid #FFCC00; border-radius:12px; padding:16px; margin-bottom:22px; text-align:left;">
+        <strong style="color:var(--navy-900); font-size:0.9rem; display:block; margin-bottom:6px;">💡 What's included with full access?</strong>
+        <ul style="font-size:0.85rem; color:var(--text-muted); padding-left:18px; margin:0; line-height:1.5;">
+          <li>Unlimited exam simulations (25, 50, or 75 questions)</li>
+          <li>Full policy question bank across AD II, AD I, DD, DIR II</li>
+          <li>Instant authoritative explanations & legal rationale</li>
+          <li>Printable Official Certificate of Excellence</li>
+        </ul>
+      </div>
+
+      <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer" class="btn btn-momo btn-lg" style="width:100%; text-decoration:none; justify-content:center; padding:14px; font-size:1.05rem;">
+        <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img" style="height:28px;">
+        Pay via MTN Mobile Money (MoMo) →
+      </a>
+
+      <button type="button" class="btn btn-outline btn-sm" id="glossyModalCloseBtn" style="margin-top:16px; width:100%;">
+        Close & Return to Dashboard
+      </button>
     </div>
   </div>
 

@@ -343,6 +343,67 @@ body.dark-mode .paystack-banner {
   border-color: rgba(11, 164, 219, 0.5);
 }
 
+/* MTN Mobile Money (MoMo) Brand Button & Banner */
+.btn-momo {
+  background: linear-gradient(135deg, #FFCC00 0%, #FFB700 100%);
+  color: #000000 !important;
+  border: 1px solid #E6B800;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(255, 204, 0, 0.4);
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-momo:hover {
+  background: linear-gradient(135deg, #E6B800 0%, #D9A800 100%);
+  color: #000000 !important;
+  box-shadow: 0 6px 18px rgba(255, 204, 0, 0.6);
+  transform: translateY(-1px);
+}
+
+.momo-logo-img {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  vertical-align: middle;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+.momo-banner {
+  background: linear-gradient(135deg, rgba(255, 204, 0, 0.12) 0%, rgba(255, 183, 0, 0.18) 100%);
+  border: 1.5px solid #FFCC00;
+  border-radius: var(--radius-md);
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+body.dark-mode .momo-banner {
+  background: linear-gradient(135deg, rgba(255, 204, 0, 0.15) 0%, rgba(255, 183, 0, 0.22) 100%);
+  border-color: #FFCC00;
+}
+
+.glossy-modal-card {
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 2px solid #FFCC00 !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 40px rgba(255, 204, 0, 0.35) !important;
+  border-radius: var(--radius-lg);
+}
+
+body.dark-mode .glossy-modal-card {
+  background: rgba(17, 24, 39, 0.96) !important;
+  border-color: #FFCC00 !important;
+}
+
 .btn-pay-active {
   background: var(--emerald-100);
   color: var(--emerald-700);

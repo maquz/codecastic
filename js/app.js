@@ -548,9 +548,17 @@
     }
 
     const candidateProfile = StorageManager.getCandidateProfile();
+    const candidateEmail = candidateProfile ? candidateProfile.email : null;
     const isPaidCandidate = candidateProfile ? Boolean(candidateProfile.isPaid || candidateProfile.is_paid) : false;
+    const attemptHistory = StorageManager.getAttemptHistory(candidateEmail);
 
-    // Unpaid candidates are restricted to 5 questions maximum
+    // Unpaid candidates who have completed 1 trial attempt are blocked from taking further exams until payment
+    if (!isPaidCandidate && attemptHistory.length >= 1) {
+      openGlossyPayModal();
+      return;
+    }
+
+    // Unpaid candidates are restricted to 5 questions maximum on their 1 free trial
     if (!isPaidCandidate) {
       targetCount = Math.min(targetCount, 5);
     }
@@ -856,6 +864,12 @@
     });
 
     certificateElements.modal.classList.add("active");
+  }
+
+  /* ================= GLOSSY UNPAID TRIAL LOCK MODAL ================= */
+  function openGlossyPayModal() {
+    const modal = document.getElementById("unpaidGlossyPayModal");
+    if (modal) modal.classList.add("active");
   }
 
   /* ================= ADMIN MANAGEMENT PORTAL ================= */
@@ -1540,6 +1554,15 @@
     certificateElements.printBtn.addEventListener("click", () => {
       window.print();
     });
+
+    // Glossy Unpaid Modal Close
+    const glossyModalCloseBtn = document.getElementById("glossyModalCloseBtn");
+    if (glossyModalCloseBtn) {
+      glossyModalCloseBtn.addEventListener("click", () => {
+        const modal = document.getElementById("unpaidGlossyPayModal");
+        if (modal) modal.classList.remove("active");
+      });
+    }
 
     // Clear History
     selectElements.clearHistoryBtn.addEventListener("click", () => {
