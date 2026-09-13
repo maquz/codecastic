@@ -978,13 +978,24 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       const profile = JSON.parse(raw);
       if (!profile || !profile.email) return profile;
 
-      // Always resolve latest assignedRank from candidate accounts list
+      // Always resolve latest assignedRank and isPaid status from candidate accounts list
       const accounts = this.getCandidateAccounts();
       const account = accounts.find(a => a.email.toLowerCase() === profile.email.toLowerCase());
       const latestRank = account ? (account.assignedRank || account.assigned_rank) : null;
+      const latestPaid = account ? Boolean(account.isPaid || account.is_paid) : false;
+      
+      let updated = false;
       if (latestRank && latestRank !== profile.assignedRank) {
         profile.assignedRank = latestRank;
         profile.assigned_rank = latestRank;
+        updated = true;
+      }
+      if (profile.isPaid !== latestPaid) {
+        profile.isPaid = latestPaid;
+        profile.is_paid = latestPaid;
+        updated = true;
+      }
+      if (updated) {
         localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(profile));
       }
       return profile;
@@ -1042,7 +1053,10 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       const cleanEmail = (accountData.email || "").toLowerCase().trim();
       const existingIdx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
 
+      const isPaidVal = Boolean(accountData.isPaid || accountData.is_paid || false);
       const updatedAccount = {
+        isPaid: isPaidVal,
+        is_paid: isPaidVal,
         ...accountData,
         email: cleanEmail,
         registeredAt: Date.now()
@@ -1067,7 +1081,8 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
               email: updatedAccount.email,
               region: updatedAccount.region,
               password: updatedAccount.password,
-              assigned_rank: updatedAccount.assignedRank
+              assigned_rank: updatedAccount.assignedRank,
+              is_paid: isPaidVal
             }], { onConflict: 'email' });
         } catch (sbErr) {
           console.warn("Supabase cloud sync warning:", sbErr);
@@ -1116,6 +1131,52 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
             .eq('email', cleanEmail);
         } catch (sbErr) {
           console.warn("Supabase candidate rank update warning:", sbErr);
+        }
+      }
+
+      return { success: true, account: accounts[idx] };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  /**
+   * Admin method to update a candidate's payment access status
+   */
+  updateCandidatePaymentStatus: async function (email, isPaid) {
+    try {
+      const accounts = this.getCandidateAccounts();
+      const cleanEmail = (email || "").toLowerCase().trim();
+      const idx = accounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+      if (idx === -1) return { success: false, error: "Candidate account not found" };
+
+      const isPaidBool = Boolean(isPaid);
+      accounts[idx].isPaid = isPaidBool;
+      accounts[idx].is_paid = isPaidBool;
+      localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(accounts));
+
+      // Update active candidate profile directly if currently logged in
+      const rawProfile = localStorage.getItem(STORAGE_KEYS.CANDIDATE);
+      if (rawProfile) {
+        try {
+          const currentProfile = JSON.parse(rawProfile);
+          if (currentProfile && currentProfile.email && currentProfile.email.toLowerCase() === cleanEmail) {
+            currentProfile.isPaid = isPaidBool;
+            currentProfile.is_paid = isPaidBool;
+            localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(currentProfile));
+          }
+        } catch (pErr) {}
+      }
+
+      // Sync to Supabase cloud database if available
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        try {
+          await supabaseClient
+            .from('candidates')
+            .update({ is_paid: isPaidBool })
+            .eq('email', cleanEmail);
+        } catch (sbErr) {
+          console.warn("Supabase candidate payment status update warning:", sbErr);
         }
       }
 
@@ -1276,7 +1337,8 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
         email: (a.email || "").toLowerCase().trim(),
         region: a.region,
         password: a.password,
-        assigned_rank: a.assignedRank
+        assigned_rank: a.assignedRank,
+        is_paid: Boolean(a.isPaid || a.is_paid)
       }));
 
       const { data, error } = await supabaseClient
@@ -1310,12 +1372,15 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
 
         data.forEach(item => {
           const cleanEmail = (item.email || "").toLowerCase().trim();
+          const isPaidVal = Boolean(item.is_paid || item.isPaid);
           const cloudAccount = {
             name: item.full_name,
             email: cleanEmail,
             region: item.region,
             password: item.password,
             assignedRank: item.assigned_rank,
+            isPaid: isPaidVal,
+            is_paid: isPaidVal,
             registeredAt: item.created_at ? new Date(item.created_at).getTime() : Date.now()
           };
 
@@ -1328,6 +1393,8 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
             activeProfile.name = item.full_name;
             activeProfile.region = item.region;
             activeProfile.password = item.password;
+            activeProfile.isPaid = isPaidVal;
+            activeProfile.is_paid = isPaidVal;
             localStorage.setItem(STORAGE_KEYS.CANDIDATE, JSON.stringify(activeProfile));
           }
         });

@@ -343,6 +343,30 @@ body.dark-mode .paystack-banner {
   border-color: rgba(11, 164, 219, 0.5);
 }
 
+.btn-pay-active {
+  background: var(--emerald-100);
+  color: var(--emerald-700);
+  border: 1.5px solid var(--emerald-600);
+  transition: all 0.15s ease;
+}
+
+.btn-pay-active:hover {
+  background: var(--emerald-600);
+  color: #FFFFFF;
+}
+
+.btn-pay-unpaid {
+  background: var(--crimson-100);
+  color: var(--crimson-700);
+  border: 1.5px solid var(--crimson-600);
+  transition: all 0.15s ease;
+}
+
+.btn-pay-unpaid:hover {
+  background: var(--crimson-600);
+  color: #FFFFFF;
+}
+
 /* Badges for Promotion Levels */
 .badge {
   display: inline-block;

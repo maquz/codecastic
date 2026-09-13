@@ -311,6 +311,17 @@
         selectElements.rankHint.textContent = `Eligible Promotion Rank Pre-Selected: ${eligibleRankObj.name} Exam.`;
       }
     }
+
+    // Update Question Count Help Text based on Candidate Payment Status
+    const isPaid = candidate ? Boolean(candidate.isPaid || candidate.is_paid) : false;
+    const qCountHelpText = document.getElementById("qCountHelpText");
+    if (qCountHelpText) {
+      if (!isPaid) {
+        qCountHelpText.innerHTML = `<strong style="color:var(--crimson-600);">🔒 Preview Mode (Unpaid Account):</strong> Exam limited to 5 questions maximum. Complete payment on Paystack to unlock 25 to 75 questions.`;
+      } else {
+        qCountHelpText.innerHTML = `<strong style="color:var(--emerald-700);">✅ Full Access Unlocked:</strong> Access 25, 50, and 75 question exams & official certificates.`;
+      }
+    }
   }
 
   function updateDashboardStats() {
@@ -497,6 +508,14 @@
       targetCount = parseInt(chosenVal, 10) || 25;
     }
 
+    const candidateProfile = StorageManager.getCandidateProfile();
+    const isPaidCandidate = candidateProfile ? Boolean(candidateProfile.isPaid || candidateProfile.is_paid) : false;
+
+    // Unpaid candidates are restricted to 5 questions maximum
+    if (!isPaidCandidate) {
+      targetCount = Math.min(targetCount, 5);
+    }
+
     // Thoroughly reshuffle the base question pool
     pool = shuffleArray(pool);
 
@@ -531,7 +550,8 @@
     totalTimeUsed = 0;
 
     const rankObj = GES_RANKS.find(r => r.id === currentRank);
-    quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} PROMOTION EXAM (${targetCount} QUESTIONS)`;
+    const modeTag = !isPaidCandidate ? " (UNPAID PREVIEW: 5 QUESTIONS)" : ` (${targetCount} QUESTIONS)`;
+    quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} PROMOTION EXAM${modeTag}`;
 
     // Activate Anti-Cheating Security Mode
     isSecurityActive = true;
@@ -756,6 +776,28 @@
       `;
     }).join("");
 
+    const unpaidUpgradeNotice = document.getElementById("unpaidUpgradeNotice");
+    const candProf = StorageManager.getCandidateProfile();
+    const isPaid = candProf ? Boolean(candProf.isPaid || candProf.is_paid) : false;
+
+    if (unpaidUpgradeNotice) {
+      if (!isPaid) {
+        unpaidUpgradeNotice.classList.remove("hidden");
+        unpaidUpgradeNotice.innerHTML = `
+          <div class="paystack-banner" style="margin-top:16px; margin-bottom:16px; background:linear-gradient(135deg, rgba(217,119,6,0.12) 0%, rgba(180,83,9,0.18) 100%); border:1.5px solid var(--gold-500);">
+            <div>
+              <strong style="font-size:1.05rem; color:var(--navy-900); display:block; margin-bottom:4px;">🎉 You have completed your 5-Question Free Preview!</strong>
+              <span style="font-size:0.88rem; color:var(--text-muted);">To unlock full 25 to 75 question exams, full policy question banks, and official certificates, complete your registration payment on Paystack.</span>
+            </div>
+            <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer" class="btn btn-paystack" style="text-decoration:none; white-space:nowrap;">💳 Pay via Paystack for Full Access →</a>
+          </div>
+        `;
+      } else {
+        unpaidUpgradeNotice.classList.add("hidden");
+        unpaidUpgradeNotice.innerHTML = "";
+      }
+    }
+
     updateDashboardStats();
     showScreen("results");
   }
@@ -941,13 +983,14 @@
     if (!tbody) return;
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:16px;">No candidate accounts found matching criteria.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:var(--text-muted); padding:16px;">No candidate accounts found matching criteria.</td></tr>`;
       return;
     }
 
     tbody.innerHTML = filtered.map(acct => {
       const cStats = StorageManager.getStats(acct.email);
       const candPass = acct.password || "ges123";
+      const isPaid = Boolean(acct.isPaid || acct.is_paid);
 
       const rankSelectHtml = `
         <select class="form-control admin-candidate-rank-select" data-email="${acct.email}" style="height:32px; padding:2px 8px; font-size:0.78rem; font-weight:700; border-radius:6px; border:1.5px solid var(--gold-500); background:#FFFFFF; color:var(--navy-950); width:auto; cursor:pointer;">
@@ -956,6 +999,12 @@
           <option value="DD" ${acct.assignedRank === 'DD' ? 'selected' : ''}>DD (Deputy Director)</option>
           <option value="DIR_II" ${acct.assignedRank === 'DIR_II' ? 'selected' : ''}>DIR II (Director II)</option>
         </select>
+      `;
+
+      const payBtnHtml = `
+        <button type="button" class="btn btn-sm ${isPaid ? 'btn-pay-active' : 'btn-pay-unpaid'} admin-pay-toggle-btn" data-email="${acct.email}" data-paid="${isPaid}" style="font-size:0.75rem; padding:4px 10px; font-weight:700; border-radius:6px; cursor:pointer;">
+          ${isPaid ? '✅ PAID (Full Access)' : '🔒 UNPAID (5 Qs)'}
+        </button>
       `;
 
       return `
@@ -970,11 +1019,35 @@
           </td>
           <td>${acct.region || 'Ghana'}</td>
           <td>${rankSelectHtml}</td>
+          <td>${payBtnHtml}</td>
           <td>${cStats.totalAttempts}</td>
           <td><strong>${cStats.overallBest > 0 ? cStats.overallBest + '%' : '—'}</strong></td>
         </tr>
       `;
     }).join("");
+
+    tbody.querySelectorAll(".admin-pay-toggle-btn").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        const email = btn.getAttribute("data-email");
+        const currentPaid = btn.getAttribute("data-paid") === "true";
+        const newPaid = !currentPaid;
+        const confirmMsg = newPaid 
+          ? `Mark candidate ${email} as PAID (Grant full access to 25–75 questions)?` 
+          : `Mark candidate ${email} as UNPAID (Restrict candidate to 5 questions)?`;
+
+        if (confirm(confirmMsg)) {
+          const res = await StorageManager.updateCandidatePaymentStatus(email, newPaid);
+          if (res.success) {
+            alert(`✅ Payment status updated for ${email}!`);
+            renderAdminCandidatesList();
+            renderRankCards();
+            checkCandidateAuth();
+          } else {
+            alert(`❌ Failed to update payment status: ${res.error}`);
+          }
+        }
+      });
+    });
 
     tbody.querySelectorAll(".admin-candidate-rank-select").forEach(select => {
       select.addEventListener("change", async () => {
