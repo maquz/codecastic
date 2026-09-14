@@ -750,8 +750,8 @@
 
     const rankObj = GES_RANKS.find(r => r.id === currentRank);
 
-    // Save Record
-    StorageManager.saveAttempt({
+    // Save Record (local + Supabase cloud)
+    const attemptRecord = StorageManager.saveAttempt({
       rankId: currentRank,
       rankName: rankObj.name,
       total: total,
@@ -760,6 +760,13 @@
       pass: isPassed,
       timeSeconds: totalTimeUsed
     });
+    // Async cloud save — non-blocking
+    if (typeof saveAttemptSupabase === 'function') {
+      saveAttemptSupabase(attemptRecord).then(res => {
+        if (res && res.error) console.warn('Cloud attempt save error:', res.error);
+        else console.info('✅ Attempt saved to Supabase cloud.');
+      }).catch(e => console.warn('Cloud attempt save exception:', e));
+    }
 
     // Populate Results Screen
     resultElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} RESULTS`;

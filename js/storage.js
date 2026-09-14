@@ -1247,7 +1247,9 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
             region: data.region,
             password: data.password,
             assignedRank: data.assigned_rank,
-            registeredAt: data.created_at ? new Date(data.created_at).getTime() : Date.now()
+            registeredAt: data.created_at ? new Date(data.created_at).getTime() : Date.now(),
+            isPaid: Boolean(data.is_paid),
+            is_paid: Boolean(data.is_paid)
           };
 
           // Cache locally on this device
