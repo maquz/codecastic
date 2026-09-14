@@ -384,7 +384,7 @@
 
     if (qCountHelpText) {
       if (!isPaid) {
-        qCountHelpText.innerHTML = `<strong style="color:var(--crimson-600);">🔒 Preview Mode (Unpaid Account):</strong> Exam limited to 5 questions maximum. Complete payment on Paystack to unlock 25 to 75 questions.`;
+        qCountHelpText.innerHTML = `<strong style="color:var(--crimson-600);">🔒 Preview Mode (Unpaid Account):</strong> Free Exam questions limited to maximum of 5. Complete payment on Paystack to unlock the full package (1 to 75) per set.`;
       } else {
         qCountHelpText.innerHTML = `<strong style="color:var(--emerald-700);">✅ Full Access Unlocked:</strong> Access 25, 50, and 75 question exams & official certificates.`;
       }
