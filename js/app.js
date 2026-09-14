@@ -389,6 +389,12 @@
         qCountHelpText.innerHTML = `<strong style="color:var(--emerald-700);">✅ Full Access Unlocked:</strong> Access 25, 50, and 75 question exams & official certificates.`;
       }
     }
+
+    // Hide topbar "Pay via MTN MoMo" button for paid candidates — no need to show it
+    const topbarPayBtn = document.getElementById("paystackHeaderBtn");
+    if (topbarPayBtn) {
+      topbarPayBtn.style.display = isPaid ? "none" : "";
+    }
   }
 
   function updateDashboardStats() {
