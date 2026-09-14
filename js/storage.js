@@ -1225,6 +1225,31 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
     const foundLocal = accounts.find(a => a.email.toLowerCase() === cleanEmail && a.password.trim() === cleanPass);
 
     if (foundLocal) {
+      // Always refresh is_paid from Supabase cloud so admin approvals take effect immediately
+      if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+        try {
+          const { data: cloudData } = await supabaseClient
+            .from('candidates')
+            .select('is_paid, assigned_rank, full_name, region')
+            .ilike('email', cleanEmail)
+            .maybeSingle();
+          if (cloudData) {
+            const latestPaid = Boolean(cloudData.is_paid);
+            foundLocal.isPaid = latestPaid;
+            foundLocal.is_paid = latestPaid;
+            if (cloudData.assigned_rank) foundLocal.assignedRank = cloudData.assigned_rank;
+            if (cloudData.full_name) foundLocal.name = cloudData.full_name;
+            if (cloudData.region) foundLocal.region = cloudData.region;
+            // Persist the refreshed account back to local storage
+            const allAccounts = this.getCandidateAccounts();
+            const idx = allAccounts.findIndex(a => a.email.toLowerCase() === cleanEmail);
+            if (idx !== -1) allAccounts[idx] = foundLocal;
+            localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(allAccounts));
+          }
+        } catch (e) {
+          console.warn("Cloud is_paid refresh failed (using local value):", e);
+        }
+      }
       this.saveCandidateProfile(foundLocal);
       return { success: true, account: foundLocal };
     }
