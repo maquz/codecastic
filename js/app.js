@@ -185,15 +185,43 @@
   async function initApp() {
     setupTheme();
     
-    // Auto-sync & fetch candidate accounts & question bank from Supabase Cloud on startup
+    // Fetch latest candidate data from Supabase Cloud on startup
+    // NOTE: We do NOT push local→cloud here to avoid overwriting admin-managed fields (is_paid, assigned_rank)
     if (typeof StorageManager !== 'undefined') {
       try {
-        await StorageManager.syncLocalAccountsToSupabase();
         await StorageManager.fetchCloudAccountsSupabase();
-        await StorageManager.syncQuestionsToSupabase();
         await StorageManager.fetchQuestionsFromSupabase();
       } catch (e) {
         console.warn("Cloud startup sync notice:", e);
+      }
+
+      // Refresh is_paid for the active candidate session directly from Supabase
+      try {
+        const activeProfile = StorageManager.getCandidateProfile();
+        if (activeProfile && activeProfile.email && typeof supabaseClient !== 'undefined' && supabaseClient) {
+          const { data: cloudCand } = await supabaseClient
+            .from('candidates')
+            .select('is_paid, assigned_rank, full_name, region')
+            .ilike('email', activeProfile.email)
+            .maybeSingle();
+          if (cloudCand) {
+            activeProfile.isPaid   = Boolean(cloudCand.is_paid);
+            activeProfile.is_paid  = Boolean(cloudCand.is_paid);
+            if (cloudCand.assigned_rank) activeProfile.assignedRank = cloudCand.assigned_rank;
+            StorageManager.saveCandidateProfile(activeProfile);
+            // Also update the accounts roster
+            const allAcc = StorageManager.getCandidateAccounts();
+            const ai = allAcc.findIndex(a => a.email.toLowerCase() === activeProfile.email.toLowerCase());
+            if (ai !== -1) {
+              allAcc[ai].isPaid        = Boolean(cloudCand.is_paid);
+              allAcc[ai].is_paid       = Boolean(cloudCand.is_paid);
+              if (cloudCand.assigned_rank) allAcc[ai].assignedRank = cloudCand.assigned_rank;
+              localStorage.setItem(STORAGE_KEYS.CANDIDATE_ACCOUNTS, JSON.stringify(allAcc));
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Active candidate cloud refresh notice:", e);
       }
     }
 
