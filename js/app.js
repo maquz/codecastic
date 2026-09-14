@@ -1,5 +1,5 @@
 /**
- * CodeCastic - Ghana Education Service (GES) Promotion Exam Readiness Application
+ * CodeCastic - Ghana Education Service (GES) Promotion Trial Exam Readiness Application
  * Core Application Controller
  */
 
@@ -308,7 +308,7 @@
           </div>
           <div class="rank-meta">
             <span>📚 ${count} Questions</span>
-            <span>✅ TARGET PROMOTION EXAM</span>
+            <span>✅ TARGET Promotion Trial Exam</span>
           </div>
         </div>
       `;
@@ -355,7 +355,7 @@
               ✅ Full GES Examination Access Unlocked
             </strong>
             <span style="font-size:0.88rem; color:var(--text-muted);">
-              Your candidate account has full access enabled. You can take complete 25 to 75 question promotion exam simulations with instant rationale and official achievement certificates.
+              Your candidate account has full access enabled. You can take complete 25 to 75 question Promotion Trial Exam simulations with instant rationale and official achievement certificates.
             </span>
           </div>
           <span class="badge" style="background:var(--emerald-100); color:var(--emerald-700); font-weight:800; padding:8px 14px; font-size:0.85rem; white-space:nowrap;">
@@ -371,7 +371,7 @@
               💳 Unlock Full GES Examination Access
             </strong>
             <span style="font-size:0.88rem; color:var(--text-muted);">
-              Complete your payment securely via Paystack to get full unrestricted access to all promotion exam questions, custom question counts (25 to 75 questions), and official certificates.
+              Complete your payment securely via Paystack to get full unrestricted access to all Promotion Trial Exam questions, custom question counts (25 to 75 questions), and official certificates.
             </span>
           </div>
           <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
@@ -446,8 +446,8 @@
 
     const candidate = StorageManager.getCandidateProfile();
     const watermarkText = candidate 
-      ? `CONFIDENTIAL — GES PROMOTION EXAM — ${candidate.name} (${candidate.email}) — ${candidate.region || 'Ghana'}` 
-      : `CONFIDENTIAL — GES PROMOTION EXAM PORTAL — UNAUTHORIZED COPYING PROHIBITED`;
+      ? `CONFIDENTIAL — GES Promotion Trial Exam — ${candidate.name} (${candidate.email}) — ${candidate.region || 'Ghana'}` 
+      : `CONFIDENTIAL — GES Promotion Trial Exam PORTAL — UNAUTHORIZED COPYING PROHIBITED`;
 
     const items = Array(12).fill(`<div class="quiz-watermark-item">${watermarkText}</div>`).join("");
     watermarkContainer.innerHTML = items;
@@ -632,7 +632,7 @@
 
     const rankObj = GES_RANKS.find(r => r.id === currentRank);
     const modeTag = !isPaidCandidate ? " (UNPAID PREVIEW: 5 QUESTIONS)" : ` (${targetCount} QUESTIONS)`;
-    quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} PROMOTION EXAM${modeTag}`;
+    quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} Promotion Trial Exam${modeTag}`;
 
     // Activate Anti-Cheating Security Mode
     isSecurityActive = true;
@@ -898,7 +898,7 @@
     const candidate = StorageManager.getCandidateProfile();
 
     certificateElements.recipientName.textContent = candidate ? `${candidate.name} — ${candidate.region || 'Ghana'}` : "Ghana Education Service Officer";
-    certificateElements.rankName.textContent = rankObj ? rankObj.name : "Promotion Exam";
+    certificateElements.rankName.textContent = rankObj ? rankObj.name : "Promotion Trial Exam";
     certificateElements.scoreVal.textContent = latestAttempt ? latestAttempt.percentage : 100;
     certificateElements.dateVal.textContent = new Date().toLocaleDateString(undefined, {
       year: 'numeric', month: 'long', day: 'numeric'
@@ -1301,7 +1301,7 @@
   function openQFormModal(questionId = null) {
     editingQuestionId = questionId;
     if (questionId) {
-      adminElements.formTitle.textContent = "Edit Promotion Exam Question";
+      adminElements.formTitle.textContent = "Edit Promotion Trial Exam Question";
       const q = StorageManager.getQuestions().find(item => item.id === questionId);
       if (q) {
         adminElements.inputLevel.value = q.level;
@@ -1399,7 +1399,7 @@
       const authHeaderTitle = document.getElementById("authHeaderTitle");
       const authHeaderSubtitle = document.getElementById("authHeaderSubtitle");
       if (authHeaderTitle) authHeaderTitle.textContent = "Welcome Back";
-      if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Login to access your GES promotion exam portal";
+      if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Login to access your GES Promotion Trial Exam portal";
       candidateAuthElements.modal.classList.add("active");
     };
 
@@ -1420,7 +1420,7 @@
         candidateAuthElements.regForm.classList.remove("hidden");
         candidateAuthElements.loginForm.classList.add("hidden");
         if (authHeaderTitle) authHeaderTitle.textContent = "Create Account";
-        if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Register to access your GES promotion exam portal";
+        if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Register to access your GES Promotion Trial Exam portal";
       });
     }
 
@@ -1430,7 +1430,7 @@
         candidateAuthElements.loginForm.classList.remove("hidden");
         candidateAuthElements.regForm.classList.add("hidden");
         if (authHeaderTitle) authHeaderTitle.textContent = "Welcome Back";
-        if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Login to access your GES promotion exam portal";
+        if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Login to access your GES Promotion Trial Exam portal";
       });
     }
 
