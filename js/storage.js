@@ -1089,8 +1089,10 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
               email: updatedAccount.email,
               region: updatedAccount.region,
               password: updatedAccount.password,
-              assigned_rank: updatedAccount.assignedRank,
-              is_paid: isPaidVal
+              assigned_rank: updatedAccount.assignedRank
+              // NOTE: is_paid is intentionally excluded here — it is managed exclusively
+              // by the admin via updateCandidatePaymentStatus(). Including it here would
+              // overwrite admin-set TRUE values with FALSE on every registration/re-login.
             }], { onConflict: 'email' });
         } catch (sbErr) {
           console.warn("Supabase cloud sync warning:", sbErr);
@@ -1372,8 +1374,8 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
         email: (a.email || "").toLowerCase().trim(),
         region: a.region,
         password: a.password,
-        assigned_rank: a.assignedRank,
-        is_paid: Boolean(a.isPaid || a.is_paid)
+        assigned_rank: a.assignedRank
+        // NOTE: is_paid excluded intentionally — managed only by admin via updateCandidatePaymentStatus()
       }));
 
       const { data, error } = await supabaseClient
