@@ -177,8 +177,20 @@ var StorageManager = {
     const list = this.getQuestions();
     const index = list.findIndex(q => q.id === id);
     if (index !== -1) {
-      if (updatedData.q && this.isDuplicateQuestion(updatedData.q, list, id)) {
-        return { success: false, isDuplicate: true, error: "Another question with identical wording already exists in your question bank." };
+      const originalText = list[index].q;
+      if (updatedData.q) {
+        const normNew = this.normalizeQuestionText(updatedData.q);
+        const normOrig = this.normalizeQuestionText(originalText);
+        // Duplicate check: skip the question being edited (by ID) AND any entry
+        // whose text matches the ORIGINAL text (handles dual-ID entries from cloud merge)
+        const isDup = list.some(item => {
+          if (item.id === id) return false;
+          if (this.normalizeQuestionText(item.q) === normOrig) return false; // same original text = same question
+          return this.normalizeQuestionText(item.q) === normNew;
+        });
+        if (isDup) {
+          return { success: false, isDuplicate: true, error: "Another question with identical wording already exists in your question bank." };
+        }
       }
       list[index] = { ...list[index], ...updatedData };
       this.saveQuestions(list);
