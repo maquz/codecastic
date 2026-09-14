@@ -913,7 +913,7 @@
       switchAdminTab("admins");
       showScreen("admin");
     } else {
-      if (adminLoginElements.emailInput) adminLoginElements.emailInput.value = "admin@ges.gov.gh";
+      if (adminLoginElements.emailInput) adminLoginElements.emailInput.value = "";
       if (adminLoginElements.passInput) adminLoginElements.passInput.value = "";
       adminLoginElements.errorMsg.classList.add("hidden");
       adminLoginElements.modal.classList.add("active");
@@ -990,6 +990,11 @@
     const tbody = document.getElementById("adminUsersTableBody");
     if (!tbody) return;
 
+    // Determine if the currently logged-in admin is the super admin
+    const loggedInAdmin = StorageManager.getCurrentAdmin();
+    const isSuperAdmin = loggedInAdmin && loggedInAdmin.email &&
+      loggedInAdmin.email.toLowerCase() === "admin@ges.gov.gh";
+
     if (list.length === 0) {
       tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:16px;">No system administrator accounts found.</td></tr>`;
       return;
@@ -998,17 +1003,31 @@
     tbody.innerHTML = list.map(admin => {
       const isSuper = admin.email.toLowerCase() === "admin@ges.gov.gh";
       const dateStr = admin.createdAt ? new Date(admin.createdAt).toLocaleDateString() : 'System Default';
-      const deleteBtnHtml = isSuper 
-        ? `<span class="badge badge-ad2" style="font-size:0.72rem; padding:3px 8px;">Super Admin</span>`
-        : `<button class="btn btn-outline btn-sm delete-admin-btn" data-email="${admin.email}" style="color:var(--crimson-600); border-color:var(--crimson-600); padding:3px 8px; font-size:0.75rem;">🗑️ Delete</button>`;
 
-      const roleCellHtml = isSuper
-        ? `<span class="badge badge-ad1" style="font-size:0.72rem;">Super Administrator</span>`
-        : `<select class="form-control admin-role-change-select" data-email="${admin.email}" style="height:32px; padding:2px 8px; font-size:0.78rem; font-weight:600; border-radius:6px; border:1px solid var(--line-color); width:auto; cursor:pointer;">
+      // Delete button: super admin sees delete for non-super accounts; others see nothing
+      let deleteBtnHtml;
+      if (isSuper) {
+        deleteBtnHtml = `<span class="badge badge-ad2" style="font-size:0.72rem; padding:3px 8px;">Super Admin</span>`;
+      } else if (isSuperAdmin) {
+        deleteBtnHtml = `<button class="btn btn-outline btn-sm delete-admin-btn" data-email="${admin.email}" style="color:var(--crimson-600); border-color:var(--crimson-600); padding:3px 8px; font-size:0.75rem;">🗑️ Delete</button>`;
+      } else {
+        deleteBtnHtml = `<span style="color:var(--text-muted); font-size:0.75rem;">—</span>`;
+      }
+
+      // Role cell: super admin gets dropdown; others get read-only badge
+      let roleCellHtml;
+      if (isSuper) {
+        roleCellHtml = `<span class="badge badge-ad1" style="font-size:0.72rem;">Super Administrator</span>`;
+      } else if (isSuperAdmin) {
+        roleCellHtml = `<select class="form-control admin-role-change-select" data-email="${admin.email}" style="height:32px; padding:2px 8px; font-size:0.78rem; font-weight:600; border-radius:6px; border:1px solid var(--line-color); width:auto; cursor:pointer;">
             <option value="System Administrator" ${admin.role === 'System Administrator' ? 'selected' : ''}>System Administrator</option>
             <option value="Regional Exam Controller" ${admin.role === 'Regional Exam Controller' ? 'selected' : ''}>Regional Exam Controller</option>
             <option value="GES Content Manager" ${admin.role === 'GES Content Manager' ? 'selected' : ''}>GES Content Manager</option>
            </select>`;
+      } else {
+        // Non-super admins can only see role as read-only badge
+        roleCellHtml = `<span class="badge badge-ad2" style="font-size:0.72rem;">${admin.role || 'Administrator'}</span>`;
+      }
 
       return `
         <tr>
@@ -1747,7 +1766,7 @@
 
     adminLoginElements.form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const email = adminLoginElements.emailInput ? adminLoginElements.emailInput.value.trim() : "admin@ges.gov.gh";
+      const email = adminLoginElements.emailInput ? adminLoginElements.emailInput.value.trim() : "";
       const password = adminLoginElements.passInput.value;
 
       const res = await StorageManager.loginAdmin(email, password);
