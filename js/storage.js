@@ -736,19 +736,27 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.SETTINGS);
       if (stored) {
-        return Object.assign({
-          defaultQuestionCount: "75",
-          timeLimitMinutes: 45
-        }, JSON.parse(stored));
+        // Guard against raw non-JSON values (e.g. plain string "light")
+        if (stored.trim().charAt(0) !== '{') {
+          console.warn("Settings localStorage was invalid — resetting to defaults.");
+          localStorage.removeItem(STORAGE_KEYS.SETTINGS);
+        } else {
+          return Object.assign({
+            defaultQuestionCount: "75",
+            timeLimitMinutes: 45
+          }, JSON.parse(stored));
+        }
       }
     } catch (e) {
-      console.warn("Error loading settings from localStorage:", e);
+      console.warn("Error loading settings from localStorage — resetting:", e);
+      localStorage.removeItem(STORAGE_KEYS.SETTINGS);
     }
     return {
       defaultQuestionCount: "75",
       timeLimitMinutes: 45
     };
   },
+
 
   /**
    * Save settings to localStorage
