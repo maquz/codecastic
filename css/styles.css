@@ -1080,6 +1080,15 @@ body.dark-mode .timer-pill {
   border-color: var(--gold-500) !important;
 }
 
+/* Scrollable table wrapper — defeats parent overflow-x:hidden */
+.table-scroll-wrap {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -1455,6 +1464,9 @@ body.dark-mode .landing-rank-pill {
 @media (max-width: 768px) {
   html, body {
     font-size: 15px;
+    /* Allow child scroll containers (admin tables) to scroll horizontally
+       while still preventing unwanted page-level side scroll */
+    overflow-x: clip;
   }
 
   .app-container {
@@ -1944,12 +1956,13 @@ body.dark-mode .password-toggle-btn:focus {
     min-width: 600px;
   }
 
-  /* Table wrapper — ensure it scrolls */
-  div[style*="overflow-x:auto"],
-  div[style*="overflow-x: auto"] {
+  /* Table scroll wrapper — explicit override of parent overflow-x:hidden */
+  .table-scroll-wrap {
     overflow-x: auto !important;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 8px;
+    -webkit-overflow-scrolling: touch !important;
+    display: block !important;
+    width: 100% !important;
+    position: relative !important;
   }
 
   /* Compact table cells on mobile */
