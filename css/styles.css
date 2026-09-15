@@ -1864,3 +1864,148 @@ body.dark-mode .password-toggle-btn:focus {
   opacity: 0.8;
   background: rgba(0, 0, 0, 0.05);
 }
+
+/* ============================================================
+   MOBILE ADMIN PANEL — RESPONSIVE FIXES (max-width: 768px)
+   ============================================================ */
+@media (max-width: 768px) {
+
+  /* Admin fullpage panel padding */
+  .admin-fullpage-panel {
+    padding: 12px 8px !important;
+  }
+
+  /* Admin header: stack title + buttons vertically */
+  .admin-fullpage-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 10px !important;
+    padding-bottom: 12px !important;
+  }
+
+  #adminPortalTitle {
+    font-size: 1.15rem !important;
+  }
+
+  .admin-fullpage-header > div:last-child {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Admin tab navigation: horizontal scroll strip */
+  .admin-tab-nav {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    gap: 6px !important;
+    padding-bottom: 6px !important;
+    scrollbar-width: none;
+  }
+  .admin-tab-nav::-webkit-scrollbar { display: none; }
+
+  .admin-tab-nav .btn-sm {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 6px 10px !important;
+    font-size: 0.75rem !important;
+  }
+
+  /* Admin config card grid: single column on mobile */
+  .cu-config-card div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Search + filter toolbar: full-width stacked */
+  #adminCandidateSearch,
+  #adminAuditSearch,
+  #adminCandidateRegionFilter,
+  #adminAuditRegionFilter,
+  #adminRankFilter {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  /* Search/filter row: stack vertically */
+  div:has(> #adminCandidateSearch),
+  div:has(> #adminAuditSearch) {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+  }
+
+  /* All admin tables: horizontal scroll container */
+  .admin-table {
+    font-size: 0.75rem !important;
+    min-width: 600px;
+  }
+
+  /* Table wrapper — ensure it scrolls */
+  div[style*="overflow-x:auto"],
+  div[style*="overflow-x: auto"] {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
+
+  /* Compact table cells on mobile */
+  .admin-table th,
+  .admin-table td {
+    padding: 7px 8px !important;
+    font-size: 0.73rem !important;
+    white-space: nowrap;
+  }
+
+  /* Admin stats bar: wrap chips */
+  .admin-stats-bar,
+  #adminDashStatsBar {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+
+  /* Admin question card */
+  .cu-question-card {
+    padding: 14px 12px !important;
+  }
+
+  /* Admin button rows: wrap */
+  .admin-qbank-toolbar,
+  div[style*="display:flex"][style*="gap"] {
+    flex-wrap: wrap !important;
+  }
+
+  /* Pay toggle buttons in candidate table */
+  .admin-pay-toggle-btn,
+  button[class*="btn-pay"] {
+    font-size: 0.68rem !important;
+    padding: 3px 6px !important;
+    white-space: nowrap;
+  }
+}
+
+/* Extra small screens (< 480px) */
+@media (max-width: 480px) {
+  .admin-table {
+    font-size: 0.68rem !important;
+    min-width: 520px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 5px 6px !important;
+    font-size: 0.68rem !important;
+  }
+
+  #adminPortalTitle {
+    font-size: 1rem !important;
+  }
+
+  .admin-tab-nav .btn-sm {
+    font-size: 0.68rem !important;
+    padding: 5px 8px !important;
+  }
+}
