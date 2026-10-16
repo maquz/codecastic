@@ -2229,3 +2229,221 @@ body.dark-mode .password-toggle-btn:focus {
     padding: 5px 8px !important;
   }
 }
+
+/* ============================================================
+   CANDIDATE DASHBOARD — DARK PROFILE BANNER & 2x2 GLASS CARDS
+   ============================================================ */
+#screen-select {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.cand-hero-banner {
+  background: linear-gradient(135deg, #091326 0%, #0F1E3A 100%);
+  border-radius: 0 0 24px 24px;
+  padding: 28px 36px 68px;
+  color: #FFFFFF;
+  box-shadow: 0 10px 30px rgba(9, 19, 38, 0.18);
+  position: relative;
+}
+
+.cand-hero-profile {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  max-width: 720px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.cand-hero-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1.5px solid rgba(255, 255, 255, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  flex-shrink: 0;
+  letter-spacing: 0.03em;
+}
+
+.cand-hero-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cand-hero-welcome {
+  font-size: 0.78rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.cand-hero-name {
+  font-size: 1.28rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+
+.cand-hero-meta {
+  font-size: 0.8rem;
+  color: #CBD5E1;
+  line-height: 1.45;
+}
+
+.cand-hero-meta strong {
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+/* 2x2 Glass-Like Interactive Grid overlapping the dark banner */
+.cand-glass-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 760px;
+  margin: -42px auto 28px;
+  padding: 0 14px;
+  position: relative;
+  z-index: 5;
+}
+
+.cand-glass-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(226, 232, 240, 0.9);
+  border-radius: 16px;
+  padding: 24px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+body.dark-mode .cand-glass-card {
+  background: rgba(17, 24, 39, 0.92);
+  border-color: rgba(51, 65, 85, 0.8);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.cand-glass-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.12);
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+.cand-glass-card.active {
+  border-color: #3B82F6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.18), 0 10px 26px rgba(37, 99, 235, 0.12);
+}
+
+.cand-glass-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s ease;
+}
+
+.cand-glass-card:hover .cand-glass-icon {
+  transform: scale(1.07);
+}
+
+.glass-icon-amber {
+  background: linear-gradient(135deg, #FBBF24, #F59E0B);
+}
+
+.glass-icon-blue {
+  background: linear-gradient(135deg, #60A5FA, #3B82F6);
+}
+
+.glass-icon-emerald {
+  background: linear-gradient(135deg, #34D399, #10B981);
+}
+
+.glass-icon-purple {
+  background: linear-gradient(135deg, #A78BFA, #8B5CF6);
+}
+
+.cand-glass-title {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 3px;
+}
+
+.cand-glass-sub {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.cand-section-heading {
+  text-align: center;
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin: 6px auto 18px;
+}
+
+.cand-outer-shell {
+  max-width: 780px;
+  margin: 0 auto 28px;
+  background: var(--card-bg);
+  border: 1px solid var(--line-color);
+  border-radius: 22px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.05);
+}
+
+@media (max-width: 600px) {
+  .cand-hero-banner {
+    padding: 22px 18px 56px;
+    border-radius: 0 0 18px 18px;
+  }
+  .cand-hero-profile {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+  }
+  .cand-glass-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 6px;
+    margin-top: -36px;
+  }
+  .cand-glass-card {
+    padding: 16px 10px;
+    border-radius: 14px;
+  }
+  .cand-glass-title {
+    font-size: 0.84rem;
+  }
+  .cand-glass-sub {
+    font-size: 0.72rem;
+  }
+  .cand-outer-shell {
+    padding: 16px 12px;
+    border-radius: 16px;
+  }
+}

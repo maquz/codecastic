@@ -161,132 +161,191 @@
 
     <!-- ================= SCREEN 1: LEVEL SELECTION & DASHBOARD ================= -->
     <section id="screen-select" class="hidden">
-      <!-- Welcome Panel -->
-      <div class="panel">
-        <div class="section-label">
-          <span>Select Examination Rank</span>
-          <span class="rule"></span>
-        </div>
-        <h2 class="heading-lg">Ghana Education Service Promotion Trial Exams</h2>
-        <p class="lede-text">
-          Prepare for your official GES promotion interview and written examination. You are timed, 45-second per
-          question simulation with instant feedback and authoritative
-          explanations.
-        </p>
-
-        <!-- MTN MoMo Access Payment Banner -->
-        <div class="momo-banner" id="dashPaystackBanner">
-          <div>
-            <strong style="font-size:1.05rem; color:var(--navy-900); display:block; margin-bottom:4px;">
-              💳 Unlock Full GES Examination Access via MTN MoMo
-            </strong>
-            <span style="font-size:0.88rem; color:var(--text-muted);">
-              Complete your payment securely via MTN Mobile Money to get full unrestricted access to all Promotion Trial Exam questions, custom question counts (25 to 75 questions), and official certificates.
-            </span>
+      <!-- Top Dark Candidate Profile Banner (Sample Style) -->
+      <div class="cand-hero-banner">
+        <div class="cand-hero-profile">
+          <div class="cand-hero-avatar" id="candHeroAvatar">CA</div>
+          <div class="cand-hero-details">
+            <div class="cand-hero-welcome">Welcome back</div>
+            <div class="cand-hero-name" id="candHeroName">Candidate Officer</div>
+            <div class="cand-hero-meta"><strong>Region:</strong> <span id="candHeroRegion">Ghana</span></div>
+            <div class="cand-hero-meta"><strong>Target Rank:</strong> <span id="candHeroRank">Promotion Trial Exam</span></div>
+            <div class="cand-hero-meta"><strong>Role:</strong> <span id="candHeroStatus">GES Promotion Candidate (Dashboard)</span></div>
           </div>
-          <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
-            class="btn btn-momo" style="white-space:nowrap; text-decoration:none;">
-            <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img"> Pay via MTN MoMo →
-          </a>
-        </div>
-
-        <!-- Rank Grid -->
-        <div class="rank-grid" id="rankGrid">
-          <!-- Dynamically populated by JS -->
-        </div>
-
-        <!-- Question Count Selector -->
-        <div
-          style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:14px 18px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-          <label for="questionCountSelect"
-            style="font-weight:700; font-size:0.9rem; margin:0; color:var(--navy-900);">📝 Number of Exam
-            Questions:</label>
-          <select class="form-control" id="questionCountSelect" style="width:auto; max-width:280px; font-weight:600;">
-            <option value="25">25 Questions (Standard Exam)</option>
-            <option value="30">30 Questions</option>
-            <option value="35">35 Questions</option>
-            <option value="40">40 Questions</option>
-            <option value="45">45 Questions</option>
-            <option value="50">50 Questions</option>
-            <option value="55">55 Questions</option>
-            <option value="60">60 Questions</option>
-            <option value="65">65 Questions</option>
-            <option value="70">70 Questions</option>
-            <option value="75" selected>75 Questions (Full Exam)</option>
-            <option value="CUSTOM">Custom Count (25 to 75)...</option>
-            <option value="ALL">All Available Questions</option>
-          </select>
-          <div id="customCountContainer" class="hidden"
-            style="display:inline-flex; align-items:center; gap:8px; background:var(--card-bg); padding:4px 10px; border-radius:8px; border:1.5px solid var(--gold-500);">
-            <label for="customQuestionCountInput"
-              style="font-size:0.82rem; font-weight:700; color:var(--navy-900);">Custom Count:</label>
-            <input type="number" class="form-control" id="customQuestionCountInput" min="25" max="75" value="25"
-              style="width:75px; height:34px; font-weight:700; text-align:center; padding:4px 6px;">
-            <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(25 – 75)</span>
-          </div>
-          <span style="font-size:0.82rem; color:var(--text-muted);" id="qCountHelpText">Select or specify a customized
-            question count between 25 and 75 questions.</span>
-        </div>
-
-        <div class="action-row">
-          <span id="rankHint" style="color:var(--text-muted); font-size:0.9rem;">
-            Select a rank above to start your readiness test.
-          </span>
-          <button class="btn btn-gold" id="startBtn" disabled>
-            🚀 Begin Promotion Trial Exam
-          </button>
         </div>
       </div>
 
-      <!-- History & Stats Panel -->
-      <div class="panel" style="margin-top:24px;">
-        <div class="section-label">
-          <span>Performance Record & History</span>
-          <span class="rule"></span>
+      <!-- 2x2 Glass-Like Interactive Navigation Cards -->
+      <div class="cand-glass-grid" id="candGlassNav">
+        <div class="cand-glass-card active" data-cand-tab="exam" role="button" tabindex="0">
+          <div class="cand-glass-icon glass-icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+            </svg>
+          </div>
+          <div class="cand-glass-title">Promotion Trial Exam</div>
+          <div class="cand-glass-sub">Assessment</div>
         </div>
 
-        <div class="stats-summary">
-          <div class="stat-box">
-            <div class="val" id="statTotal">0</div>
-            <div class="lbl">Total Attempts</div>
+        <div class="cand-glass-card" data-cand-tab="stats" role="button" tabindex="0">
+          <div class="cand-glass-icon glass-icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
           </div>
-          <div class="stat-box">
-            <div class="val" id="statPassRate">0%</div>
-            <div class="lbl">Pass Rate (≥70%)</div>
+          <div class="cand-glass-title">Post-Trial Metrics</div>
+          <div class="cand-glass-sub">Evaluation</div>
+        </div>
+
+        <div class="cand-glass-card" data-cand-tab="history" role="button" tabindex="0">
+          <div class="cand-glass-icon glass-icon-emerald">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+              <line x1="12" y1="18" x2="12.01" y2="18"></line>
+            </svg>
           </div>
-          <div class="stat-box">
-            <div class="val" id="statBest">0%</div>
-            <div class="lbl">Personal Best</div>
+          <div class="cand-glass-title">Attempt Slip</div>
+          <div class="cand-glass-sub">Audit Records</div>
+        </div>
+
+        <div class="cand-glass-card" data-cand-tab="package" role="button" tabindex="0">
+          <div class="cand-glass-icon glass-icon-purple">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
           </div>
-          <div class="stat-box">
-            <div class="val">45s</div>
-            <div class="lbl">Clock / Question</div>
+          <div class="cand-glass-title">Resources &amp; Access</div>
+          <div class="cand-glass-sub">Documents</div>
+        </div>
+      </div>
+
+      <h3 class="cand-section-heading" id="candSectionHeading">Portal Forms &amp; Assessments</h3>
+
+      <!-- Outer Soft Card Container -->
+      <div class="cand-outer-shell">
+        <!-- TAB VIEW 1: PROMOTION TRIAL EXAM ASSESSMENT -->
+        <div id="candTabView-exam" class="cand-tab-view">
+          <!-- Rank Grid -->
+          <div class="rank-grid" id="rankGrid">
+            <!-- Dynamically populated by JS -->
+          </div>
+
+          <!-- Question Count Selector -->
+          <div
+            style="display:flex; align-items:center; gap:12px; margin-top:16px; margin-bottom:14px; flex-wrap:wrap; background:var(--paper-bg); padding:14px 18px; border-radius:var(--radius-sm); border:1px solid var(--line-color);">
+            <label for="questionCountSelect"
+              style="font-weight:700; font-size:0.9rem; margin:0; color:var(--navy-900);">📝 Number of Exam
+              Questions:</label>
+            <select class="form-control" id="questionCountSelect" style="width:auto; max-width:280px; font-weight:600;">
+              <option value="25">25 Questions (Standard Exam)</option>
+              <option value="30">30 Questions</option>
+              <option value="35">35 Questions</option>
+              <option value="40">40 Questions</option>
+              <option value="45">45 Questions</option>
+              <option value="50">50 Questions</option>
+              <option value="55">55 Questions</option>
+              <option value="60">60 Questions</option>
+              <option value="65">65 Questions</option>
+              <option value="70">70 Questions</option>
+              <option value="75" selected>75 Questions (Full Exam)</option>
+              <option value="CUSTOM">Custom Count (25 to 75)...</option>
+              <option value="ALL">All Available Questions</option>
+            </select>
+            <div id="customCountContainer" class="hidden"
+              style="display:inline-flex; align-items:center; gap:8px; background:var(--card-bg); padding:4px 10px; border-radius:8px; border:1.5px solid var(--gold-500);">
+              <label for="customQuestionCountInput"
+                style="font-size:0.82rem; font-weight:700; color:var(--navy-900);">Custom Count:</label>
+              <input type="number" class="form-control" id="customQuestionCountInput" min="25" max="75" value="25"
+                style="width:75px; height:34px; font-weight:700; text-align:center; padding:4px 6px;">
+              <span style="font-size:0.8rem; font-weight:600; color:var(--text-muted);">(25 – 75)</span>
+            </div>
+            <span style="font-size:0.82rem; color:var(--text-muted);" id="qCountHelpText">Select or specify a customized
+              question count between 25 and 75 questions.</span>
+          </div>
+
+          <div class="action-row">
+            <span id="rankHint" style="color:var(--text-muted); font-size:0.9rem;">
+              Select a rank above to start your readiness test.
+            </span>
+            <button class="btn btn-gold" id="startBtn" disabled>
+              🚀 Begin Promotion Trial Exam
+            </button>
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
-          <h3 style="font-size:1.1rem;">Recent Exam Attempts</h3>
-          <button class="btn btn-outline btn-sm" id="clearHistoryBtn" style="font-size:0.78rem;">Clear History</button>
+        <!-- TAB VIEW 2: PERFORMANCE EVALUATION METRICS -->
+        <div id="candTabView-stats" class="cand-tab-view hidden">
+          <div class="section-label">
+            <span>Candidate Performance Evaluation</span>
+            <span class="rule"></span>
+          </div>
+          <div class="stats-summary" style="margin-bottom:0;">
+            <div class="stat-box">
+              <div class="val" id="statTotal">0</div>
+              <div class="lbl">Total Attempts</div>
+            </div>
+            <div class="stat-box">
+              <div class="val" id="statPassRate">0%</div>
+              <div class="lbl">Pass Rate (≥70%)</div>
+            </div>
+            <div class="stat-box">
+              <div class="val" id="statBest">0%</div>
+              <div class="lbl">Personal Best</div>
+            </div>
+            <div class="stat-box">
+              <div class="val">45s</div>
+              <div class="lbl">Clock / Question</div>
+            </div>
+          </div>
         </div>
 
-        <div id="historyEmptyState" class="hidden" style="color:var(--text-muted); padding:16px 0;">
-          No attempt history saved yet. Complete your first exam to track your progress!
+        <!-- TAB VIEW 3: ATTEMPT SLIP / AUDIT RECORDS -->
+        <div id="candTabView-history" class="cand-tab-view hidden">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+            <h3 style="font-size:1.1rem;">Recent Exam Attempts</h3>
+            <button class="btn btn-outline btn-sm" id="clearHistoryBtn" style="font-size:0.78rem;">Clear History</button>
+          </div>
+
+          <div id="historyEmptyState" class="hidden" style="color:var(--text-muted); padding:16px 0;">
+            No attempt history saved yet. Complete your first exam to track your progress!
+          </div>
+
+          <div class="table-scroll-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date &amp; Time</th>
+                  <th>Rank Level</th>
+                  <th>Score</th>
+                  <th>Percentage</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="historyTableBody">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Date & Time</th>
-              <th>Rank Level</th>
-              <th>Score</th>
-              <th>Percentage</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="historyTableBody">
-            <!-- Populated by JS -->
-          </tbody>
-        </table>
+        <!-- TAB VIEW 4: RESOURCES & ACCESS DOCUMENTS -->
+        <div id="candTabView-package" class="cand-tab-view hidden">
+          <div class="section-label">
+            <span>Examination Package &amp; Study Coverage</span>
+            <span class="rule"></span>
+          </div>
+          <div id="candPackageStatusBox" style="padding:18px; border-radius:12px; border:1px solid var(--line-color); background:var(--paper-bg);">
+            <!-- Populated dynamically by JS based on candidate status -->
+          </div>
+        </div>
       </div>
     </section>
 

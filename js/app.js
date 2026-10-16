@@ -341,44 +341,65 @@
       }
     }
 
-    // Update Question Count Help Text & Banner based on Candidate Payment Status
+    // Update Candidate Profile Hero Banner & Package Status
     const isPaid = candidate ? Boolean(candidate.isPaid || candidate.is_paid) : false;
     const qCountHelpText = document.getElementById("qCountHelpText");
-    const dashPaystackBanner = document.getElementById("dashPaystackBanner");
 
-    if (dashPaystackBanner) {
+    const heroAvatar = document.getElementById("candHeroAvatar");
+    const heroName = document.getElementById("candHeroName");
+    const heroRegion = document.getElementById("candHeroRegion");
+    const heroRank = document.getElementById("candHeroRank");
+    const heroStatus = document.getElementById("candHeroStatus");
+    const packageBox = document.getElementById("candPackageStatusBox");
+
+    if (candidate) {
+      const parts = (candidate.name || "Candidate").trim().split(/\s+/);
+      const initials = parts.length >= 2
+        ? (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        : (candidate.name || "CA").slice(0, 2).toUpperCase();
+      const rObj = GES_RANKS.find(r => r.id === candidate.assignedRank);
+      if (heroAvatar) heroAvatar.textContent = initials;
+      if (heroName) heroName.textContent = candidate.name || "Candidate Officer";
+      if (heroRegion) heroRegion.textContent = candidate.region || "Ghana";
+      if (heroRank) heroRank.textContent = rObj ? rObj.name : (candidate.assignedRank || "Promotion Trial Exam");
+      if (heroStatus) heroStatus.textContent = isPaid
+        ? "Full Access Candidate (GES Dashboard)"
+        : "Preview Mode Candidate (GES Dashboard)";
+    }
+
+    if (packageBox) {
       if (isPaid) {
-        dashPaystackBanner.style.background = "linear-gradient(135deg, rgba(4,120,87,0.08) 0%, rgba(5,150,105,0.14) 100%)";
-        dashPaystackBanner.style.borderColor = "var(--emerald-600)";
-        dashPaystackBanner.innerHTML = `
-          <div>
-            <strong style="font-size:1.05rem; color:var(--emerald-700); display:block; margin-bottom:4px;">
-              ✅ Full GES Examination Access Unlocked
-            </strong>
-            <span style="font-size:0.88rem; color:var(--text-muted);">
-              Your candidate account has full access enabled. You can take complete 25 to 75 question Promotion Trial Exam simulations with instant rationale and official achievement certificates.
+        packageBox.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+            <div>
+              <strong style="font-size:1.02rem; color:var(--emerald-700); display:block; margin-bottom:4px;">
+                ✅ Full GES Promotion Trial Package Active
+              </strong>
+              <span style="font-size:0.88rem; color:var(--text-muted);">
+                Your account has full unrestricted access to 25–75 question sets, detailed policy rationale, and official achievement certificates.
+              </span>
+            </div>
+            <span class="badge" style="background:var(--emerald-100); color:var(--emerald-700); font-weight:800; padding:8px 14px; font-size:0.82rem;">
+              ✅ FULL ACCESS PAID
             </span>
           </div>
-          <span class="badge" style="background:var(--emerald-100); color:var(--emerald-700); font-weight:800; padding:8px 14px; font-size:0.85rem; white-space:nowrap;">
-            ✅ FULL ACCESS PAID
-          </span>
         `;
       } else {
-        dashPaystackBanner.style.background = "linear-gradient(135deg, rgba(11, 164, 219, 0.08) 0%, rgba(0, 118, 163, 0.12) 100%)";
-        dashPaystackBanner.style.borderColor = "rgba(11, 164, 219, 0.4)";
-        dashPaystackBanner.innerHTML = `
-          <div>
-            <strong style="font-size:1.05rem; color:var(--navy-900); display:block; margin-bottom:4px;">
-              💳 Unlock Full GES Examination Access
-            </strong>
-            <span style="font-size:0.88rem; color:var(--text-muted);">
-              Complete your payment securely via Paystack to get full unrestricted access to all Promotion Trial Exam questions, custom question counts (25 to 75 questions), and official certificates.
-            </span>
+        packageBox.innerHTML = `
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+            <div>
+              <strong style="font-size:1.02rem; color:var(--navy-900); display:block; margin-bottom:4px;">
+                🔒 Free Trial Preview Package (5 Questions Max)
+              </strong>
+              <span style="font-size:0.88rem; color:var(--text-muted);">
+                Complete payment via MTN Mobile Money to unlock full 25 to 75 question sets per exam and official printable certificates.
+              </span>
+            </div>
+            <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
+              class="btn btn-momo btn-sm" style="white-space:nowrap; text-decoration:none;">
+              <img src="images/mtn_momo.jpg" alt="MTN MoMo" class="momo-logo-img"> Pay via MTN MoMo →
+            </a>
           </div>
-          <a href="https://paystack.shop/pay/f9ddu20gyn" target="_blank" rel="noopener noreferrer"
-            class="btn btn-paystack" style="white-space:nowrap; text-decoration:none;">
-            💳 Pay via Paystack →
-          </a>
         `;
       }
     }
@@ -1452,6 +1473,31 @@
     bindCardAction(landingRegisterBtn, openRegisterModal);
     bindCardAction(landingBottomSignInBtn, openAuthModal);
     bindCardAction(landingAdminBtn, openAdminModal);
+
+    // Candidate 2x2 Glass Card Interactive Navigation
+    const glassCards = document.querySelectorAll(".cand-glass-card");
+    const candSectionHeading = document.getElementById("candSectionHeading");
+    const headingMap = {
+      exam: "Portal Forms & Assessments",
+      stats: "Post-Trial Readiness Evaluation",
+      history: "Candidate Examination Audit Records",
+      package: "Resources & Examination Package"
+    };
+
+    glassCards.forEach(card => {
+      bindCardAction(card, () => {
+        const tabKey = card.getAttribute("data-cand-tab");
+        glassCards.forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+
+        document.querySelectorAll(".cand-tab-view").forEach(v => v.classList.add("hidden"));
+        const targetView = document.getElementById(`candTabView-${tabKey}`);
+        if (targetView) targetView.classList.remove("hidden");
+        if (candSectionHeading && headingMap[tabKey]) {
+          candSectionHeading.textContent = headingMap[tabKey];
+        }
+      });
+    });
 
     // Candidate Auth Card Navigation Links
     const toRegisterLink = document.getElementById("toRegisterLink");
