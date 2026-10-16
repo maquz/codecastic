@@ -67,122 +67,94 @@
   <main class="app-container">
 
     <!-- ================= SCREEN 0: PUBLIC INFORMATION LANDING PAGE ================= -->
-    <section id="screen-landing">
-      <!-- Hero Banner -->
-      <div class="panel landing-hero">
-        <div class="landing-hero-brand-wrap" style="text-align:center; margin-bottom:16px;">
-          <img src="images/logo.png" alt="CodeCastic Logo" class="landing-hero-logo"
-            style="max-height:100px; max-width:320px; width:auto; object-fit:contain; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));">
-        </div>
-        <div class="landing-hero-badge-row">
-          <span class="badge badge-ad2" style="font-size:0.8rem; padding:4px 12px;">Official GES Readiness Portal</span>
-          <span style="font-size:0.85rem; color:var(--navy-900); font-weight:700;">Ghana Education Service</span>
-        </div>
-        <h2 class="landing-hero-heading">
-          Master Your GES Promotion Trial Examination With Confidence
-        </h2>
-        <p class="landing-hero-lede">
-          CodeCastic is the authoritative digital prep platform built specifically for Ghanaian Education Practitioners
-          preparing for official GES promotion interviews and competitive Promotion Trial Exams across all 16 regions of
-          Ghana.
+    <section id="screen-landing" class="clean-landing-screen">
+      <div class="clean-landing-header">
+        <div class="clean-landing-pill">OFFICIAL GES PROMOTION TRIAL PORTAL</div>
+        <h2 class="clean-landing-title">GES Promotion Trial Exams</h2>
+        <p class="clean-landing-subtitle">
+          Prepare, practice, and excel in your official GES promotion interviews and written assessments.<br>
+          Designed for Ghanaian Education Practitioners across all 16 regions.
         </p>
+      </div>
 
-        <!-- Promotion Rank Badges Row -->
-        <div class="landing-hero-ranks-row">
-          <span class="landing-rank-pill">Assistant Director II (AD II)</span>
-          <span class="landing-rank-pill">Assistant Director I (AD I)</span>
-          <span class="landing-rank-pill">Deputy Director (DD)</span>
-          <span class="landing-rank-pill">Director II (Dir II)</span>
-        </div>
-
-        <!-- Primary Call to Actions -->
-        <div class="landing-hero-btns">
-          <button class="btn btn-gold btn-lg" id="landingSignInBtn">
-            🎓 Candidate Sign In / Register →
-          </button>
-          <button class="btn btn-outline btn-lg" id="landingAdminBtn">
-            ⚙️ Administrator Portal
-          </button>
-        </div>
-
-        <!-- How It Works Step Banner -->
-        <div
-          style="margin-top:32px; background:var(--paper-bg); border:1px solid var(--line-color); border-radius:var(--radius-md); padding:24px;">
-          <h3 style="font-size:1.2rem; margin-bottom:14px; color:var(--navy-900);">📋 Candidate Examination Process</h3>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
-            <div
-              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">1. Register
-                Account</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Sign up with your email, Ghana region, and
-                eligible promotion rank level.</div>
-            </div>
-            <div
-              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">2. Select Exam
-                Test</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Choose your desired question count (25, 30, 35,
-                50, 75, or Custom 25–75).</div>
-            </div>
-            <div
-              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">3. Complete
-                Assessment</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Answer timed questions with Fisher-Yates
-                randomized options & instant explanations.</div>
-            </div>
-            <div
-              style="padding:12px; background:var(--card-bg); border-radius:var(--radius-sm); border:1px solid var(--line-color);">
-              <div style="font-weight:800; color:var(--gold-600); font-size:1.1rem; margin-bottom:4px;">4. Track & Print
-                Cert</div>
-              <div style="font-size:0.85rem; color:var(--text-muted);">Review private performance analytics and print
-                your official certificate of excellence.</div>
-            </div>
+      <!-- 3-Card Interactive Portal Grid -->
+      <div class="clean-portal-grid">
+        <!-- Card 1: Candidate Sign In -->
+        <div class="clean-portal-card card-accent-blue" id="landingSignInBtn" role="button" tabindex="0">
+          <div class="clean-card-icon icon-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
           </div>
+          <h3 class="clean-card-title">Candidate Portal</h3>
+          <p class="clean-card-desc">
+            Access timed 45-second per question promotion trial exams (AD II, AD I, Deputy Director, and Director II)
+            with Fisher-Yates randomized options, instant rationale, and printable certificates.
+          </p>
+          <span class="clean-card-link link-blue">
+            Log In as Candidate <span class="arrow">→</span>
+          </span>
+        </div>
+
+        <!-- Card 2: Candidate Registration -->
+        <div class="clean-portal-card card-accent-amber" id="landingRegisterBtn" role="button" tabindex="0">
+          <div class="clean-card-icon icon-amber">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <path d="M9 15l2 2 4-4"></path>
+            </svg>
+          </div>
+          <h3 class="clean-card-title">Candidate Registration</h3>
+          <p class="clean-card-desc">
+            Create your candidate profile with your email, Ghana region, and eligible promotion rank. Start with a free
+            5-question trial or unlock the full package (up to 75 questions per set).
+          </p>
+          <span class="clean-card-link link-amber">
+            Register New Account <span class="arrow">→</span>
+          </span>
+        </div>
+
+        <!-- Card 3: Administration -->
+        <div class="clean-portal-card card-accent-crimson" id="landingAdminBtn" role="button" tabindex="0">
+          <div class="clean-card-icon icon-crimson">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <h3 class="clean-card-title">Administration</h3>
+          <p class="clean-card-desc">
+            Access the examination controller monitor to manage the question bank, verify and approve candidate
+            full-package access, review global audit logs, and export reports to CSV.
+          </p>
+          <span class="clean-card-link link-crimson">
+            Access Administration Panel <span class="arrow">→</span>
+          </span>
         </div>
       </div>
 
-      <!-- Core Features Grid -->
-      <div class="panel" style="margin-top:24px;">
-        <div class="section-label">
-          <span>Portal Architecture & System Capabilities</span>
-          <span class="rule"></span>
+      <!-- Bottom System Tip Bar -->
+      <div class="clean-system-tip">
+        <div class="clean-tip-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="8.5" cy="7" r="4"></circle>
+            <polyline points="17 11 19 13 23 9"></polyline>
+          </svg>
         </div>
-
-        <div class="landing-feature-grid">
-          <div class="landing-feature-card">
-            <div class="landing-feature-icon">📜</div>
-            <h3>Authentic GES Policy & Law</h3>
-            <p>Comprehensive questions covering Act 1023 (NTC/NaSIA/NaCCA), Act 921 (Public Financial Management), Act
-              663 (Procurement), SPAS appraisals, and NaCCA Standards-Based Curriculum.</p>
-          </div>
-
-          <div class="landing-feature-card">
-            <div class="landing-feature-icon">⏱️</div>
-            <h3>Timed Exam Simulations</h3>
-            <p>Experience realistic examination conditions with a 45-second per question timer clock, customised
-              question count selection (25 to 75 questions), and instant feedback with authoritative rationale.</p>
-          </div>
-
-          <div class="landing-feature-card">
-            <div class="landing-feature-icon">🔒</div>
-            <h3>Anti-Cheating & Integrity System</h3>
-            <p>Strict security protection featuring anti-text-copying, anti-highlighting, keyboard shortcut blocking,
-              screenshot detection with automatic screen blur, and dynamic candidate watermarking.</p>
-          </div>
-
-          <div class="landing-feature-card">
-            <div class="landing-feature-icon">🏆</div>
-            <h3>Personalized Audit & Certificates</h3>
-            <p>Private personal scorecards, historical attempt performance tracking, and printable Official Certificates
-              of Achievement upon meeting the 70% passing benchmark.</p>
-          </div>
-        </div>
-
-        <div style="text-align:center; margin-top:28px;">
-          <button class="btn btn-gold btn-lg" id="landingBottomSignInBtn" style="padding:14px 32px; font-size:1.1rem;">
-            🎓 Launch Candidate Portal & Sign In →
-          </button>
+        <div class="clean-tip-text">
+          <strong>System Tip:</strong> Examination flow — <strong>1. Register Account</strong> → <strong>2. Select Exam
+            Test</strong> → <strong>3. Complete Assessment</strong> → <strong>4. Track &amp; Print Cert</strong>.
+          Clicking the <strong>CodeCastic Logo</strong> in the top header at any point returns you to this landing
+          screen.
         </div>
       </div>
     </section>

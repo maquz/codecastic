@@ -1389,6 +1389,7 @@
 
     // Landing Page Action Buttons
     const landingSignInBtn = document.getElementById("landingSignInBtn");
+    const landingRegisterBtn = document.getElementById("landingRegisterBtn");
     const landingBottomSignInBtn = document.getElementById("landingBottomSignInBtn");
     const landingAdminBtn = document.getElementById("landingAdminBtn");
 
@@ -1403,9 +1404,32 @@
       candidateAuthElements.modal.classList.add("active");
     };
 
-    if (landingSignInBtn) landingSignInBtn.addEventListener("click", openAuthModal);
-    if (landingBottomSignInBtn) landingBottomSignInBtn.addEventListener("click", openAuthModal);
-    if (landingAdminBtn) landingAdminBtn.addEventListener("click", openAdminModal);
+    const openRegisterModal = () => {
+      candidateAuthElements.loginErrorMsg.classList.add("hidden");
+      candidateAuthElements.loginForm.classList.add("hidden");
+      candidateAuthElements.regForm.classList.remove("hidden");
+      const authHeaderTitle = document.getElementById("authHeaderTitle");
+      const authHeaderSubtitle = document.getElementById("authHeaderSubtitle");
+      if (authHeaderTitle) authHeaderTitle.textContent = "Create Account";
+      if (authHeaderSubtitle) authHeaderSubtitle.textContent = "Register to access your GES Promotion Trial Exam portal";
+      candidateAuthElements.modal.classList.add("active");
+    };
+
+    const bindCardAction = (el, fn) => {
+      if (!el) return;
+      el.addEventListener("click", fn);
+      el.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          fn();
+        }
+      });
+    };
+
+    bindCardAction(landingSignInBtn, openAuthModal);
+    bindCardAction(landingRegisterBtn, openRegisterModal);
+    bindCardAction(landingBottomSignInBtn, openAuthModal);
+    bindCardAction(landingAdminBtn, openAdminModal);
 
     // Candidate Auth Card Navigation Links
     const toRegisterLink = document.getElementById("toRegisterLink");
