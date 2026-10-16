@@ -191,6 +191,7 @@
       try {
         await StorageManager.fetchCloudAccountsSupabase();
         await StorageManager.fetchQuestionsFromSupabase();
+        await StorageManager.fetchAttemptsFromSupabase();
       } catch (e) {
         console.warn("Cloud startup sync notice:", e);
       }
@@ -958,16 +959,33 @@
       tabCandidates?.classList.remove("btn-outline");
       viewCandidates?.classList.remove("hidden");
       renderAdminCandidatesList();
+      Promise.all([
+        StorageManager.fetchCloudAccountsSupabase(),
+        StorageManager.fetchAttemptsFromSupabase()
+      ]).then(() => {
+        renderAdminCandidatesList();
+        renderAdminDashboardStats();
+      }).catch(() => {});
     } else if (tabName === "audit") {
       tabAudit?.classList.add("active", "btn-gold");
       tabAudit?.classList.remove("btn-outline");
       viewAudit?.classList.remove("hidden");
       renderAdminAuditLog();
+      StorageManager.fetchAttemptsFromSupabase().then(() => {
+        renderAdminAuditLog();
+        renderAdminDashboardStats();
+      }).catch(() => {});
     } else if (tabName === "admins") {
       tabAdmins?.classList.add("active", "btn-gold");
       tabAdmins?.classList.remove("btn-outline");
       viewAdmins?.classList.remove("hidden");
       renderAdminAccountsList();
+      Promise.all([
+        StorageManager.fetchCloudAccountsSupabase(),
+        StorageManager.fetchAttemptsFromSupabase()
+      ]).then(() => {
+        renderAdminDashboardStats();
+      }).catch(() => {});
     }
   }
 
@@ -978,12 +996,16 @@
     const questions = StorageManager.getQuestions();
 
     const adminCountEl = document.getElementById("adminCount");
+    const candCountEl = document.getElementById("adminCandidateCount");
+    const auditCountEl = document.getElementById("adminAuditCount");
     const dashAdminCount = document.getElementById("dashStatAdminCount");
     const dashCandCount = document.getElementById("dashStatCandidateCount");
     const dashAttCount = document.getElementById("dashStatAttemptCount");
     const dashQCount = document.getElementById("dashStatQuestionCount");
 
     if (adminCountEl) adminCountEl.textContent = adminAccounts.length;
+    if (candCountEl) candCountEl.textContent = candidateAccounts.length;
+    if (auditCountEl) auditCountEl.textContent = attempts.length;
     if (dashAdminCount) dashAdminCount.textContent = adminAccounts.length;
     if (dashCandCount) dashCandCount.textContent = candidateAccounts.length;
     if (dashAttCount) dashAttCount.textContent = attempts.length;
@@ -1133,8 +1155,8 @@
           <td>${acct.region || 'Ghana'}</td>
           <td>${rankSelectHtml}</td>
           <td>${payBtnHtml}</td>
-          <td>${cStats.totalAttempts}</td>
-          <td><strong>${cStats.overallBest > 0 ? cStats.overallBest + '%' : '—'}</strong></td>
+          <td><strong>${cStats.totalAttempts}</strong></td>
+          <td><strong style="color:${cStats.totalAttempts > 0 ? (cStats.overallBest >= PASS_THRESHOLD ? 'var(--emerald-700)' : 'var(--crimson-600)') : 'var(--text-muted)'};">${cStats.totalAttempts > 0 ? cStats.overallBest + '%' : '—'}</strong></td>
         </tr>
       `;
     }).join("");

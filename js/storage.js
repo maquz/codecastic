@@ -1534,6 +1534,77 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
       console.warn("Error fetching questions from Supabase:", e);
     }
     return [];
+  },
+
+  /**
+   * Fetch all exam attempts from Supabase cloud into local storage
+   */
+  fetchAttemptsFromSupabase: async function () {
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return [];
+    try {
+      const { data, error } = await supabaseClient
+        .from('attempts')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.warn("Supabase attempts fetch warning:", error);
+        return this.getAttemptHistory();
+      }
+
+      if (data && Array.isArray(data) && data.length > 0) {
+        const localAttempts = this.getAttemptHistory();
+        const mappedCloud = data.map(item => {
+          const ts = item.created_at ? new Date(item.created_at).getTime() : Date.now();
+          const fallbackDate = item.created_at
+            ? new Date(item.created_at).toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            : '';
+          return {
+            id: 'cloud_att_' + item.id,
+            cloudId: item.id,
+            timestamp: ts,
+            dateFormatted: item.date_formatted || fallbackDate,
+            candidateEmail: (item.candidate_email || '').toLowerCase().trim(),
+            candidateName: item.candidate_name || 'Candidate',
+            candidateRegion: item.candidate_region || 'Ghana',
+            rankId: item.rank_id || 'AD_II',
+            rankName: item.rank_name || item.rank_id || 'Promotion Trial Exam',
+            total: Number(item.total_questions) || 0,
+            correct: Number(item.correct_count) || 0,
+            percentage: Number(item.percentage) || 0,
+            pass: Boolean(item.pass_status),
+            timeSeconds: Number(item.time_seconds) || 0
+          };
+        });
+
+        // Deduplicate local attempts that are already in cloud
+        const cloudSignatures = new Set(
+          mappedCloud.map(a => `${a.candidateEmail}|${a.dateFormatted}|${a.rankId}|${a.percentage}|${a.correct}`)
+        );
+
+        const merged = [...mappedCloud];
+        localAttempts.forEach(la => {
+          if (String(la.id || '').startsWith('cloud_att_')) return;
+          const sig = `${(la.candidateEmail || '').toLowerCase().trim()}|${la.dateFormatted}|${la.rankId}|${la.percentage}|${la.correct}`;
+          if (!cloudSignatures.has(sig)) {
+            merged.push(la);
+          }
+        });
+
+        merged.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        localStorage.setItem(STORAGE_KEYS.ATTEMPTS, JSON.stringify(merged.slice(0, 500)));
+        return merged;
+      }
+    } catch (e) {
+      console.warn("Error fetching attempts from Supabase:", e);
+    }
+    return this.getAttemptHistory();
   }
 };
 
