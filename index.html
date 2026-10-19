@@ -342,8 +342,26 @@
             <span>Examination Package &amp; Study Coverage</span>
             <span class="rule"></span>
           </div>
-          <div id="candPackageStatusBox" style="padding:18px; border-radius:12px; border:1px solid var(--line-color); background:var(--paper-bg);">
+          <div id="candPackageStatusBox" style="padding:18px; border-radius:12px; border:1px solid var(--line-color); background:var(--paper-bg); margin-bottom:18px;">
             <!-- Populated dynamically by JS based on candidate status -->
+          </div>
+
+          <div class="section-label" style="margin-top:20px;">
+            <span>Official Achievement Certificate</span>
+            <span class="rule"></span>
+          </div>
+          <div id="candCertificateBox" style="padding:18px; border-radius:12px; border:1px solid var(--line-color); background:var(--paper-bg); display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;">
+            <div>
+              <strong style="font-size:1.02rem; color:var(--navy-900); display:block; margin-bottom:4px;">
+                🎓 GES Promotion Trial Readiness Certificate
+              </strong>
+              <span style="font-size:0.88rem; color:var(--text-muted);" id="candCertStatusText">
+                View and print your official personalized GES Promotion Trial Examination Certificate.
+              </span>
+            </div>
+            <button type="button" class="btn btn-gold btn-sm" id="candResourcesViewCertBtn" style="white-space:nowrap;">
+              🎓 View Official Certificate
+            </button>
           </div>
         </div>
       </div>
@@ -386,9 +404,13 @@
           <!-- Instant Feedback Content injected by JS -->
         </div>
 
-        <div class="quiz-footer" style="display:flex; align-items:center; justify-content:space-between; width:100%;">
-          <button class="btn btn-outline btn-sm" id="endQuizBtn"
-            style="color:var(--crimson-600); border-color:var(--line-color);">🛑 End Quiz Early</button>
+        <div class="quiz-footer" style="display:flex; align-items:center; justify-content:space-between; width:100%; gap:10px; flex-wrap:wrap;">
+          <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-outline btn-sm" id="endQuizBtn"
+              style="color:var(--crimson-600); border-color:var(--line-color);">🛑 End Quiz Early</button>
+            <button class="btn btn-outline btn-sm" id="pauseQuizBtn"
+              style="color:var(--navy-900); border-color:var(--line-color);">⏸️ Pause Session</button>
+          </div>
           <button class="btn btn-primary hidden" id="nextBtn">Next Question →</button>
         </div>
       </div>
@@ -438,6 +460,25 @@
             <button class="btn btn-outline btn-sm" id="endQuizResumeBtn" style="margin-top:6px;">▶️ Resume Current
               Question</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAUSE QUIZ SESSION MODAL ================= -->
+    <div class="modal-overlay" id="pauseQuizModal">
+      <div class="modal-card" style="max-width:440px; text-align:center;">
+        <div class="modal-header">
+          <h3>⏸️ Exam Session Paused</h3>
+        </div>
+        <div class="modal-body" style="padding:24px;">
+          <div style="font-size:2.6rem; margin-bottom:10px;">⏳</div>
+          <h4 style="font-size:1.12rem; color:var(--text-main); margin-bottom:8px;">Your Timer is Safely Paused</h4>
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:16px;" id="pauseQuizStatusText">
+            Take a breather. Your progress and remaining question time are preserved until you are ready to continue.
+          </p>
+          <button class="btn btn-gold" id="resumePausedQuizBtn" style="width:100%; padding:13px; font-size:1rem;">
+            ▶️ Continue Exam Session
+          </button>
         </div>
       </div>
     </div>

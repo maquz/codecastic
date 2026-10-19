@@ -457,6 +457,18 @@
         `;
       }).join("");
     }
+
+    // Update Certificate Status Text under Resources & Access
+    const certStatusText = document.getElementById("candCertStatusText");
+    if (certStatusText) {
+      if (stats.totalAttempts > 0 && stats.overallBest >= PASS_THRESHOLD) {
+        certStatusText.innerHTML = `<strong style="color:var(--emerald-700);">✅ Qualified (${stats.overallBest}% Personal Best):</strong> Your official GES Promotion Trial Certificate is ready to view and print.`;
+      } else if (stats.totalAttempts > 0) {
+        certStatusText.innerHTML = `Current Personal Best: <strong>${stats.overallBest}%</strong> (${stats.totalAttempts} attempt${stats.totalAttempts === 1 ? '' : 's'}). View your certificate or aim for ≥70% distinction.`;
+      } else {
+        certStatusText.textContent = "View and print your official personalized GES Promotion Trial Examination Certificate.";
+      }
+    }
   }
 
   /* ================= ANTI-CHEATING SECURITY SYSTEM ================= */
@@ -697,11 +709,17 @@
     startQuestionTimer();
   }
 
-  function startQuestionTimer() {
+  function startQuestionTimer(preserveTime = false) {
     clearInterval(timerInterval);
-    timeLeft = SECONDS_PER_QUESTION;
+    if (!preserveTime) {
+      timeLeft = SECONDS_PER_QUESTION;
+    }
     quizElements.timerVal.textContent = timeLeft;
-    quizElements.timerPill.classList.remove("urgent");
+    if (timeLeft <= 10) {
+      quizElements.timerPill.classList.add("urgent");
+    } else {
+      quizElements.timerPill.classList.remove("urgent");
+    }
 
     timerInterval = setInterval(() => {
       timeLeft--;
@@ -913,16 +931,21 @@
   }
 
   /* ================= CERTIFICATE MODAL ================= */
-  function openCertificateModal() {
-    const history = StorageManager.getAttemptHistory();
-    const latestAttempt = history[0];
-    const rankObj = GES_RANKS.find(r => r.id === (latestAttempt ? latestAttempt.rankId : currentRank));
+  function openCertificateModal(useBestScore = false) {
     const candidate = StorageManager.getCandidateProfile();
+    const history = StorageManager.getAttemptHistory(candidate ? candidate.email : null);
+    let targetAttempt = history[0] || null;
+    if (useBestScore && history.length > 0) {
+      targetAttempt = history.reduce((best, curr) => (curr.percentage > best.percentage ? curr : best), history[0]);
+    }
+
+    const targetRankId = targetAttempt ? targetAttempt.rankId : (candidate?.assignedRank || currentRank);
+    const rankObj = GES_RANKS.find(r => r.id === targetRankId);
 
     certificateElements.recipientName.textContent = candidate ? `${candidate.name} — ${candidate.region || 'Ghana'}` : "Ghana Education Service Officer";
     certificateElements.rankName.textContent = rankObj ? rankObj.name : "Promotion Trial Exam";
-    certificateElements.scoreVal.textContent = latestAttempt ? latestAttempt.percentage : 100;
-    certificateElements.dateVal.textContent = new Date().toLocaleDateString(undefined, {
+    certificateElements.scoreVal.textContent = targetAttempt ? targetAttempt.percentage : 0;
+    certificateElements.dateVal.textContent = targetAttempt?.dateFormatted || new Date().toLocaleDateString(undefined, {
       year: 'numeric', month: 'long', day: 'numeric'
     });
 
@@ -1663,12 +1686,41 @@
     const resumeQuiz = () => {
       endQuizElements.modal.classList.remove("active");
       if (!isAnswerLocked && timeLeft > 0) {
-        startQuestionTimer();
+        startQuestionTimer(true);
       }
     };
 
     if (endQuizElements.closeBtn) endQuizElements.closeBtn.addEventListener("click", resumeQuiz);
     if (endQuizElements.resumeBtn) endQuizElements.resumeBtn.addEventListener("click", resumeQuiz);
+
+    // Pause Quiz Session Listeners
+    const pauseQuizBtn = document.getElementById("pauseQuizBtn");
+    const pauseQuizModal = document.getElementById("pauseQuizModal");
+    const resumePausedQuizBtn = document.getElementById("resumePausedQuizBtn");
+    const pauseQuizStatusText = document.getElementById("pauseQuizStatusText");
+
+    if (pauseQuizBtn && pauseQuizModal) {
+      pauseQuizBtn.addEventListener("click", () => {
+        clearInterval(timerInterval);
+        const quizScreen = document.getElementById("screen-quiz");
+        if (quizScreen) quizScreen.classList.add("blur-security");
+        if (pauseQuizStatusText) {
+          pauseQuizStatusText.innerHTML = `Paused on <strong>Question ${currentQIndex + 1} of ${activeQuestions.length}</strong>${!isAnswerLocked ? ` with <strong>${timeLeft}s</strong> remaining` : ''}. Click below whenever you are ready to continue.`;
+        }
+        pauseQuizModal.classList.add("active");
+      });
+    }
+
+    if (resumePausedQuizBtn && pauseQuizModal) {
+      resumePausedQuizBtn.addEventListener("click", () => {
+        pauseQuizModal.classList.remove("active");
+        const quizScreen = document.getElementById("screen-quiz");
+        if (quizScreen) quizScreen.classList.remove("blur-security");
+        if (!isAnswerLocked && timeLeft > 0) {
+          startQuestionTimer(true);
+        }
+      });
+    }
 
     if (endQuizElements.finishBtn) {
       endQuizElements.finishBtn.addEventListener("click", () => {
@@ -1699,7 +1751,11 @@
     });
 
     // Certificate Actions
-    resultElements.certificateBtn.addEventListener("click", openCertificateModal);
+    resultElements.certificateBtn.addEventListener("click", () => openCertificateModal(false));
+    const candResourcesViewCertBtn = document.getElementById("candResourcesViewCertBtn");
+    if (candResourcesViewCertBtn) {
+      candResourcesViewCertBtn.addEventListener("click", () => openCertificateModal(true));
+    }
     certificateElements.closeBtn.addEventListener("click", () => {
       certificateElements.modal.classList.remove("active");
     });
