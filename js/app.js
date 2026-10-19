@@ -288,11 +288,13 @@
       : GES_RANKS;
 
     selectElements.rankGrid.innerHTML = visibleRanks.map(rank => {
-      const count = rank.id === "ALL" 
-        ? questions.length 
+      const rankFiltered = rank.id === "ALL"
+        ? questions
         : (rank.id === "DD" || rank.id === "DIR_II")
-          ? questions.filter(q => q.level === "DD" || q.level === "DIR_II").length
-          : questions.filter(q => q.level === rank.id).length;
+          ? questions.filter(q => q.level === "DD" || q.level === "DIR_II")
+          : questions.filter(q => q.level === rank.id);
+      const uniqueNorms = new Set(rankFiltered.map(q => StorageManager.normalizeQuestionText(q.q)));
+      const count = uniqueNorms.size;
 
       const isEligible = !assignedRank || rank.id === assignedRank;
       const isSelected = rank.id === currentRank || visibleRanks.length === 1;
@@ -631,41 +633,48 @@
       targetCount = Math.min(targetCount, 5);
     }
 
-    // Thoroughly reshuffle the base question pool
+    // Strictly deduplicate pool by normalized question text & ID so no question can repeat in a single set
+    const seenNorms = new Set();
+    const seenIds = new Set();
+    pool = pool.filter(q => {
+      if (!q || !q.q) return false;
+      const norm = StorageManager.normalizeQuestionText(q.q);
+      const qId = String(q.id || '');
+      if (seenNorms.has(norm) || (qId && seenIds.has(qId))) {
+        return false;
+      }
+      seenNorms.add(norm);
+      if (qId) seenIds.add(qId);
+      return true;
+    });
+
+    // Thoroughly shuffle the unique question pool once using Fisher-Yates
     pool = shuffleArray(pool);
 
-    // If pool has fewer questions than targetCount, cycle/pad questions with unique instance IDs & reshuffled options
-    activeQuestions = [];
-    let poolIdx = 0;
-    for (let i = 0; i < targetCount; i++) {
-      const baseQ = pool[poolIdx % pool.length];
+    // Pull one clean non-repeating set (never wrap around or repeat any question)
+    const finalSetCount = Math.min(targetCount, pool.length);
+    const selectedSet = pool.slice(0, finalSetCount);
 
-      // Reshuffle option choices (A, B, C, D) for this question instance
+    activeQuestions = selectedSet.map((baseQ, i) => {
       const originalOptions = baseQ.options ? [...baseQ.options] : [];
       const correctText = originalOptions[baseQ.correct];
       const shuffledOptions = shuffleArray(originalOptions);
       const newCorrectIdx = shuffledOptions.indexOf(correctText);
 
-      activeQuestions.push({
+      return {
         ...baseQ,
         instanceId: i,
         options: shuffledOptions,
         correct: newCorrectIdx >= 0 ? newCorrectIdx : baseQ.correct
-      });
-
-      poolIdx++;
-      if (poolIdx % pool.length === 0) {
-        // Re-shuffle pool on every full cycle for maximum variety
-        pool = shuffleArray(pool);
-      }
-    }
+      };
+    });
 
     currentQIndex = 0;
     examAnswers = [];
     totalTimeUsed = 0;
 
     const rankObj = GES_RANKS.find(r => r.id === currentRank);
-    const modeTag = !isPaidCandidate ? " (UNPAID PREVIEW: 5 QUESTIONS)" : ` (${targetCount} QUESTIONS)`;
+    const modeTag = !isPaidCandidate ? " (UNPAID PREVIEW: 5 QUESTIONS)" : ` (${activeQuestions.length} QUESTIONS)`;
     quizElements.rankTitle.textContent = `${rankObj.name.toUpperCase()} Promotion Trial Exam${modeTag}`;
 
     // Activate Anti-Cheating Security Mode

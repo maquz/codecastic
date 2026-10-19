@@ -1518,17 +1518,22 @@ Explanation: Article 25(1)(b) mandates that secondary education shall be made pr
           explanation: item.explanation || ""
         }));
 
-        const cloudIdSet = new Set(mappedCloud.map(q => q.id));
-        const merged = [...mappedCloud];
+        const seenKeys = new Set();
+        const uniqueMerged = [];
 
-        localQuestions.forEach(lq => {
-          if (!cloudIdSet.has(lq.id) && !this.isDuplicateQuestion(lq.q, mappedCloud)) {
-            merged.push(lq);
+        mappedCloud.forEach(item => {
+          const norm = this.normalizeQuestionText(item.q);
+          if (!norm) return;
+          const lvlGroup = (item.level === 'DIR_II' || item.level === 'DD') ? 'DD_DIR' : item.level;
+          const key = `${lvlGroup}|${norm}`;
+          if (!seenKeys.has(key)) {
+            seenKeys.add(key);
+            uniqueMerged.push(item);
           }
         });
 
-        localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(merged));
-        return merged;
+        localStorage.setItem(STORAGE_KEYS.QUESTIONS, JSON.stringify(uniqueMerged));
+        return uniqueMerged;
       }
     } catch (e) {
       console.warn("Error fetching questions from Supabase:", e);
